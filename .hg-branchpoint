@@ -1,0 +1,2 @@
+Just as a note in case we want to merge this back to pypy.
+We copied this code over from py3.8 branch at adfc0e50a98d.
