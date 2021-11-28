@@ -21,7 +21,7 @@ from rpython.rlib import objectmodel
 from rpython.flowspace.flowcontext import FlowingError
 from rpython.flowspace.operation import op
 
-from rpython.translator.test import snippet
+from rpython.translator.test import snippet, snippet_py2
 
 def graphof(a, func):
     return tgraphof(a.translator, func)
@@ -858,7 +858,7 @@ class TestAnnotateTestCase:
 
     def test_exception_deduction_with_raise3(self):
         a = self.RPythonAnnotator()
-        s = a.build_types(snippet.exception_deduction_with_raise3, [bool])
+        s = a.build_types(snippet_py2.exception_deduction_with_raise3, [bool])
         assert isinstance(s, annmodel.SomeInstance)
         assert s.classdef is a.bookkeeper.getuniqueclassdef(snippet.Exc)
 

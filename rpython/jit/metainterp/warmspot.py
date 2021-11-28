@@ -575,7 +575,7 @@ class WarmRunnerDesc(object):
                     print('~~~ %s: %s' % (e.__class__, e))
                     if sys.stdout == sys.__stdout__:
                         import pdb; pdb.post_mortem(tb)
-                    raise e.__class__, e, tb
+                    raise
                 fatalerror('~~~ Crash in JIT! %s' % (e,))
         crash_in_jit._dont_inline_ = True
 

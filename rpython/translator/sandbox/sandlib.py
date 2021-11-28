@@ -78,7 +78,7 @@ EXCEPTION_TABLE = [
     (9, RuntimeError),
     ]
 
-def write_exception(g, exception, tb=None):
+def write_exception(g, exception):
     for i, excclass in EXCEPTION_TABLE:
         if isinstance(exception, excclass):
             write_message(g, i)
@@ -91,7 +91,7 @@ def write_exception(g, exception, tb=None):
             break
     else:
         # just re-raise the exception
-        raise exception.__class__, exception, tb
+        raise
 
 def shortrepr(x):
     r = repr(x)
@@ -244,8 +244,7 @@ class SandboxedProc(object):
             try:
                 answer, resulttype = self.handle_message(fnname, *args)
             except Exception as e:
-                tb = sys.exc_info()[2]
-                write_exception(child_stdin, e, tb)
+                write_exception(child_stdin, e)
                 if self.log:
                     if str(e):
                         self.log.exception('%s: %s' % (e.__class__.__name__, e))
@@ -574,4 +573,3 @@ class VirtualizedSocketProc(VirtualizedSandboxedProc):
             return self.get_file(fd).send(data)
         return super(VirtualizedSocketProc, self).do_ll_os__ll_os_write(
             fd, data)
-
