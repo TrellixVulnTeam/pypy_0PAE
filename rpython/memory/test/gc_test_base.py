@@ -85,7 +85,7 @@ class GCTest(object):
         for i in range(1, 15):
             res = self.interpret(append_to_list, [i, i - 1])
             assert res == i - 1 # crashes if constants are not considered roots
-            
+
     def test_string_concatenation(self):
         #curr = simulator.current_size
         def concat(j):
@@ -1058,7 +1058,7 @@ class GCTest(object):
             assert rgc.get_gcflag_extra(a1) == False
             assert rgc.get_gcflag_extra(a2) == False
         self.interpret(fn, [])
-    
+
     def test_register_custom_trace_hook(self):
         S = lltype.GcStruct('S', ('x', lltype.Signed))
         called = []
@@ -1117,7 +1117,7 @@ class GCTest(object):
     def test_gettypeid(self):
         class A(object):
             pass
-        
+
         def fn():
             a = A()
             return rgc.get_typeid(a)

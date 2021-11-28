@@ -62,20 +62,20 @@ SQUARE_LIST = [
     ALLOCATE,    3,
     MOV_A_R,     0,   # i = a
     MOV_A_R,     1,   # copy of 'a'
-    
+
     SET_A,       0,
     MOV_A_R,     2,   # res = 0
 
     # 10:
     SET_A,       1,
     NEG_A,
-    ADD_R_TO_A,  0,   
+    ADD_R_TO_A,  0,
     MOV_A_R,     0,   # i--
-    
+
     MOV_R_A,     2,
     ADD_R_TO_A,  1,
     MOV_A_R,     2,   # res += a
-    
+
     MOV_R_A,     0,
     JUMP_IF_A,  10,   # if i!=0: goto 10
 

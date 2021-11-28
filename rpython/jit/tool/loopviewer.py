@@ -47,7 +47,7 @@ def consider_category(log, options, category):
     for loop in loops:
         summary = loop.summary(summary)
     return loops, summary
-        
+
 
 def print_summary(summary):
     ops = [(summary[key], key) for key in summary]
@@ -79,7 +79,7 @@ if __name__ == '__main__':
                       help='print the difference between non-optimized and optimized operations in the loop(s)')
     parser.add_option('-q', '--quiet', dest='quiet', action='store_true', default=False,
                       help='do not show the graphical representation of the loop')
-    
+
     options, args = parser.parse_args()
     if len(args) != 1:
         parser.print_help()

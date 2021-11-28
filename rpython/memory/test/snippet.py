@@ -202,7 +202,7 @@ class SemiSpaceGCTests(SemiSpaceGCTestDefines):
         if name == 'finalizer_order':
             func = self.definestr_finalizer_order()
             res = self.interpret(func, [-1])
-            return ''.join(res.chars) 
+            return ''.join(res.chars)
         elif name == 'from_objwithfinalizer_to_youngobj':
             func = self.define_from_objwithfinalizer_to_youngobj()
             return self.interpret(func, [])

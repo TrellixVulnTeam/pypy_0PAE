@@ -330,10 +330,10 @@ def test_register_custom_trace_hook():
     def trace_func():
         xxx # should not be annotated here
     lambda_trace_func = lambda: trace_func
-    
+
     def f():
         rgc.register_custom_trace_hook(TP, lambda_trace_func)
-    
+
     t, typer, graph = gengraph(f, [])
 
     assert typer.custom_trace_funcs == [(TP, trace_func)]

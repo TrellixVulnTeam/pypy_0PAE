@@ -104,7 +104,7 @@ def configure_libbacktrace_linux():
 def setup():
     if not IS_SUPPORTED:
         raise VMProfPlatformUnsupported
-    
+
     if sys.platform.startswith('linux'):
         configure_libbacktrace_linux()
 

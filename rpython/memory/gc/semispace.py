@@ -522,7 +522,7 @@ class SemiSpaceGC(MovingGCBase):
         while self.objects_with_finalizers.non_empty():
             x = self.objects_with_finalizers.popleft()
             fq_nr = self.objects_with_finalizers.popleft()
-            ll_assert(self._finalization_state(x) != 1, 
+            ll_assert(self._finalization_state(x) != 1,
                       "bad finalization state 1")
             if self.surviving(x):
                 new_with_finalizer.append(self.get_forwarding_address(x))

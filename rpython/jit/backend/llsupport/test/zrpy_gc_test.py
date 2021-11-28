@@ -895,7 +895,7 @@ class CompileFrameworkTests(BaseFrameworkTests):
             #
             n -= 1
             return (n, x) + args
-        
+
         return None, fn, None
 
     def test_multiple_pinned(self):

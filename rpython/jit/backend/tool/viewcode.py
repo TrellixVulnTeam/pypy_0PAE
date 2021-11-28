@@ -478,4 +478,4 @@ if __name__ == '__main__':
 else:
     from rpython.tool.udir import udir
     tmpfile = str(udir.join('dump.tmp'))
-    
+

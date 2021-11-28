@@ -48,7 +48,7 @@ class Code(object):
 class Parser(object):
 
     name = None
-    
+
     def compile(self, strrepr):
         self.code = []
         self.maxregno = 0
@@ -215,7 +215,7 @@ driver = JitDriver(greens = ['i', 'code'], reds = ['self'],
 
 class Frame(object):
     _virtualizable_ = ['registers[*]', 'code']
-    
+
     def __init__(self, code, arg=None):
         self = hint(self, access_directly=True, fresh_virtualizable=True)
         self.code = code

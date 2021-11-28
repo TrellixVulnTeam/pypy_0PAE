@@ -1,7 +1,7 @@
 import py
 import os
 from rpython.translator.driver import TranslationDriver, shutil_copy
-from rpython.tool.udir import udir 
+from rpython.tool.udir import udir
 
 def test_ctr():
     td = TranslationDriver()
@@ -71,7 +71,7 @@ def test_create_exe():
     dst_name.ensure()
 
     class CBuilder(object):
-        shared_library_name = dll_name 
+        shared_library_name = dll_name
 
     td = TranslationDriver(exe_name=str(dst_name))
     td.c_entryp = str(src_name)

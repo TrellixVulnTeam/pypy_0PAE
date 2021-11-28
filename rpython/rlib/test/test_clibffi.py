@@ -35,10 +35,10 @@ class BaseFfiTest(object):
 
     def setup_method(self, meth):
         ALLOCATED.clear()
-    
+
     def get_libc(self):
         return self.CDLL(get_libc_name())
-    
+
     def get_libm(self):
         return self.CDLL(get_libm_name(sys.platform))
 
@@ -151,9 +151,9 @@ class TestCLibffi(BaseFfiTest):
 
         assert not ch.free_list
         a = ch.alloc()
-        assert ch.free_list        
+        assert ch.free_list
         b = ch.alloc()
-        
+
         chunks = [a, b]
         p = ch.free_list
         while p:
@@ -175,7 +175,7 @@ class TestCLibffi(BaseFfiTest):
         assert ch.free_list == rffi.cast(rffi.VOIDP, b)
         snd = rffi.cast(rffi.VOIDPP, b)[0]
         assert snd == rffi.cast(rffi.VOIDP, a)
-        
+
     def test_callback(self):
         size_t = cast_type_to_ffitype(rffi.SIZE_T)
         libc = self.get_libc()
@@ -197,7 +197,7 @@ class TestCLibffi(BaseFfiTest):
 
         ptr = CallbackFuncPtr([ffi_type_pointer, ffi_type_pointer],
                               ffi_type_sint, callback)
-        
+
         TP = rffi.CArray(rffi.INT)
         to_sort = lltype.malloc(TP, 4, flavor='raw')
         to_sort[0] = rffi.cast(rffi.INT, 4)
@@ -295,7 +295,7 @@ class TestCLibffi(BaseFfiTest):
         Signed sum_x_y_p(struct x_y *p) {
             return p->x + p->y;
         }
-        
+
         '''))
         eci = ExternalCompilationInfo(include_dirs=[cdir])
         lib_name = str(platform.compile([c_file], eci, 'x1', standalone=False))
@@ -355,7 +355,7 @@ class TestCLibffi(BaseFfiTest):
             inp.y *= 3;
             return inp;
         }
-        
+
         '''))
         eci = ExternalCompilationInfo(include_dirs=[cdir])
         lib_name = str(platform.compile([c_file], eci, 'x2', standalone=False))
@@ -444,7 +444,7 @@ class TestWin32Handles(BaseFfiTest):
         if sys.platform != 'win32':
             py.test.skip("Handle to libc library, Win-only test")
         BaseFfiTest.setup_class()
-    
+
     def test_get_libc_handle(self):
         handle = get_libc_handle()
         print get_libc_name()

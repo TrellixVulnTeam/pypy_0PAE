@@ -184,7 +184,7 @@ def aggregate_values_by_module_and_type(database, count_modules_separately=False
         reachables.update(seen)
         reports.append(ModuleReport(modulename, size, typereports))
 
-    
+
     allnodes = set([node for node in database.globalcontainers() if node.nodekind != "func"])
     unreachables = allnodes-reachables
     if count_modules_separately:

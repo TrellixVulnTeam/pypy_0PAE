@@ -448,7 +448,7 @@ def convert_loop_to_trace(loop, metainterp_sd, skip_last=False):
     if skip_last:
         ops = ops[:-1]
     for op in ops:
-        newpos = trace.record_op(op.getopnum(), [get(arg) for arg in 
+        newpos = trace.record_op(op.getopnum(), [get(arg) for arg in
             op.getarglist()], op.getdescr())
         if rop.is_guard(op.getopnum()):
             failargs = []

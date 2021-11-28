@@ -447,7 +447,7 @@ def import_log(logname, ParserCls=SimpleParser):
     if not cat:
         cat = extract_category(log, 'jit-log-rewritten')
     if not cat:
-        cat = extract_category(log, 'jit-log-noopt')        
+        cat = extract_category(log, 'jit-log-noopt')
     for entry in cat:
         parser = ParserCls(entry, None, {}, 'lltype', None,
                            nonstrict=True)

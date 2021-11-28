@@ -114,7 +114,7 @@ def kill_category(log, catprefix=''):
     for entry in log:
         if not entry[0].startswith(catprefix):
             if len(entry) > 3:
-                newlog.append(entry[:3] + 
+                newlog.append(entry[:3] +
                               (kill_category(entry[3], catprefix),))
             else:
                 newlog.append(entry)

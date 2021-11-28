@@ -14,4 +14,4 @@ def test_timing():
     t.end_event('z')
     assert t.events == [('x', 1), ('y', 1), ('z', 1)]
     assert t.ttime() == 5
-    
+

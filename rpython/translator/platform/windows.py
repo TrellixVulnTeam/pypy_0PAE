@@ -479,13 +479,13 @@ class MsvcPlatform(Platform):
         if manifest and not shared:
             linkflags.append('/MANIFESTINPUT:pypy.manifest')
         m.rule('$(TARGET)', ['$(OBJECTS)'] + extra_deps,
-                [ '$(CC_LINK) $(LDFLAGS) $(LDFLAGSEXTRA)' + 
-                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' + 
+                [ '$(CC_LINK) $(LDFLAGS) $(LDFLAGSEXTRA)' +
+                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' +
                   linkobjs,
                 ])
         m.rule('debugmode_$(TARGET)', ['$(OBJECTS)'] + extra_deps,
-                [ '$(CC_LINK) /DEBUG $(LDFLAGS) $(LDFLAGSEXTRA)' + 
-                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' + 
+                [ '$(CC_LINK) /DEBUG $(LDFLAGS) $(LDFLAGSEXTRA)' +
+                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' +
                   linkobjs,
                 ])
 

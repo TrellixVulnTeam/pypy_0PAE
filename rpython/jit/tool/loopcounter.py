@@ -39,7 +39,7 @@ def main(logfile, options):
     print 'timestamp,total,loops,bridges'
     log = open(logfile)
     for timestamp, total, loops, bridges in count_loops_and_bridges(log):
-        print '%d,%d,%d,%d' % (timestamp, total, loops, bridges)        
+        print '%d,%d,%d,%d' % (timestamp, total, loops, bridges)
 
 if __name__ == '__main__':
     parser = optparse.OptionParser(usage="%prog loopfile [options]")

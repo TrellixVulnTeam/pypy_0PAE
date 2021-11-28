@@ -203,7 +203,7 @@ def splitloops(loops):
     counter = 1
     bar = progressbar.ProgressBar(color='blue')
     allloops = []
-    for i, loop in enumerate(loops): 
+    for i, loop in enumerate(loops):
         if i > MAX_LOOPS:
             return real_loops, allloops
         bar.render((i * 100) / len(loops))

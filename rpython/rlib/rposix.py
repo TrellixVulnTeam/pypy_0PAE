@@ -1951,7 +1951,7 @@ if not _WIN32:
                     groups_p = lltype.nullptr(GID_GROUPS_T.TO)
                     groups_p = lltype.malloc(GID_GROUPS_T.TO, widen(ngroups_p[0]),
                                              flavor='raw')
-                     
+
                     n = handle_posix_error('getgrouplist', c_getgroupslist(user,
                                                      group, groups_p, ngroups_p))
             ngroups = widen(ngroups_p[0])
@@ -2145,7 +2145,7 @@ if not _WIN32:
         _compilation_info_ = ExternalCompilationInfo(
             includes=[ 'unistd.h', ],
         )
-    
+
     # Taken from posixmodule.c. Note the avaialbility is determined at
     # compile time by the host, but filled in by a runtime call to pathconf,
     # sysconf, or confstr.
@@ -2405,7 +2405,7 @@ if not _WIN32:
        setattr(ConfConfig, k, rffi_platform.DefinedConstantInteger(v))
     for k,v in sysconf_consts_defs.items():
        setattr(ConfConfig, k, rffi_platform.DefinedConstantInteger(v))
-            
+
     confConfig = rffi_platform.configure(ConfConfig)
     pathconf_names = {}
     confstr_names = {}

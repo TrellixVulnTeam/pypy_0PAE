@@ -867,7 +867,7 @@ class IncrementalMiniMarkGC(MovingGCBase):
                 # nursery. "Next area" in this case is the space between the
                 # pinned object in front of nusery_top and the pinned object
                 # after that. Graphically explained:
-                # 
+                #
                 #     |- allocating totalsize failed in this area
                 #     |     |- nursery_top
                 #     |     |    |- pinned object in front of nursery_top,

@@ -22,7 +22,7 @@ def entry_point(args):
     if args[0] == '--onlyjit':
         onlyjit = True
         args = args[1:]
-        
+
     filename = args[0]
     x = int(args[1])
     bytecode, pool = load_bytecode(filename)

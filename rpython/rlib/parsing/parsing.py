@@ -147,7 +147,7 @@ class LazyParseTable(object):
             except IndexError:
                 error = ErrorInformation(i)
         return None, 0, error
-    
+
     def terminal_equality(self, symbol, input):
         return symbol == input.name
 

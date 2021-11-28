@@ -95,7 +95,7 @@ class RffiBuilder(object):
         arg_tps = [self.proc_tp(arg) for arg in func.argtypes]
         ll_item = rffi.llexternal(
             name, arg_tps,
-            self.proc_tp(func.restype), 
+            self.proc_tp(func.restype),
             compilation_info=self.CConfig._compilation_info_)
         self.ns[name] = ll_item
         return ll_item
@@ -103,10 +103,10 @@ class RffiBuilder(object):
     def proc_namespace(self, ns):
         exempt = set(id(value) for value in ctypes.__dict__.values())
         for key, value in ns.items():
-            if id(value) in exempt: 
+            if id(value) in exempt:
                 continue
             if isinstance(value, ctypes._CFuncPtr):
-                try:    
+                try:
                     self.proc_func(value)
                 except NotImplementedError as e:
                     print "genrffi: skipped:", key, value, e

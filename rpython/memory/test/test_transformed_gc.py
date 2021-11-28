@@ -1426,7 +1426,7 @@ class MyGcHooks(GcHooks):
 
     def on_gc_collect_step(self, duration, oldstate, newstate):
         self.stats.steps += 1
-        
+
     def on_gc_collect(self, num_major_collects,
                       arenas_count_before, arenas_count_after,
                       arenas_bytes, rawmalloc_bytes_before,

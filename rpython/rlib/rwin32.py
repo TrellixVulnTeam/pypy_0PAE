@@ -628,4 +628,4 @@ if WIN32:
         save_err=rffi.RFFI_SAVE_LASTERROR)
 
     # Don't save the err since this is called before checking err in rdynload
-    SetErrorMode = winexternal('SetErrorMode', [rffi.UINT], rffi.UINT) 
+    SetErrorMode = winexternal('SetErrorMode', [rffi.UINT], rffi.UINT)

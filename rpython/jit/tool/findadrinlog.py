@@ -24,7 +24,7 @@ for l in text:
 else:
     print "Not found"
     exit(0)
-                                         
+
 if trace.startswith('Bridge'):
     cat = 'jit-log-opt-bridge'
 else:
@@ -44,4 +44,4 @@ for ll in text:
                     print l
 print "..."
 
-        
+

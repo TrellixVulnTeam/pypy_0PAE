@@ -675,7 +675,7 @@ class _fixedsizedarray_mixin(_parentable_mixin):
 
     def getitem(self, index, uninitialized_ok=False):
         if hasattr(self, '_items'):
-            obj = lltype._fixedsizearray.getitem.im_func(self, 
+            obj = lltype._fixedsizearray.getitem.im_func(self,
                                      index, uninitialized_ok=uninitialized_ok)
             return obj
         else:

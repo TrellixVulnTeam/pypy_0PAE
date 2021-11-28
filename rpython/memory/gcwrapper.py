@@ -57,7 +57,7 @@ class GCManagedHeap(object):
                     return
             else:
                 assert False
-        
+
         for TP, func in custom_trace_funcs:
             gcdata._has_got_custom_trace(self.get_type_id(TP))
 
@@ -156,7 +156,7 @@ class GCManagedHeap(object):
         result = llmemory.cast_adr_to_ptr(addr, gctypelayout.WEAKREFPTR)
         result.weakptr = llmemory.cast_ptr_to_adr(objgetter())
         return llmemory.cast_ptr_to_weakrefptr(result)
-    
+
     def weakref_deref(self, PTRTYPE, obj):
         addr = gctypelayout.ll_weakref_deref(obj)
         return llmemory.cast_adr_to_ptr(addr, PTRTYPE)

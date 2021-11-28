@@ -1301,11 +1301,11 @@ class RecursiveTests:
 
     def test_get_unique_id(self):
         lst = []
-        
+
         def reg_codemap(self, (start, size, l)):
             lst.append((start, size))
             old_reg_codemap(self, (start, size, l))
-        
+
         old_reg_codemap = codemap.CodemapStorage.register_codemap
         try:
             codemap.CodemapStorage.register_codemap = reg_codemap

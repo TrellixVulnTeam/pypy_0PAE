@@ -980,7 +980,7 @@ class AssemblerARM(ResOpAssembler):
         self.datablockwrapper.done()      # finish using cpu.asmmemmgr
         self.datablockwrapper = None
         allblocks = self.get_asmmemmgr_blocks(looptoken)
-        size = self.mc.get_relative_pos() 
+        size = self.mc.get_relative_pos()
         res = self.mc.materialize(self.cpu, allblocks,
                                    self.cpu.gc_ll_descr.gcrootmap)
         #self.cpu.codemap.register_codemap(

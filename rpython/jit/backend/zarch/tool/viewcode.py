@@ -297,7 +297,7 @@ class World(object):
                         color = "black"
                     else:
                         color = "red"
-                    g1.emit_edge('N_%x' % r.addr, 'N_%x' % targetaddr, 
+                    g1.emit_edge('N_%x' % r.addr, 'N_%x' % targetaddr,
                                  color=color)
         sys.stdout.flush()
         if showgraph:
