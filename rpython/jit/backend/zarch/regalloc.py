@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.jit.backend.llsupport.regalloc import (RegisterManager, FrameManager,
                                                     TempVar, compute_vars_longevity,
                                                     BaseRegalloc, NoVariableToSpill,
@@ -1403,8 +1404,8 @@ if not we_are_translated():
 
     if __name__ == '__main__':
         for m in missing:
-            print(" " * 4 + m)
-        print
-        print("regalloc implements %d of %d = %.2f%% of all resops" % \
-              (implemented_count, total_count, (100.0 * implemented_count / total_count)))
+            print((" " * 4 + m))
+        print()
+        print(("regalloc implements %d of %d = %.2f%% of all resops" % \
+              (implemented_count, total_count, (100.0 * implemented_count / total_count))))
 

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py, pytest
 import sys, struct
 import ctypes
@@ -563,7 +564,7 @@ class TestLL2Ctypes(object):
         def my_compar(p1, p2):
             p1 = rffi.cast(SIGNEDPTR, p1)
             p2 = rffi.cast(SIGNEDPTR, p2)
-            print 'my_compar:', p1[0], p2[0]
+            print('my_compar:', p1[0], p2[0])
             return rffi.cast(rffi.INT, cmp(p1[0], p2[0]))
 
         qsort(rffi.cast(rffi.VOIDP, a),
@@ -572,8 +573,8 @@ class TestLL2Ctypes(object):
               llhelper(lltype.Ptr(CMPFUNC), my_compar))
 
         for i in range(10):
-            print a[i],
-        print
+            print(a[i], end=' ')
+        print()
         lst.sort()
         for i in range(10):
             assert a[i] == lst[i]

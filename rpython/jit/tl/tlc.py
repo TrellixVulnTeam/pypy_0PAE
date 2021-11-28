@@ -1,5 +1,6 @@
 '''Toy Language with Cons Cells'''
 
+from __future__ import print_function
 import py
 from rpython.rlib.objectmodel import specialize, we_are_translated
 from rpython.jit.tl.tlopcode import *
@@ -431,14 +432,14 @@ def make_interp(supports_call, jitted=True):
             elif opcode == PRINT:
                 if not we_are_translated():
                     a = stack.pop()
-                    print a.to_string()
+                    print(a.to_string())
 
             elif opcode == DUMP:
                 if not we_are_translated():
                     parts = []
                     for obj in stack:
                         parts.append(obj.to_string())
-                    print '[%s]' % ', '.join(parts)
+                    print('[%s]' % ', '.join(parts))
 
             else:
                 raise RuntimeError("unknown opcode: " + str(opcode))
@@ -474,7 +475,7 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2:
         src = file(sys.argv[1]).read()
     else:
-        print >> sys.stderr, 'Usage: python tlc.py [sourcefile]'
+        print('Usage: python tlc.py [sourcefile]', file=sys.stderr)
         sys.exit(2)
 
     pool = ConstantPool()

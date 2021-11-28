@@ -1,3 +1,4 @@
+from __future__ import print_function
 import math
 import sys
 
@@ -1079,7 +1080,7 @@ class BasicTests:
             while n > 0:
                 myjitdriver.can_enter_jit(n=n)
                 myjitdriver.jit_merge_point(n=n)
-                print n
+                print(n)
                 n -= 1
             return n
         res = self.meta_interp(f, [7])
@@ -2220,7 +2221,7 @@ class BasicTests:
         myjitdriver = JitDriver(greens = ['g'], reds = ['x', 'l'])
         @dont_look_inside
         def residual():
-            print "hi there"
+            print("hi there")
         @unroll_safe
         def loop(g):
             y = 0
@@ -2880,7 +2881,7 @@ class BasicTests:
             i = 0
             while i < n:
                 myjitdriver.jit_merge_point(n=n, i=i)
-                print i
+                print(i)
                 i += 1
             return i
         #
@@ -2913,7 +2914,7 @@ class BasicTests:
             i = 0
             while i < n:
                 myjitdriver.jit_merge_point(n=n, i=i)
-                print i
+                print(i)
                 i += 1
             return i
         #
@@ -4152,7 +4153,7 @@ class TestLLtype(BaseLLtypeTests, LLJitMixin):
             return A()
         @dont_look_inside
         def escape():
-            print "hi!"
+            print("hi!")
         def f(n):
             a = g()
             a.x = n

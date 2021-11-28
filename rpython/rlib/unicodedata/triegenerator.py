@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pprint
 
 MINLIST  = 5 # minimum number of codepoints in range to make a list
@@ -170,28 +171,28 @@ def collapse_ranges(ranges):
     return collapsed
 
 def build_compression_tree(outfile, ucdata):
-    print >> outfile, "#" + "_" * 60
-    print >> outfile, "# output from build_compression_tree"
+    print("#" + "_" * 60, file=outfile)
+    print("# output from build_compression_tree", file=outfile)
     if not ucdata:
-        print >> outfile, empty_trie_functions
+        print(empty_trie_functions, file=outfile)
         return
-    print >> outfile, classdef
+    print(classdef, file=outfile)
 
     reversedict = {}
     rootnode = gen_compression_tree(ucdata.keys(), ucdata, reversedict)
 
     # write string table
-    print >> outfile, "_stringtable = ("
+    print("_stringtable = (", file=outfile)
     stringidx = {}
     stridx = 0
     for string in sorted(rootnode.allstrings):
         strlen = len(string)
         assert strlen < 256, "Substring too long, > 255 chars"
-        print >> outfile, "%r" % (chr(strlen) + string)
+        print("%r" % (chr(strlen) + string), file=outfile)
         stringidx[string] = stridx
         stridx += strlen + 1
 
-    print >> outfile, ")"
+    print(")", file=outfile)
 
     assert stridx < (1<<STRIDXBITS), "Too many strings, > %d chars" % (
         ((1<<STRIDXBITS) - 1))
@@ -212,7 +213,7 @@ def build_compression_tree(outfile, ucdata):
     nodelist.sort(key=lambda x: x.index)
     newnodes = []
     map(newnodes.extend, (n.as_list(stringidx) for n in nodelist))
-    print >> outfile, "_charnodes =",
+    print("_charnodes =", end=' ', file=outfile)
     pprint.pprint(newnodes, stream=outfile)
 
     function = ["def lookup_charcode(code):",
@@ -234,21 +235,21 @@ def build_compression_tree(outfile, ucdata):
             prefix, low, high, low, low))
         prefix = "el"
 
-        print >> outfile, "_charnames_%d = [" % (low,)
+        print("_charnames_%d = [" % (low,), file=outfile)
         for code in range(low, high + 1):
             if code in reversedict:
-                print >> outfile, "%s," % (reversedict[code].index,)
+                print("%s," % (reversedict[code].index,), file=outfile)
             else:
-                print >> outfile, "-1,"
-        print >> outfile, "]\n"
+                print("-1,", file=outfile)
+        print("]\n", file=outfile)
 
     function.extend(["    if res == -1: raise KeyError(code)",
                      "    return name_of_node(res)",
                      "",
                      ])
-    print >> outfile, '\n'.join(function)
-    print >> outfile, "# end output from build_compression_tree"
-    print >> outfile, "#" + "_" * 60
+    print('\n'.join(function), file=outfile)
+    print("# end output from build_compression_tree", file=outfile)
+    print("#" + "_" * 60, file=outfile)
     return rootnode
 
 def gen_compression_tree(stringlist, ucdata, reversedict, parent=None, parent_str="", left=False):

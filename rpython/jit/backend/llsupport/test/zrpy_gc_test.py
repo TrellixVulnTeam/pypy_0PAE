@@ -4,6 +4,7 @@ It is testing that the GC-dependent aspects basically work, mostly the mallocs
 and the various cases of write barrier.
 """
 
+from __future__ import print_function
 import weakref
 import os, py
 from rpython.rlib import rgc
@@ -56,7 +57,7 @@ def get_entry(g):
         for r in r_list:
             if r() is None:
                 freed += 1
-        print freed
+        print(freed)
         return 0
 
     return entrypoint
@@ -146,7 +147,7 @@ class BaseFrameworkTests(object):
             funcs.append((beforefunc, loopfunc, afterfunc))
             assert name not in name_to_func
             name_to_func[name] = len(name_to_func)
-        print name_to_func
+        print(name_to_func)
         def allfuncs(name, n):
             x = X()
             x.foo = 2

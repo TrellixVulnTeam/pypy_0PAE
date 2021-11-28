@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import inspect
 
@@ -1583,7 +1584,7 @@ class TaggedPointerGCTests(GCTest):
     def test_gettypeid(self):
         func = self.runner("gettypeid")
         res = func([])
-        print res
+        print(res)
 
 
 from rpython.rlib.objectmodel import UnboxedValue

@@ -1,9 +1,10 @@
+from __future__ import print_function
 from rpython.flowspace.model import mkentrymap, checkgraph
 
 # this transformation is very academical -- I had too much time
 
 def _remove_tail_call(translator, graph, block):
-    print "removing tail call"
+    print("removing tail call")
     assert len(block.exits) == 1
     assert block.exits[0].target is graph.returnblock
     assert block.operations[-1].result == block.exits[0].args[0]
@@ -21,7 +22,7 @@ def remove_tail_calls_to_self(translator, graph):
             len(block.operations) > 0 and
             block.operations[-1].opname == 'direct_call' and
             block.operations[-1].result == link.args[0]):
-            print "getgraph", graph
+            print("getgraph", graph)
             if graph is graph:
                 _remove_tail_call(translator, graph, block)
                 changed = True

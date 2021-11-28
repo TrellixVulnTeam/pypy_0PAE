@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division, print_function
 import cPickle as pickle
 
 from rpython.tool.ansicolor import red, yellow, green
@@ -76,7 +76,7 @@ def guess_size_obj(obj):
             try:
                 length = len(ptr)
             except TypeError:
-                print "couldn't find size of", ptr
+                print("couldn't find size of", ptr)
                 return 0
     else:
         length = None
@@ -246,18 +246,18 @@ def print_report(filename,
         size = format_size(report.totalsize, human_readable)
         globalsize += report.totalsize
         if summary:
-            print "%d\t%s" % (size, report.modulename)
+            print("%d\t%s" % (size, report.modulename))
         else:
-            print '%s: %s' % (red(report.modulename), yellow(size))
-            print green(format_line('Typename', 'Size', 'Num'))
+            print('%s: %s' % (red(report.modulename), yellow(size)))
+            print(green(format_line('Typename', 'Size', 'Num')))
             for typereport in report.typereports:
-                print format_typereport(typereport, human_readable)
-            print
-    print
-    print 'Total size:', format_size(globalsize, human_readable)
+                print(format_typereport(typereport, human_readable))
+            print()
+    print()
+    print('Total size:', format_size(globalsize, human_readable))
 
     if show_unknown_graphs:
-        print
-        print green('Unknown graphs:')
+        print()
+        print(green('Unknown graphs:'))
         for graphname in info.unknown_graphs:
-            print graphname
+            print(graphname)

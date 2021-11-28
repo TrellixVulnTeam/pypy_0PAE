@@ -1,4 +1,5 @@
 #encoding: utf-8
+from __future__ import print_function
 import pytest
 import sys
 from hypothesis import given, strategies, settings, example
@@ -146,7 +147,7 @@ def test_codepoint_index_at_byte_position(u):
 
 @given(strategies.text())
 def test_codepoint_position_at_index_inverse(u):
-    print u
+    print(u)
     b = u.encode('utf8')
     storage = rutf8.create_utf8_index_storage(b, len(u))
     for i in range(len(u) + 1):

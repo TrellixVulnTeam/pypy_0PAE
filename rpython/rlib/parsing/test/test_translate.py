@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.rlib.parsing.lexer import *
 # Unused, but needed for some obscure reason
 from rpython.rlib.parsing.makepackrat import BacktrackException, Status
@@ -52,7 +53,7 @@ def test_translate_parser():
                         for i, c in enumerate(list("2*(3+4)") + ["EOF"])])
     data = [Token(c, i, SourcePos(i, 0, i))
                 for i, c in enumerate(list("2*(3+4)") + ["EOF"])]
-    print tree
+    print(tree)
     def parse(choose):
         tree = p.parse(data, lazy=False)
         return tree.symbol + " " + "-%-".join([c.symbol for c in tree.children])
@@ -76,7 +77,7 @@ def test_translate_compiled_parser():
                         for i, c in enumerate(list("2*(3+4)") + ["EOF"])])
     data = [Token(c, i, SourcePos(i, 0, i))
                for i, c in enumerate(list("2*(3+4)") + ["EOF"])]
-    print tree
+    print(tree)
     p = kls()
     def parse(choose):
         tree = p.parse(data)
@@ -130,7 +131,7 @@ def test_translate_pypackrat():
         simple:
             ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9');
         """
-    print parser._code
+    print(parser._code)
     def parse(s):
         p = parser(s)
         return p.expr()
@@ -147,7 +148,7 @@ def test_translate_pypackrat_regex():
         num:
             `([1-9][0-9]*)|0`;
         """
-    print parser._code
+    print(parser._code)
     def parse(s):
         p = parser(s)
         return p.num()

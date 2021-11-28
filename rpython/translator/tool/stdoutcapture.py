@@ -2,6 +2,7 @@
 A quick hack to capture stdout/stderr.
 """
 
+from __future__ import print_function
 import os, sys
 
 
@@ -70,5 +71,5 @@ if __name__ == '__main__':
         os.system('echo hello')
     finally:
         fout, ferr = c.done()
-    print 'Output:', `fout.read()`
-    print 'Error:', `ferr.read()`
+    print('Output:', `fout.read()`)
+    print('Error:', `ferr.read()`)

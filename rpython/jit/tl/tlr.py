@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.rlib.jit import JitDriver
 
 
@@ -88,6 +89,6 @@ SQUARE = ''.join([chr(n) for n in SQUARE_LIST])
 if __name__ == '__main__':
     import sys
     if len(sys.argv) >= 2 and sys.argv[1] == 'assemble':
-        print SQUARE
+        print(SQUARE)
     else:
-        print ','.join([str(n) for n in SQUARE_LIST])
+        print(','.join([str(n) for n in SQUARE_LIST]))

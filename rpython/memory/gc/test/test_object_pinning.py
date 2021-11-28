@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rtyper.lltypesystem import lltype, llmemory, llarena
 from rpython.memory.gc.incminimark import IncrementalMiniMarkGC, WORD

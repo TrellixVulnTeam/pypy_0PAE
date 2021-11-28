@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os, py
 from rpython.tool.udir import udir
 from rpython.rlib import rgc
@@ -142,11 +143,11 @@ class SemiSpaceGCTestDefines:
             i, summary, msg = res.split('\n')
             i = int(i)
             import pprint
-            print 'Example:'
+            print('Example:')
             pprint.pprint(self.finalizer_order_examples[i])
-            print 'Finalization ages:'
-            print summary
-            print msg
+            print('Finalization ages:')
+            print(summary)
+            print(msg)
             py.test.fail(msg)
 
 

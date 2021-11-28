@@ -1,3 +1,4 @@
+from __future__ import print_function
 import time
 import py
 py.path.local(__file__)
@@ -15,7 +16,7 @@ def entry_point(args):
     args = args[1:]
     highleveljitinfo.sys_executable = exe
     if len(args) < 2:
-        print "Usage: %s [--onlyjit] filename x" % (exe,)
+        print("Usage: %s [--onlyjit] filename x" % (exe,))
         return 2
 
     onlyjit = False
@@ -31,17 +32,17 @@ def entry_point(args):
         start = time.clock()
         res = interp_nonjit(bytecode, inputarg=x, pool=pool)
         stop = time.clock()
-        print 'Non jitted:    %d (%f seconds)' % (res, stop-start)
+        print('Non jitted:    %d (%f seconds)' % (res, stop-start))
 
     start = time.clock()
     res = interp(bytecode, inputarg=x, pool=pool)
     stop = time.clock()
-    print 'Warmup jitted: %d (%f seconds)' % (res, stop-start)
+    print('Warmup jitted: %d (%f seconds)' % (res, stop-start))
 
     start = time.clock()
     res = interp(bytecode, inputarg=x, pool=pool)
     stop = time.clock()
-    print 'Warmed jitted: %d (%f seconds)' % (res, stop-start)
+    print('Warmed jitted: %d (%f seconds)' % (res, stop-start))
 
     return 0
 

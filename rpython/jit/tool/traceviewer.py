@@ -2,6 +2,7 @@
 """ Usage: traceviewer.py [--use-threshold] loopfile
 """
 
+from __future__ import print_function
 import optparse
 import sys
 import re
@@ -358,6 +359,6 @@ if __name__ == '__main__':
                       action="store_true", default=False)
     options, args = parser.parse_args(sys.argv)
     if len(args) != 2:
-        print __doc__
+        print(__doc__)
         sys.exit(1)
     main(args[1], options.use_threshold)

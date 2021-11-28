@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import struct
 import math
@@ -157,7 +158,7 @@ class TestRunningAssembler(object):
         print(f64)
         print(s64)
         for i,c in enumerate(f64):
-            print('index: %d is set? %s' % (i,c))
+            print(('index: %d is set? %s' % (i,c)))
 
         assert f64[1] == '1' # The z/Architecture architectural mode is installed.
         assert f64[2] == '1' # The z/Architecture architectural mode is active.
@@ -403,7 +404,7 @@ class TestRunningAssembler(object):
     def test_stmg(self):
         self.mc.LGR(r.r2, r.r15)
         self.a.jmpto(r.r14)
-        print hex(run_asm(self.a))
+        print(hex(run_asm(self.a)))
 
     def test_recursion(self):
         with ActivationRecordCtx(self):

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rlib.parsing.parsing import PackratParser, Rule
 from rpython.rlib.parsing.tree import Nonterminal
@@ -2000,5 +2001,5 @@ RegexParser.init_parser = Parser.__init__.im_func
 %s
 %s\
 """ % (pre, s, code, s, after)
-    print content
+    print(content)
     f.write(content)

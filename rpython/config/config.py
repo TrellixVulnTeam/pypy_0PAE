@@ -1,3 +1,4 @@
+from __future__ import print_function
 import optparse
 from rpython.tool.pairtype import extendabletype
 
@@ -543,7 +544,7 @@ class ConfigUpdate(object):
             # more information...  hack.
             import sys
             for warning in self.config.get_warnings():
-                print >> sys.stderr, warning
+                print(warning, file=sys.stderr)
             raise optparse.OptionValueError(e.args[0])
 
     def help_default(self):

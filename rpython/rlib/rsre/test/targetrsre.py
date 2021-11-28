@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 from rpython.rlib.rarithmetic import intmask
 from rpython.rlib.rsre import rsre_core
 from rpython.rlib.rsre.rsre_char import MAXREPEAT
@@ -32,7 +33,7 @@ def search_in_file(filename):
             break
         matchstart, matchstop = res.span(1)
         assert 0 <= matchstart <= matchstop
-        print '%s: %s' % (filename, data[matchstart:matchstop])
+        print('%s: %s' % (filename, data[matchstart:matchstop]))
         p = res.span(0)[1]
 
 # __________  Entry point  __________
@@ -42,7 +43,7 @@ def entry_point(argv):
     for fn in argv[1:]:
         search_in_file(fn)
     stop = time.time()
-    print stop - start
+    print(stop - start)
     return 0
 
 # _____ Define and setup target ___
@@ -61,6 +62,6 @@ if __name__ == '__main__':
         data = f.read()
         f.close()
         for title in r.findall(data):
-            print '%s: %s' % (fn, title)
+            print('%s: %s' % (fn, title))
     stop = time.time()
-    print '%.4fs' % (stop - start,)
+    print('%.4fs' % (stop - start,))

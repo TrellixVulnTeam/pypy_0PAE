@@ -4,6 +4,7 @@ target --pyjittest.  Feel free to hack it as needed; it is imported
 only after the '---> Checkpoint' fork.
 """
 
+from __future__ import print_function
 import os
 from rpython import conftest
 from rpython.rtyper.llinterp import LLInterpreter
@@ -38,7 +39,7 @@ def jittest(driver):
 
 
 def apply_jit(policy, interp, graph, CPUClass):
-    print 'warmspot.jittify_and_run() started...'
+    print('warmspot.jittify_and_run() started...')
     if conftest.option is None:
         class MyOpt:
             pass

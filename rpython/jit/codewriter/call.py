@@ -3,6 +3,7 @@
 # to transform to JitCodes or not.
 #
 
+from __future__ import print_function
 from rpython.jit.codewriter import support
 from rpython.jit.codewriter.jitcode import JitCode
 from rpython.jit.codewriter.effectinfo import (VirtualizableAnalyzer,
@@ -65,10 +66,10 @@ class CallControl(object):
 
         def callers():
             graph = top_graph
-            print graph
+            print(graph)
             while graph in coming_from:
                 graph = coming_from[graph]
-                print '<-', graph
+                print('<-', graph)
         coming_from = {}
 
         while todo:

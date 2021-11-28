@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re, py
 from rpython.rlib import rvmprof, jit
 from rpython.rlib.rvmprof import traceback
@@ -51,7 +52,7 @@ def test_compiled():
             lltype.free(p, flavor='raw')
 
     def my_callback(code, loc, arg):
-        print code, loc, arg
+        print(code, loc, arg)
         return 0
 
     def f(argv):
@@ -96,7 +97,7 @@ def test_jitted():
             lltype.free(p, flavor='raw')
 
     def my_callback(code, loc, arg):
-        print code, loc, arg
+        print(code, loc, arg)
         return 0
 
     def f(argv):

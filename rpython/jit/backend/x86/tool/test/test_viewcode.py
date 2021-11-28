@@ -1,3 +1,4 @@
+from __future__ import print_function
 from cStringIO import StringIO
 from rpython.jit.backend.tool.viewcode import format_code_dump_with_labels
 from rpython.jit.backend.tool.viewcode import find_objdump
@@ -66,7 +67,7 @@ def test_find_objdump():
 
     #
     path = udir.join('objdump')
-    print >>path, 'hello world'
+    print('hello world', file=path)
     os.environ['PATH'] = path.dirname
     assert find_objdump() == 'objdump'
     #

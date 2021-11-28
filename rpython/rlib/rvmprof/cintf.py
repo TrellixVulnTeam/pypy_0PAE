@@ -1,3 +1,4 @@
+from __future__ import print_function
 import platform as host_platform
 import py
 import sys

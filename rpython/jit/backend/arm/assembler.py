@@ -1,4 +1,4 @@
-from __future__ import with_statement
+from __future__ import print_function, with_statement
 
 import os
 
@@ -1596,7 +1596,7 @@ def not_implemented(msg):
 
 
 def notimplemented_op(self, op, arglocs, regalloc, fcond):
-    print "[ARM/asm] %s not implemented" % op.getopname()
+    print("[ARM/asm] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 

@@ -1,4 +1,5 @@
 
+from __future__ import print_function
 from rpython.jit.backend.aarch64 import registers as r
 from rpython.jit.backend.aarch64 import locations
 from rpython.jit.backend.arm import conditions as c
@@ -1110,15 +1111,15 @@ class Regalloc(BaseRegalloc):
 
 
 def notimplemented(self, op):
-    print "[ARM64/regalloc] %s not implemented" % op.getopname()
+    print("[ARM64/regalloc] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 def notimplemented_guard_op(self, op, prevop):
-    print "[ARM64/regalloc] %s not implemented" % op.getopname()
+    print("[ARM64/regalloc] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 def notimplemented_comp_op(self, op, res_in_cc):
-    print "[ARM64/regalloc] %s not implemented" % op.getopname()
+    print("[ARM64/regalloc] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 operations = [notimplemented] * (rop._LAST + 1)

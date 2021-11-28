@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rlib.parsing.lexer import SourcePos
 from rpython.rlib.parsing.tree import Node, Symbol, Nonterminal
@@ -204,7 +205,7 @@ class PackratParser(object):
                         break
         for nonterminal, follow in follows.iteritems():
             if nonterminal in follow:
-                print "nonterminal %s is in its own follow %s" % (nonterminal, follow)
+                print("nonterminal %s is in its own follow %s" % (nonterminal, follow))
                 return True
         return False
 

@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import print_function, division
 
 import operator
 import sys, os
@@ -8,8 +8,8 @@ from random import random, randint, sample
 try:
     import pytest
 except ImportError:
-    print 'cwd', os.getcwd()
-    print 'sys.path', sys.path
+    print('cwd', os.getcwd())
+    print('sys.path', sys.path)
     raise
 
 from rpython.rlib import rbigint as lobj
@@ -71,7 +71,7 @@ class TestRLong(object):
                 for op in "add sub mul".split():
                     r1 = getattr(rl_op1, op)(rl_op2)
                     r2 = getattr(operator, op)(op1, op2)
-                    print op, op1, op2
+                    print(op, op1, op2)
                     assert r1.tolong() == r2
 
     def test_frombool(self):
@@ -242,7 +242,7 @@ class TestRLong(object):
                 for op3 in gen_signs([1, 2, 5, 1000, 12312312312312235659969696l]):
                     if not op3:
                         continue
-                    print op1, op2, op3
+                    print(op1, op2, op3)
                     r3 = rl_op1.pow(rl_op2, rbigint.fromlong(op3))
                     r4 = pow(op1, op2, op3)
                     assert r3.tolong() == r4
@@ -260,7 +260,7 @@ class TestRLong(object):
                         continue
                     r3 = rl_op1.int_pow(op2, rbigint.fromlong(op3))
                     r4 = pow(op1, op2, op3)
-                    print op1, op2, op3
+                    print(op1, op2, op3)
                     assert r3.tolong() == r4
 
     def test_int_pow_big(self):
@@ -1073,7 +1073,7 @@ class TestInternalFunctions(object):
                     div, rem = f1.int_divmod(sy)
                     div1, rem1 = f1.divmod(rbigint.fromlong(sy))
                     _div, _rem = divmod(sx, sy)
-                    print sx, sy, " | ", div.tolong(), rem.tolong()
+                    print(sx, sy, " | ", div.tolong(), rem.tolong())
                     assert div1.tolong() == _div
                     assert rem1.tolong() == _rem
                     assert div.tolong() == _div
@@ -1282,8 +1282,8 @@ class TestTranslated(StandaloneTests):
         MIN = -sys.maxint-1
 
         def entry_point(argv):
-            print rbigint.fromint(MIN+1)._digits
-            print rbigint.fromint(MIN)._digits
+            print(rbigint.fromint(MIN+1)._digits)
+            print(rbigint.fromint(MIN)._digits)
             return 0
 
         t, cbuilder = self.compile(entry_point)
@@ -1330,7 +1330,7 @@ class TestHypothesis(object):
             with pytest.raises(type(e)):
                 f1.divmod(f2)
         else:
-            print x, y
+            print(x, y)
             a, b = f1.divmod(f2)
             assert (a.tolong(), b.tolong()) == res
 
@@ -1380,7 +1380,7 @@ class TestHypothesis(object):
                 with pytest.raises(type(e)):
                     divmod_big(f1, f2)
             else:
-                print x, y
+                print(x, y)
                 a, b = divmod_big(f1, f2)
                 assert (a.tolong(), b.tolong()) == res
         finally:
@@ -1395,7 +1395,7 @@ class TestHypothesis(object):
             with pytest.raises(type(e)):
                 f1.int_divmod(iy)
         else:
-            print x, iy
+            print(x, iy)
             a, b = f1.int_divmod(iy)
             assert (a.tolong(), b.tolong()) == res
 
@@ -1490,11 +1490,11 @@ class TestHypothesis(object):
              99887766554433221113)
     @settings(max_examples=10)
     def test_gcd(self, x, y, z):
-        print(x, y, z)
+        print((x, y, z))
         x, y, z = abs(x), abs(y), abs(z)
 
         def test(a, b, res):
-            print(rbigint.fromlong(a))
+            print((rbigint.fromlong(a)))
             g = rbigint.fromlong(a).gcd(rbigint.fromlong(b)).tolong()
 
             assert g == res
@@ -1578,8 +1578,8 @@ def test_hypothesis_small_shift(methname):
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                          shell=True, env=env)
     stdout, stderr = p.communicate()
-    print stdout
-    print stderr
+    print(stdout)
+    print(stderr)
     assert not p.returncode
 
 def _get_hacked_rbigint(shift):
@@ -1597,7 +1597,7 @@ def _get_hacked_rbigint(shift):
 
 def run():
     shift = 9
-    print "USING SHIFT", shift
+    print("USING SHIFT", shift)
     _hacked_rbigint = _get_hacked_rbigint(shift)
     globals().update(_hacked_rbigint.__dict__) # emulate import *
     assert SHIFT == shift
@@ -1608,7 +1608,7 @@ def run():
         if "--pdb" in sys.argv:
             import traceback, pdb
             info = sys.exc_info()
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
             pdb.post_mortem(info[2], pdb.Pdb)
 
 

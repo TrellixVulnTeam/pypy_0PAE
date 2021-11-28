@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rlib.jit import JitDriver, hint, set_param, Counters
 from rpython.rlib.jit import unroll_safe, dont_look_inside, promote
@@ -74,9 +75,9 @@ class RecursiveTests:
                 return f(n)
             else:
                 return 1
-        print
+        print()
         for i in range(1, 11):
-            print '%3d %9d' % (i, f(i))
+            print('%3d %9d' % (i, f(i)))
         res = self.meta_interp(main, [10], enable_opts='')
         assert res == main(10)
         self.check_enter_count_at_most(11)
@@ -194,7 +195,7 @@ class RecursiveTests:
             return n
         def main(n):
             return f("c-l", n)
-        print main(100)
+        print(main(100))
         res = self.meta_interp(main, [100], enable_opts='', inline=True)
         assert res == 0
 
@@ -235,7 +236,7 @@ class RecursiveTests:
             return n
         def main(n):
             return f("c-l", n)
-        print main(1000)
+        print(main(1000))
         res = self.meta_interp(main, [1000], enable_opts='', inline=True)
         assert res == main(1000)
 
@@ -637,7 +638,7 @@ class RecursiveTests:
         except AttributeError:
             pass    # not the llgraph backend
         else:
-            print redirected
+            print(redirected)
             assert redirected.keys() == trace
 
     def test_recursion_cant_call_assembler_directly_with_virtualizable(self):
@@ -692,7 +693,7 @@ class RecursiveTests:
         except AttributeError:
             pass    # not the llgraph backend
         else:
-            print redirected
+            print(redirected)
             assert redirected.keys() == trace
 
     def test_directly_call_assembler_return(self):
@@ -882,7 +883,7 @@ class RecursiveTests:
             return frame.thing.val
 
         def portal(codeno, frame):
-            print 'ENTER:', codeno, frame.thing.val
+            print('ENTER:', codeno, frame.thing.val)
             i = 0
             while i < 10:
                 driver.can_enter_jit(frame=frame, codeno=codeno, i=i)
@@ -900,7 +901,7 @@ class RecursiveTests:
                     fatalerror("bad codeno = " + str(codeno))
                 frame.thing = Thing(nextval + 1)
                 i += 1
-            print 'LEAVE:', codeno, frame.thing.val
+            print('LEAVE:', codeno, frame.thing.val)
             return frame.thing.val
 
         res = self.meta_interp(main, [0], inline=True,
@@ -966,7 +967,7 @@ class RecursiveTests:
         somewhere_else = SomewhereElse()
 
         def change(newthing, arg):
-            print arg
+            print(arg)
             if arg > 30:
                 somewhere_else.frame.thing = newthing
                 arg = 13
@@ -1178,7 +1179,7 @@ class RecursiveTests:
                     portal(64, ''))
         assert main() == 'ABCDEFGHIabcdefghijJ' * 5
         for tlimit in [95, 90, 102]:
-            print 'tlimit =', tlimit
+            print('tlimit =', tlimit)
             res = self.meta_interp(main, [], inline=True, trace_limit=tlimit)
             assert ''.join(res.chars) == 'ABCDEFGHIabcdefghijJ' * 5
 
@@ -1213,7 +1214,7 @@ class RecursiveTests:
             portal(64, '')
         main()
         for tlimit in [95, 90, 102]:
-            print 'tlimit =', tlimit
+            print('tlimit =', tlimit)
             self.meta_interp(main, [], inline=True, trace_limit=tlimit)
 
     def test_no_duplicates_bug(self):

@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 class LogEntry(object):
     def __init__(self):
@@ -55,4 +56,4 @@ class Logger(object):
 
     def do_print(self, str):
         # Hook to increase testability
-        print str
+        print(str)

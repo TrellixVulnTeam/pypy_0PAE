@@ -1,4 +1,5 @@
 
+from __future__ import print_function
 from rpython.jit.backend.aarch64.arch import WORD, JITFRAME_FIXED_SIZE
 from rpython.jit.backend.aarch64.codebuilder import InstrBuilder, OverwritingBuilder
 from rpython.jit.backend.aarch64.locations import imm, StackLocation, get_fp_offset
@@ -1492,15 +1493,15 @@ def not_implemented(msg):
 
 
 def notimplemented_op(self, op, arglocs):
-    print "[ARM64/asm] %s not implemented" % op.getopname()
+    print("[ARM64/asm] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 def notimplemented_comp_op(self, op, arglocs):
-    print "[ARM64/asm] %s not implemented" % op.getopname()
+    print("[ARM64/asm] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 def notimplemented_guard_op(self, op, guard_op, fcond, arglocs):
-    print "[ARM64/asm] %s not implemented" % op.getopname()
+    print("[ARM64/asm] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 asm_operations = [notimplemented_op] * (rop._LAST + 1)

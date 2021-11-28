@@ -1,3 +1,4 @@
+from __future__ import print_function
 import gc
 import inspect
 import os
@@ -37,9 +38,9 @@ class UsingFrameworkTest(object):
             try:
                 res = f(arg0, arg1)
             except MemoryError:
-                print "MEMORY-ERROR"
+                print("MEMORY-ERROR")
             else:
-                print res
+                print(res)
             return 0
 
         t = Translation(main, gc=cls.gcpolicy,
@@ -121,7 +122,7 @@ class UsingFrameworkTest(object):
     def run(self, name, *args, **kwds):
         if not args:
             args = (-1, )
-        print 'Running %r)' % name
+        print('Running %r)' % name)
         res = self.c_allfuncs(name, *args, **kwds)
         num = self.name_to_func[name]
         if self.funcsstr[num]:
@@ -1664,7 +1665,7 @@ class TestMiniMarkGC(TestSemiSpaceGC):
         #
         for i in range(10):
             gcmax = random.randrange(50000, 100000)
-            print gcmax
+            print(gcmax)
             res = self.run("limited_memory", -1, runner=myrunner)
             assert res == 42
 
@@ -1776,7 +1777,7 @@ class TestIncrementalMiniMarkGC(TestMiniMarkGC):
         #
         for i in range(10):
             ulimitv = random.randrange(50000, 100000)
-            print ulimitv
+            print(ulimitv)
             res = self.run("limited_memory_linux", -1, runner=myrunner)
             assert res == 42
 
@@ -1874,11 +1875,11 @@ class TestIncrementalMiniMarkGC(TestMiniMarkGC):
                 if rgc.is_done(val):
                     break
                 if n == 100:
-                    print 'Endless loop!'
+                    print('Endless loop!')
                     assert False, 'this looks like an endless loop'
 
             if n < 4: # we expect at least 4 steps
-                print 'Too few steps! n =', n
+                print('Too few steps! n =', n)
                 assert False
 
             # check that the state transitions are reasonable

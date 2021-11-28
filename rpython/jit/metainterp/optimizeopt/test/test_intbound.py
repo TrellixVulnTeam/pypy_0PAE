@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.jit.metainterp.optimizeopt.intutils import IntBound, IntUpperBound, \
      IntLowerBound, IntUnbounded, ConstIntBound, next_pow2_m1
 
@@ -404,8 +405,8 @@ def test_make_random(t1, t2):
 def test_add_bound_random(t1, t2):
     b1, n1 = t1
     b2, n2 = t2
-    print b1, n1
-    print b2, n2
+    print(b1, n1)
+    print(b2, n2)
     b3 = b1.add_bound(b2)
     try:
         r = ovfcheck(n1 + n2)
@@ -418,8 +419,8 @@ def test_add_bound_random(t1, t2):
 def test_sub_bound_random(t1, t2):
     b1, n1 = t1
     b2, n2 = t2
-    print b1, n1
-    print b2, n2
+    print(b1, n1)
+    print(b2, n2)
     b3 = b1.sub_bound(b2)
     try:
         r = ovfcheck(n1 - n2)

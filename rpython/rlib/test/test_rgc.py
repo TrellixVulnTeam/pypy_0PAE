@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.rtyper.test.test_llinterp import gengraph, interpret
 from rpython.rtyper.error import TyperError
 from rpython.rtyper.lltypesystem import lltype, llmemory, rffi
@@ -378,7 +379,7 @@ def test_nonmoving_raw_ptr_for_resizable_list():
     #
     def main(argv):
         f(len(argv))
-        print "OK!"
+        print("OK!")
         return 0
     #
     t = Translation(main, gc="incminimark")
@@ -445,7 +446,7 @@ def test_ll_for_resizable_list():
     #
     def main(argv):
         f(len(argv))
-        print "OK!"
+        print("OK!")
         return 0
     #
     t = Translation(main, gc="incminimark")
@@ -765,7 +766,7 @@ class TestFinalizerQueue:
                 n = fq.next_dead()
                 if n is EMPTY:
                     break
-            print "OK!"
+            print("OK!")
             return 0
         #
         t = Translation(main, gc=use_gc)

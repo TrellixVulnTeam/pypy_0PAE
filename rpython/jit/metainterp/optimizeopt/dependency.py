@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 
 from rpython.jit.metainterp import compile
@@ -110,10 +111,10 @@ class Path(object):
         seen = set()
         for segment in self.path:
             if segment in seen:
-                print "path:"
+                print("path:")
                 for segment in self.path:
-                    print " ->", segment
-                print ""
+                    print(" ->", segment)
+                print("")
                 assert 0, "segment %s was already seen. this makes the path cyclic!" % segment
             else:
                 seen.add(segment)

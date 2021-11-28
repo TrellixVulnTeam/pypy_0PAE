@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import print_function
 import random
 import unicodedata
 
@@ -16,7 +17,7 @@ class TestUnicodeData(object):
             py.test.skip('Needs python with unicode 5.2.0 database.')
 
         seed = random.getrandbits(32)
-        print "random seed: ", seed
+        print("random seed: ", seed)
         random.seed(seed)
         cls.charlist = charlist = []
         cls.nocharlist = nocharlist = []

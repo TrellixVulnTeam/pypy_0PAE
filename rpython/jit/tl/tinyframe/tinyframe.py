@@ -27,6 +27,7 @@ JUMP_IF_ABOVE r1 r2 @label # jump if value in r1 is above
 function argument always comes in r0
 """
 
+from __future__ import print_function
 from rpython.rlib.streamio import open_file_as_stream
 from rpython.jit.tl.tinyframe.support import sort
 from rpython.rlib.unroll import unrolling_iterable
@@ -259,7 +260,7 @@ class Frame(object):
                 i += 4
             elif opcode == PRINT:
                 arg = self.registers[ord(code[i + 1])]
-                print arg.repr()
+                print(arg.repr())
                 i += 2
             elif opcode == INTROSPECT:
                 self.introspect(ord(code[i + 1]), ord(code[i + 2]))
@@ -285,12 +286,12 @@ def main(fname, argv):
     for i in range(len(argv)):
         mainframe.registers[i] = Int(int(argv[i]))
     res = mainframe.interpret()
-    print "Result:", res.repr()
+    print("Result:", res.repr())
 
 if __name__ == '__main__':
     import sys
     if len(sys.argv) < 2:
-        print __doc__
+        print(__doc__)
         sys.exit(1)
     fname = sys.argv[1]
     main(fname, sys.argv[2:])

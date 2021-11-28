@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import ctypes
 from rpython.rtyper.lltypesystem import rffi
 from rpython.rtyper.lltypesystem import lltype
@@ -109,9 +110,9 @@ class RffiBuilder(object):
                 try:
                     self.proc_func(value)
                 except NotImplementedError as e:
-                    print "genrffi: skipped:", key, value, e
+                    print("genrffi: skipped:", key, value, e)
                 except TypeError as e:
-                    print "genrffi: skipped:", key, value, e
+                    print("genrffi: skipped:", key, value, e)
 
 
 

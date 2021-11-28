@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.translator.translator import TranslationContext
 from rpython.translator.backendopt import inline
@@ -76,7 +77,7 @@ def test_multiple_calls():
         return g1(a, b, x)
     t, graph = rtype(fn, [int])
     callgraph, caller_candidates = check_inlining(t, graph, [0], 3 * 42)
-    print callgraph
+    print(callgraph)
     assert caller_candidates == {graph: True}
     assert len(callgraph) == 1
     g1graph = graphof(t, g1)
