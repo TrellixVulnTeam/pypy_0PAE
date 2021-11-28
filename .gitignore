@@ -32,3 +32,4 @@ release/
 rpython/_cache/
 .cache/
 .hypothesis/
+.vscode/
