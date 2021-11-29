@@ -789,7 +789,7 @@ class TestLowLevelType(object):
         #
         glob_sizes = g()
         #
-        def check((ssize, msize, smsize, mssize)):
+        def check(ssize, msize, smsize, mssize):
             if is_arm:
                 # ARM has stronger rules about aligned memory access
                 # so according to the rules for round_up_for_allocation
@@ -802,8 +802,8 @@ class TestLowLevelType(object):
             assert mssize == msize
         #
         def f():
-            check(glob_sizes)
-            check(g())
+            check(*glob_sizes)
+            check(*g())
             return 42
         #
         fn = self.getcompiled(f, [])

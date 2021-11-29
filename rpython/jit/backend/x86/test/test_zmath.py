@@ -10,7 +10,7 @@ from rpython.rlib.debug import debug_print
 from rpython.rtyper.lltypesystem.module.test.math_cases import (MathTests,
                                                                 get_tester)
 
-def get_test_case((fnname, args, expected)):
+def get_test_case(fnname, args, expected):
     try:
         fn = getattr(math, fnname)
     except AttributeError:
@@ -49,7 +49,7 @@ def get_test_case((fnname, args, expected)):
     return testfn
 
 
-testfnlist = [get_test_case(testcase)
+testfnlist = [get_test_case(*testcase)
               for testcase in MathTests.TESTCASES]
 
 def fn():

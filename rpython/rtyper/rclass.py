@@ -1110,11 +1110,12 @@ def fishllattr(inst, name, default=_missing):
                              (lltype.typeOf(widest), name))
     return default
 
-def attr_reverse_size((_, T)):
+def attr_reverse_size(tup):
     # This is used to sort the instance or class attributes by decreasing
     # "likely size", as reported by rffi.sizeof(), to minimize padding
     # holes in C.  Fields should first be sorted by name, just to minimize
     # randomness, and then (stably) sorted by 'attr_reverse_size'.
+    _, T = tup
     if T is lltype.Void:
         return None
     from rpython.rtyper.lltypesystem.rffi import sizeof

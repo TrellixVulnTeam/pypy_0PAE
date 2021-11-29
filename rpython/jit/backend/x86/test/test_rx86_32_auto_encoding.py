@@ -150,11 +150,13 @@ class TestRx86_32(object):
     def assembler_operand_stack_sp(self, position):
         return '%d(%s)' % (position, self.REGNAMES[4])
 
-    def assembler_operand_memory(self, (reg1, offset)):
+    def assembler_operand_memory(self, reg_offset_pair):
+        reg1, offset = reg_offset_pair
         if not offset: offset = ''
         return '%s(%s)' % (offset, self.REGNAMES[reg1])
 
-    def assembler_operand_array(self, (reg1, reg2, scaleshift, offset)):
+    def assembler_operand_array(self, tup):
+        reg1, reg2, scaleshift, offset = tup
         if not offset: offset = ''
         return '%s(%s,%s,%d)' % (offset, self.REGNAMES[reg1],
                                  self.REGNAMES[reg2], 1<<scaleshift)

@@ -6,7 +6,7 @@ from rpython.translator.c.test.test_standalone import StandaloneTests
 from rpython.rlib import rfloat
 
 
-def get_test_case((fnname, args, expected)):
+def get_test_case(fnname, args, expected):
     try:
         fn = getattr(math, fnname)
     except AttributeError:
@@ -29,7 +29,7 @@ def get_test_case((fnname, args, expected)):
     return testfn
 
 
-testfnlist = [get_test_case(testcase)
+testfnlist = [get_test_case(*testcase)
               for testcase in MathTests.TESTCASES]
 reprlist = [repr(testcase)
             for testcase in MathTests.TESTCASES]

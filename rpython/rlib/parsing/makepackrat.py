@@ -454,9 +454,9 @@ class ParserBuilder(RPythonVisitor, Codebuilder):
         self.created_error = False
         allother = self.store_code_away()
         self.dispatch(t.children[-1])
-        subsequent = self.restore_code(allother)
+        subsequent = self.restore_code(*allother)
         self.memoize_header(name, otherargs)
-        self.add_code(subsequent)
+        self.add_code(*subsequent)
         self.memoize_footer(name, otherargs)
         self.end_block("def")
 

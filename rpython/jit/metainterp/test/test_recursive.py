@@ -1303,7 +1303,8 @@ class RecursiveTests:
     def test_get_unique_id(self):
         lst = []
 
-        def reg_codemap(self, (start, size, l)):
+        def reg_codemap(self, codemap):
+            start, size, l = codemap
             lst.append((start, size))
             old_reg_codemap(self, (start, size, l))
 

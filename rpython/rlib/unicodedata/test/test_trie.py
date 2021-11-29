@@ -11,7 +11,7 @@ def setup_module(mod):
     out = mod.tmpdir.join('btree.py')
     o = out.open('w')
     mod.trie = triegenerator.build_compression_tree(
-        o, dict(map(lambda (x,y):(y,x), enumerate(lines))))
+        o, dict(map(reversed, enumerate(lines))))
     o.close()
     mod.bt = out.pyimport()
 

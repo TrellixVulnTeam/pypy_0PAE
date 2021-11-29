@@ -8,10 +8,12 @@ class SparseMatrix:
     def __init__(self, height):
         self.lines = [{} for row in range(height)]
 
-    def __getitem__(self, (row, col)):
+    def __getitem__(self, row_col_pair):
+        row, col = row_col_pair
         return self.lines[row].get(col, 0)
 
-    def __setitem__(self, (row, col), value):
+    def __setitem__(self, row_col_pair, value):
+        row, col = row_col_pair
         if abs(value) > EPSILON:
             self.lines[row][col] = value
         else:

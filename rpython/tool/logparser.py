@@ -192,10 +192,10 @@ def getcolor(category):
         category = category[:-1]
     return COLORS[category]
 
-def getlightercolor((r, g, b)):
+def getlightercolor(r, g, b):
     return ((r*2+255)//3, (g*2+255)//3, (b*2+255)//3)
 
-def getdarkercolor((r, g, b)):
+def getdarkercolor(r, g, b):
     return (r*2//3, g*2//3, b*2//3)
 
 def getlabel(text, _cache={}):
@@ -217,18 +217,18 @@ def getlabel(text, _cache={}):
     _cache[text] = sx, sy, texthoriz, textvert
     return _cache[text]
 
-def bevelrect(draw, (x1, y1, x2, y2), color):
+def bevelrect(draw, x1, y1, x2, y2, color):
     if x2 <= x1:
         x2 = x1 + 1   # minimal width
     elif x2 >= x1 + 4:
-        draw.line((x1, y1+1, x1, y2-1), fill=getlightercolor(color))
+        draw.line((x1, y1+1, x1, y2-1), fill=getlightercolor(*color))
         x1 += 1
         x2 -= 1
-        draw.line((x2, y1+1, x2, y2-1), fill=getdarkercolor(color))
-    draw.line((x1, y1, x2-1, y1), fill=getlightercolor(color))
+        draw.line((x2, y1+1, x2, y2-1), fill=getdarkercolor(*color))
+    draw.line((x1, y1, x2-1, y1), fill=getlightercolor(*color))
     y1 += 1
     y2 -= 1
-    draw.line((x1, y2, x2-1, y2), fill=getdarkercolor(color))
+    draw.line((x1, y2, x2-1, y2), fill=getdarkercolor(*color))
     draw.rectangle((x1, y1, x2-1, y2-1), fill=color)
 
 # ----------
@@ -255,7 +255,7 @@ def get_timeline_image(log, width, height):
             color = getcolor(category1)
             if firstx1 is None:
                 firstx1 = x1
-            bevelrect(draw, (x1, y1, x2, y2), color)
+            bevelrect(draw, x1, y1, x2, y2, color)
             subcats = getsubcategories(subcats)
             if subcats:
                 x2 = recdraw(subcats, subheight * 0.94) - 1
@@ -290,7 +290,7 @@ def render_histogram(times, time0, labels, width, barheight):
         image = Image.new("RGBA", (width, barheight), (255, 255, 255, 0))
         draw = ImageDraw.Draw(image)
         x2 = int(fraction * width)
-        bevelrect(draw, (0, 0, x2, barheight), color)
+        bevelrect(draw, 0, 0, x2, barheight, color)
         # draw the labels "x%" and "key"
         percent = "%.1f%%" % (100.0 * fraction,)
         s1x, s1y, textpercent, vtextpercent = getlabel(percent)

@@ -330,7 +330,8 @@ class Trace(BaseTrace):
         self._count = end[1]
         self._index = end[2]
 
-    def cut_trace_from(self, (start, count, index), inputargs):
+    def cut_trace_from(self, start_count_index, inputargs):
+        start, count, index = start_count_index
         return CutTrace(self, start, count, index, inputargs)
 
     def _encode(self, box):
