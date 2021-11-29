@@ -238,7 +238,7 @@ class RSREMatch(object):
 
     def groupdict(self, default=None):
         d = {}
-        for key, value in self.re.groupindex.iteritems():
+        for key, value in self.re.groupindex.items():
             grp = self.group(value)
             if grp is None: grp = default
             d[key] = grp

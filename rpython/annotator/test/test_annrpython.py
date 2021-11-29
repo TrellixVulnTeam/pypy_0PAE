@@ -2501,7 +2501,7 @@ class TestAnnotateTestCase:
             for x in []:                n += x
             for y in d:                 n += y
             for z in d.iterkeys():      n += z
-            for s in d.itervalues():    n += s
+            for s in d.values():    n += s
             for t, u in d.items():      n += t * u
             for t, u in d.iteritems():  n += t * u
             return n

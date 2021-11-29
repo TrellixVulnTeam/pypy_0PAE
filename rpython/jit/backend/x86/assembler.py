@@ -41,6 +41,7 @@ from rpython.jit.codewriter.effectinfo import EffectInfo
 from rpython.jit.codewriter import longlong
 from rpython.rlib.rarithmetic import intmask, r_uint
 from rpython.rlib.objectmodel import compute_unique_id
+from rpython.compat import iteritems
 
 
 class Assembler386(BaseAssembler, VectorAssemblerMixin):
@@ -2724,8 +2725,8 @@ genop_tlref_list = {}
 genop_guard_list = [Assembler386.not_implemented_op_guard] * rop._LAST
 
 import itertools
-iterate = itertools.chain(Assembler386.__dict__.iteritems(),
-                          VectorAssemblerMixin.__dict__.iteritems())
+iterate = itertools.chain(iteritems(Assembler386.__dict__),
+                          iteritems(VectorAssemblerMixin.__dict__))
 for name, value in iterate:
     if name.startswith('genop_discard_'):
         opname = name[len('genop_discard_'):]

@@ -13,4 +13,25 @@ except NameError:
     xrange = range
 
 
-__all__ = ["execute", "reraise"]
+if sys.version_info.major == 2:
+    def iteritems(d):
+        return d.iteritems()
+
+    def iterkeys(d):
+        return d.iterkeys()
+
+    def itervalues(d):
+        return d.itervalues()
+
+else:
+    def iteritems(d):
+        return iter(d.items())
+
+    def iterkeys(d):
+        return iter(d.keys())
+
+    def itervalues(d):
+        return iter(d.values())
+
+
+__all__ = ["execute", "iteritems", "iterkeys", "itervalues", "reraise", "xrange"]

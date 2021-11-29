@@ -10,7 +10,7 @@ from rpython.annotator import model as annmodel
 from rpython.flowspace.argument import Signature
 from rpython.annotator.model import SomePBC, SomeImpossibleValue, SomeBool
 from rpython.annotator.model import unionof
-from rpython.compat import execute
+from rpython.compat import execute, iteritems
 
 def flatten_star_args(funcdesc, args_s):
     argnames, vararg, kwarg = funcdesc.signature
@@ -132,7 +132,7 @@ class MemoTable(object):
             return
         assert self.graph is None, "MemoTable already finished"
         # list of which argument positions can take more than one value
-        example_args, example_value = self.table.iteritems().next()
+        example_args, example_value = iteritems(self.table).next()
         nbargs = len(example_args)
         # list of sets of possible argument values -- one set per argument index
         sets = [set() for i in range(nbargs)]

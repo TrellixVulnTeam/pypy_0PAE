@@ -261,7 +261,7 @@ def gen_compression_tree(stringlist, ucdata, reversedict, parent=None, parent_st
         for stop in range(1, len(string) + 1):
             codes[string[:stop]] = codes.get(string[:stop], 0) + 1
 
-    s = [((freq), code) for (code, freq) in codes.iteritems()]
+    s = [((freq), code) for (code, freq) in codes.items()]
     s.sort()
     if not s:
         return None

@@ -915,7 +915,7 @@ def execv(path, args):
 @replace_os_function('execve')
 def execve(path, args, env):
     envstrs = []
-    for item in env.iteritems():
+    for item in env.items():
         envstr = "%s=%s" % item
         envstrs.append(envstr)
 
@@ -940,7 +940,7 @@ def spawnv(mode, path, args):
 @replace_os_function('spawnve')
 def spawnve(mode, path, args, env):
     envstrs = []
-    for item in env.iteritems():
+    for item in env.items():
         envstrs.append("%s=%s" % item)
     rstring.check_str0(path)
     l_args = rffi.ll_liststr2charpp(args)
@@ -2532,7 +2532,7 @@ if HAVE_FEXECVE:
 
     def fexecve(fd, args, env):
         envstrs = []
-        for item in env.iteritems():
+        for item in env.items():
             envstr = "%s=%s" % item
             envstrs.append(envstr)
 

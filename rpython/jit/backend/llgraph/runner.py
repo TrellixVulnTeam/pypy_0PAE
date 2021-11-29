@@ -477,7 +477,7 @@ class LLGraphCPU(model.AbstractCPU):
 
     def setup_descrs(self):
         all_descrs = []
-        for k, v in self.descrs.iteritems():
+        for k, v in self.descrs.items():
             v.descr_index = len(all_descrs)
             all_descrs.append(v)
         return all_descrs
@@ -1619,7 +1619,7 @@ def _setup():
         execute.__name__ = 'execute_' + opname
         return execute
 
-    for k, v in rop.__dict__.iteritems():
+    for k, v in rop.__dict__.items():
         if not k.startswith("_"):
             fname = 'execute_' + k.lower()
             if not hasattr(LLFrame, fname):

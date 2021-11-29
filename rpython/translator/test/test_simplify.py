@@ -444,7 +444,7 @@ class TestLLSpecializeListComprehension:
         # for now, this is not optimized as a list comp
         def main(n, m):
             d = {n: m, m: n}
-            lst = [i*17 for i in d.iterkeys()]
+            lst = [i*17 for i in d.keys()]
             return len(lst) + lst[0] + lst[-1]
         interp, graph = self.specialize(main, [int, int])
         res = interp.eval_graph(graph, [8, 5])

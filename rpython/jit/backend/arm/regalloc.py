@@ -36,6 +36,7 @@ from rpython.rtyper.lltypesystem.lloperation import llop
 from rpython.jit.codewriter.effectinfo import EffectInfo
 from rpython.rlib.rarithmetic import r_uint
 from rpython.jit.backend.llsupport.descr import CallDescr
+from rpython.compat import iteritems
 
 
 class TempInt(TempVar):
@@ -368,7 +369,7 @@ class Regalloc(BaseRegalloc):
         frame_depth = self.fm.get_frame_depth()
         gcmap = allocate_gcmap(self.assembler,
                         frame_depth, JITFRAME_FIXED_SIZE)
-        for box, loc in self.rm.reg_bindings.iteritems():
+        for box, loc in iteritems(self.rm.reg_bindings):
             if loc in forbidden_regs:
                 continue
             if box.type == REF and self.rm.is_still_alive(box):
@@ -380,7 +381,7 @@ class Regalloc(BaseRegalloc):
                 #     to just the line below:
                 val = loc.value
                 gcmap[val // WORD // 8] |= r_uint(1) << (val % (WORD * 8))
-        for box, loc in self.fm.bindings.iteritems():
+        for box, loc in iteritems(self.fm.bindings):
             if box.type == REF and self.rm.is_still_alive(box):
                 assert loc.is_stack()
                 val = loc.position + JITFRAME_FIXED_SIZE

@@ -31,6 +31,8 @@ from rpython.rlib.rarithmetic import r_longlong, r_uint
 from rpython.rtyper.lltypesystem import lltype, rffi, rstr
 from rpython.rtyper.lltypesystem.lloperation import llop
 from rpython.jit.backend.x86.regloc import AddressLoc
+from rpython.compat import iteritems
+
 
 def compute_gc_level(calldescr, guard_not_forced=False):
     effectinfo = calldescr.get_extra_info()
@@ -1091,7 +1093,7 @@ class RegAlloc(BaseRegalloc, VectorRegallocMixin):
     def get_gcmap(self, forbidden_regs=[], noregs=False):
         frame_depth = self.fm.get_frame_depth()
         gcmap = allocate_gcmap(self.assembler, frame_depth, JITFRAME_FIXED_SIZE)
-        for box, loc in self.rm.reg_bindings.iteritems():
+        for box, loc in self.rm.reg_bindings.items():
             if loc in forbidden_regs:
                 continue
             if box.type == REF and self.rm.is_still_alive(box):
@@ -1099,7 +1101,7 @@ class RegAlloc(BaseRegalloc, VectorRegallocMixin):
                 assert isinstance(loc, RegLoc)
                 val = gpr_reg_mgr_cls.all_reg_indexes[loc.value]
                 gcmap[val // WORD // 8] |= r_uint(1) << (val % (WORD * 8))
-        for box, loc in self.fm.bindings.iteritems():
+        for box, loc in self.fm.bindings.items():
             if box.type == REF and self.rm.is_still_alive(box):
                 assert isinstance(loc, FrameLoc)
                 val = loc.position + JITFRAME_FIXED_SIZE
@@ -1511,8 +1513,8 @@ class RegAlloc(BaseRegalloc, VectorRegallocMixin):
 oplist = [RegAlloc.not_implemented_op] * rop._LAST
 
 import itertools
-iterate = itertools.chain(RegAlloc.__dict__.iteritems(),
-                          VectorRegallocMixin.__dict__.iteritems())
+iterate = itertools.chain(iteritems(RegAlloc.__dict__),
+                          iteritems(VectorRegallocMixin.__dict__))
 for name, value in iterate:
     if name.startswith('consider_'):
         name = name[len('consider_'):]

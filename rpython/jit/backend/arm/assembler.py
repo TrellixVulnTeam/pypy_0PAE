@@ -30,6 +30,7 @@ from rpython.rtyper.lltypesystem import lltype, rffi
 from rpython.jit.backend.arm import callbuilder
 from rpython.rtyper.lltypesystem.lloperation import llop
 from rpython.rlib.rjitlog import rjitlog as jl
+from rpython.compat import iteritems
 
 class AssemblerARM(ResOpAssembler):
 
@@ -1603,7 +1604,7 @@ def notimplemented_op(self, op, arglocs, regalloc, fcond):
 asm_operations = [notimplemented_op] * (rop._LAST + 1)
 asm_extra_operations = {}
 
-for name, value in ResOpAssembler.__dict__.iteritems():
+for name, value in iteritems(ResOpAssembler.__dict__):
     if name.startswith('emit_opx_'):
         opname = name[len('emit_opx_'):]
         num = getattr(EffectInfo, 'OS_' + opname.upper())

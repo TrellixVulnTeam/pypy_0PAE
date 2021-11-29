@@ -86,7 +86,7 @@ def test_wenviron():
     assert rwin32._wgetenv(name) == value
     env = dict(rwin32._wenviron_items())
     assert env[name] == value
-    for key, value in env.iteritems():
+    for key, value in env.items():
         assert type(key) is unicode
         assert type(value) is unicode
 

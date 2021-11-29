@@ -21,6 +21,7 @@ from rpython.rtyper.rmodel import (Repr, inputconst, CanBeNull, mangle,
     warning, impossible_repr)
 from rpython.tool.pairtype import pair, pairmethod, pairtype
 from rpython.translator.unsimplify import varoftype
+from rpython.compat import itervalues
 
 
 def small_cand(rtyper, s_pbc):
@@ -203,7 +204,7 @@ class FunctionReprBase(Repr):
         descs = list(s_pbc.descriptions)
         shape, index = self.callfamily.find_row(bk, descs, args, hop.spaceop)
         row_of_graphs = self.callfamily.calltables[shape][index]
-        anygraph = row_of_graphs.itervalues().next()  # pick any witness
+        anygraph = next(itervalues(row_of_graphs))  # pick any witness
         vfn = hop.inputarg(self, arg=0)
         vlist = [self.convert_to_concrete_llfn(vfn, shape, index,
                                                hop.llops)]
@@ -488,7 +489,7 @@ class SmallFunctionSetPBCRepr(FunctionReprBase):
         descs = list(s_pbc.descriptions)
         shape, index = self.callfamily.find_row(bk, descs, args, hop.spaceop)
         row_of_graphs = self.callfamily.calltables[shape][index]
-        anygraph = row_of_graphs.itervalues().next()  # pick any witness
+        anygraph = next(itervalues(row_of_graphs))  # pick any witness
         vlist = [hop.inputarg(self, arg=0)]
         vlist += callparse.callparse(self.rtyper, anygraph, hop)
         rresult = callparse.getrresult(self.rtyper, anygraph)

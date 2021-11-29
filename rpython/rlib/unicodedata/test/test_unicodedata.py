@@ -131,7 +131,7 @@ class TestUnicodeData600(object):
             # u"\U0002B740"
             177984: "CJK UNIFIED IDEOGRAPH-2B740",
             }
-        for un, name in additions.iteritems():
+        for un, name in additions.items():
             assert unicodedb_6_0_0.name(un) == name
             assert unicodedb_6_0_0.isprintable(un)
 

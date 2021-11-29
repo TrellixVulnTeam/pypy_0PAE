@@ -90,8 +90,7 @@ def safe_equal(x, y, TLS=TLS):
 class frozendict(dict):
 
     def __hash__(self):
-        items = self.items()
-        items.sort()
+        items = sorted(self.items())
         return hash(tuple(items))
 
 
@@ -147,8 +146,7 @@ class LowLevelType(object):
             pass
         if hash_level >= 3:
             return 0
-        items = self.__dict__.items()
-        items.sort()
+        items = sorted(self.__dict__.items())
         TLS.nested_hash_level = hash_level + 1
         try:
             result = hash((self.__class__,) + tuple(items))
@@ -2506,5 +2504,3 @@ def dissect_ll_instance(v, t=None, memo=None):
         for item in v.items:
             for i in dissect_ll_instance(item, t.OF, memo):
                 yield i
-
-

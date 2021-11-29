@@ -59,12 +59,11 @@ class BytecodeSpec(object):
             setattr(self.opcodedesc, methodname, desc)
             self.opdescmap[index] = desc
         # fill the ordered opdesc list
-        self.ordered_opdescs = lst = self.opdescmap.values()
-        lst.sort()
+        self.ordered_opdescs = sorted(self.opdescmap.values())
 
     def to_globals(self, globals_dict):
         """NOT_RPYTHON. Add individual opcodes to the module constants."""
-        for name, value in self.opmap.iteritems():
+        for name, value in self.opmap.items():
             # Rename 'STORE_SLICE+0' opcodes
             if name.endswith('+0'):
                 name = name[:-2]

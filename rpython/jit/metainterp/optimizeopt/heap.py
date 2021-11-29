@@ -271,13 +271,13 @@ class OptHeap(Optimization):
     def clean_caches(self):
         items = self.cached_fields.items()
         if not we_are_translated():
-            items.sort(key=str, reverse=True)
+            items = sorted(items, key=str, reverse=True)
         for descr, cf in items:
             if not descr.is_always_pure():
                 cf.invalidate(descr)
-        for descr, submap in self.cached_arrayitems.iteritems():
+        for descr, submap in self.cached_arrayitems.items():
             if not descr.is_always_pure():
-                for index, cf in submap.iteritems():
+                for index, cf in submap.items():
                     cf.invalidate(None)
         #self.cached_arrayitems.clear()
         self.cached_dict_reads.clear()
@@ -468,29 +468,29 @@ class OptHeap(Optimization):
             submap = self.cached_arrayitems[arraydescr]
         except KeyError:
             return
-        for idx, cf in submap.iteritems():
+        for idx, cf in submap.items():
             if indexb is None or indexb.contains(idx):
                 cf.force_lazy_set(self, None, can_cache)
 
     def force_lazy_setarrayitem_submap(self, submap, can_cache=True):
-        for cf in submap.itervalues():
+        for cf in submap.values():
             cf.force_lazy_set(self, None, can_cache)
 
     def force_all_lazy_sets(self):
         items = self.cached_fields.items()
         if not we_are_translated():
-            items.sort(key=str, reverse=True)
+            items = sorted(items, key=str, reverse=True)
         for descr, cf in items:
             cf.force_lazy_set(self, descr)
-        for submap in self.cached_arrayitems.itervalues():
-            for index, cf in submap.iteritems():
+        for submap in self.cached_arrayitems.values():
+            for index, cf in submap.items():
                 cf.force_lazy_set(self, None)
 
     def force_lazy_sets_for_guard(self):
         pendingfields = []
         items = self.cached_fields.items()
         if not we_are_translated():
-            items.sort(key=str, reverse=True)
+            items = sorted(items, key=str, reverse=True)
         for descr, cf in items:
             op = cf._lazy_set
             if op is None:
@@ -500,8 +500,8 @@ class OptHeap(Optimization):
                 pendingfields.append(op)
                 continue
             cf.force_lazy_set(self, descr)
-        for descr, submap in self.cached_arrayitems.iteritems():
-            for index, cf in submap.iteritems():
+        for descr, submap in self.cached_arrayitems.items():
+            for index, cf in submap.items():
                 op = cf._lazy_set
                 if op is None:
                     continue
@@ -689,7 +689,7 @@ class OptHeap(Optimization):
 
     def serialize_optheap(self, available_boxes):
         result_getfield = []
-        for descr, cf in self.cached_fields.iteritems():
+        for descr, cf in self.cached_fields.items():
             if cf._lazy_set:
                 continue  # XXX safe default for now
             parent_descr = descr.get_parent_descr()
@@ -708,8 +708,8 @@ class OptHeap(Optimization):
                 if box2.is_constant() or box2 in available_boxes:
                     result_getfield.append((box1, descr, box2))
         result_array = []
-        for descr, indexdict in self.cached_arrayitems.iteritems():
-            for index, cf in indexdict.iteritems():
+        for descr, indexdict in self.cached_arrayitems.items():
+            for index, cf in indexdict.items():
                 if cf._lazy_set:
                     continue  # XXX safe default for now
                 for i, box1 in enumerate(cf.cached_structs):

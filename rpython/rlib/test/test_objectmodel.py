@@ -51,19 +51,19 @@ def play_with_r_dict(d):
     assert lst[0][0] == 'hello' and lst[0][1] == 42
 
     count = 0
-    for x in d.iterkeys():
+    for x in d.keys():
         assert x == 'hello'
         count += 1
     assert count == 1
 
     count = 0
-    for x in d.itervalues():
+    for x in d.values():
         assert x == 42
         count += 1
     assert count == 1
 
     count = 0
-    for x in d.iteritems():
+    for x in d.items():
         assert len(x) == 2 and x[0] == 'hello' and x[1] == 42
         count += 1
     assert count == 1

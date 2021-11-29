@@ -20,7 +20,7 @@ from rpython.rtyper.llannotation import SomePtr
 from rpython.rtyper.lltypesystem import rstr
 from rpython.rtyper.rmodel import (
     Repr, getgcflavor, inputconst, warning, mangle)
-
+from rpython.compat import itervalues
 
 class FieldListAccessor(object):
 
@@ -28,12 +28,12 @@ class FieldListAccessor(object):
         assert type(fields) is dict
         self.TYPE = TYPE
         self.fields = fields
-        for x in fields.itervalues():
+        for x in itervalues(fields):
             assert isinstance(x, ImmutableRanking)
 
     def all_immutable_fields(self):
         result = set()
-        for key, value in self.fields.iteritems():
+        for key, value in self.fields.items():
             if value in (IR_IMMUTABLE, IR_IMMUTABLE_ARRAY):
                 result.add(key)
         return result

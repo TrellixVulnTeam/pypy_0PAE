@@ -9,7 +9,7 @@ from rpython.jit.codewriter import heaptracker, longlong
 from rpython.jit.codewriter.longlong import is_longlong
 from rpython.jit.metainterp.optimizeopt import intbounds
 from rpython.rtyper import rclass
-from rpython.compat import execute
+from rpython.compat import execute, iteritems
 
 
 class GcCache(object):
@@ -25,23 +25,23 @@ class GcCache(object):
 
     def setup_descrs(self):
         all_descrs = []
-        for k, v in self._cache_size.iteritems():
+        for k, v in iteritems(self._cache_size):
             v.descr_index = len(all_descrs)
             all_descrs.append(v)
-        for k, v in self._cache_field.iteritems():
-            for k1, v1 in v.iteritems():
+        for k, v in iteritems(self._cache_field):
+            for k1, v1 in iteritems(v):
                 v1.descr_index = len(all_descrs)
                 all_descrs.append(v1)
-        for k, v in self._cache_array.iteritems():
+        for k, v in iteritems(self._cache_array):
             v.descr_index = len(all_descrs)
             all_descrs.append(v)
-        for k, v in self._cache_arraylen.iteritems():
+        for k, v in iteritems(self._cache_arraylen):
             v.descr_index = len(all_descrs)
             all_descrs.append(v)
-        for k, v in self._cache_call.iteritems():
+        for k, v in iteritems(self._cache_call):
             v.descr_index = len(all_descrs)
             all_descrs.append(v)
-        for k, v in self._cache_interiorfield.iteritems():
+        for k, v in iteritems(self._cache_interiorfield):
             v.descr_index = len(all_descrs)
             all_descrs.append(v)
         assert len(all_descrs) < 2**15

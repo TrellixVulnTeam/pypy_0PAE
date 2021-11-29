@@ -317,10 +317,10 @@ class HeapCache(object):
             else:
                 # Only invalidate things that are escaped
                 # XXX can do better, only do it for the descrs in the effectinfo
-                for descr, cache in self.heap_cache.iteritems():
+                for descr, cache in self.heap_cache.items():
                     cache.invalidate_unescaped()
-                for descr, indices in self.heap_array_cache.iteritems():
-                    for cache in indices.itervalues():
+                for descr, indices in self.heap_array_cache.items():
+                    for cache in indices.values():
                         cache.invalidate_unescaped()
                 return
 
@@ -396,7 +396,7 @@ class HeapCache(object):
             # Fish the descr out of the effectinfo
             cache = self.heap_array_cache.get(effectinfo.single_write_descr_array, None)
             if cache is not None:
-                for idx, cache in cache.iteritems():
+                for idx, cache in cache.items():
                     cache._clear_cache_on_write(seen_allocation_of_target)
             return
         self.reset_keep_likely_virtuals()

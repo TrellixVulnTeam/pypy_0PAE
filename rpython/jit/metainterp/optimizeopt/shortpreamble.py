@@ -265,7 +265,7 @@ class ShortBoxes(object):
         for shortop in self.potential_ops.values():
             self.add_op_to_short(shortop)
         #
-        for op, produced_op in self.produced_short_boxes.iteritems():
+        for op, produced_op in self.produced_short_boxes.items():
             short_boxes.append(produced_op)
 
         for short_op in self.const_short_boxes:

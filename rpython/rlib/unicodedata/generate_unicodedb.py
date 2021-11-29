@@ -191,7 +191,7 @@ def read_unicodedata(files):
 
     # Collect ranges
     ranges = {}
-    for name, (start, data) in rangeFirst.iteritems():
+    for name, (start, data) in rangeFirst.items():
         end = rangeLast[name]
         ranges[(start, end)] = ['0000', None] + data[2:]
 
@@ -218,7 +218,7 @@ def read_unicodedata(files):
             table.set_linebreak(char)
 
     # Expand ranges
-    for (first, last), data in ranges.iteritems():
+    for (first, last), data in ranges.items():
         for code in range(first, last + 1):
             table.add_char(code, data)
 
@@ -266,7 +266,7 @@ def read_unicodedata(files):
             table.add_char(code, defaultChar)
 
     extra_numeric = read_unihan(files['unihan'])
-    for code, value in extra_numeric.iteritems():
+    for code, value in extra_numeric.items():
         table.clone_char(code).numeric = value
 
     table.special_casing = {}
@@ -350,8 +350,7 @@ def writeDict(outfile, name, dictionary, base_mod):
     else:
         base_dict = {}
     print('%s = {' % name, file=outfile)
-    items = dictionary.items()
-    items.sort()
+    items = sorted(dictionary.items())
     for key, value in items:
         if key not in base_dict or base_dict[key] != value:
             print('%r: %r,'%(key, dictionary[key]), file=outfile)
@@ -501,7 +500,7 @@ def write_character_names(outfile, table, base_mod):
     names = dict((table.get_char(code).name, code)
                  for code in table.all_codes()
                  if table.get_char(code).name)
-    sorted_names_codes = sorted(names.iteritems())
+    sorted_names_codes = sorted(names.items())
 
     if base_mod is None:
         triegenerator.build_compression_tree(outfile, names)
@@ -525,7 +524,7 @@ def write_character_names(outfile, table, base_mod):
         triegenerator.build_compression_tree(outfile, corrected_names_dict)
 
         removed_names = []
-        for name, code in sorted(base_mod._orig_names.iteritems()):
+        for name, code in sorted(base_mod._orig_names.items()):
             if name not in names:
                 removed_names.append((name, code))
         print('_names_corrected = {', file=outfile)
