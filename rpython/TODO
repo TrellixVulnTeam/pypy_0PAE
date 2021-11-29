@@ -1,0 +1,28 @@
+Print:
+    - make `from __future__ import print_function` valid rpython
+    - make all the things use `print(x, y)`
+
+Tuple arguments
+    - remove use of `def foo((x, y), z)` - using decorator magic if needed
+
+Exceptions:
+    - remove references / use of multi-arg exceptions (raise Exc, Exc())
+
+Leading zeros:
+   - remove these, use octal literals if needed
+
+Long integers:
+   - use bit_length instead of long/int types
+   - use six-style integer_types
+
+Tuple args:
+   - use decorator
+
+Division
+   - basic idea is to `from __future__ import division` / see what breaks
+
+String / unicode
+   - this will be a mess, no idea yet
+
+Bytecode differences
+   - we'll have to handle this when we get to it
