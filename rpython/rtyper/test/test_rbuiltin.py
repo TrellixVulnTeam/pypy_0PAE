@@ -194,7 +194,7 @@ class TestRbuiltin(BaseRtypingTest):
     def test_os_write(self):
         tmpdir = str(udir.udir.join("os_write_test"))
         def wr_open(fname):
-            fd = os.open(fname, os.O_WRONLY|os.O_CREAT, 0777)
+            fd = os.open(fname, os.O_WRONLY|os.O_CREAT, 0o777)
             os.write(fd, "hello world")
             return fd
         def f():
@@ -210,7 +210,7 @@ class TestRbuiltin(BaseRtypingTest):
     def test_os_write_single_char(self):
         tmpdir = str(udir.udir.join("os_write_test_char"))
         def wr_open(fname):
-            fd = os.open(fname, os.O_WRONLY|os.O_CREAT, 0777)
+            fd = os.open(fname, os.O_WRONLY|os.O_CREAT, 0o777)
             os.write(fd, "x")
             return fd
         def f():
@@ -226,7 +226,7 @@ class TestRbuiltin(BaseRtypingTest):
         f.write('hello world')
         f.close()
         def fn():
-            fd = os.open(tmpfile, os.O_RDONLY, 0777)
+            fd = os.open(tmpfile, os.O_RDONLY, 0o777)
             return os.read(fd, 4096)
         res = self.interpret(fn, [])
         assert self.ll_to_string(res) == 'hello world'
@@ -241,7 +241,7 @@ class TestRbuiltin(BaseRtypingTest):
         SEEK_CUR = 1
         SEEK_END = 2
         def fn():
-            fd = os.open(tmpfile, os.O_RDONLY, 0777)
+            fd = os.open(tmpfile, os.O_RDONLY, 0o777)
             res = ''
             os.lseek(fd, 5, SEEK_SET)
             res += os.read(fd, 1)
@@ -275,7 +275,7 @@ class TestRbuiltin(BaseRtypingTest):
     def test_os_open(self):
         tmpdir = str(udir.udir.join("os_open_test"))
         def wr_open(fname):
-            return os.open(fname, os.O_WRONLY|os.O_CREAT, 0777)
+            return os.open(fname, os.O_WRONLY|os.O_CREAT, 0o777)
         def f():
             return wr_open(tmpdir)
         res = self.interpret(f, [])

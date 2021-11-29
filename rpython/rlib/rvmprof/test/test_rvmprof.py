@@ -103,7 +103,7 @@ class RVMProfSamplingTest(RVMProfTest):
     def entry_point(self, value, delta_t, memory=0):
         code = self.MyCode('py:code:52:test_enable')
         rvmprof.register_code(code, self.MyCode.get_name)
-        fd = os.open(self.tmpfilename, os.O_WRONLY | os.O_CREAT, 0666)
+        fd = os.open(self.tmpfilename, os.O_WRONLY | os.O_CREAT, 0o666)
         rvmprof.enable(fd, self.SAMPLING_INTERVAL, memory=memory)
         start = time.time()
         res = 0
