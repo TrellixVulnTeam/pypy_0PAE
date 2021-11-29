@@ -10,7 +10,7 @@ from rpython.rlib.objectmodel import newlist_hint, resizelist_hint, specialize, 
 from rpython.rlib.rarithmetic import ovfcheck, LONG_BIT as BLOOM_WIDTH, intmask
 from rpython.rlib.unicodedata import unicodedb_5_2_0 as unicodedb
 from rpython.rtyper.extregistry import ExtRegistryEntry
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 
 
 # -------------- public API for string functions -----------------------
@@ -945,12 +945,14 @@ class UnicodeBuilderEntry(BaseEntry, ExtRegistryEntry):
 
 class __extend__(pairtype(SomeStringBuilder, SomeStringBuilder)):
 
-    def union((obj1, obj2)):
+    @pairmethod
+    def union(obj1, obj2):
         return obj1
 
 class __extend__(pairtype(SomeUnicodeBuilder, SomeUnicodeBuilder)):
 
-    def union((obj1, obj2)):
+    @pairmethod
+    def union(obj1, obj2):
         return obj1
 
 class PrebuiltStringBuilderEntry(ExtRegistryEntry):

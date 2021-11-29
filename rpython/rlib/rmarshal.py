@@ -5,7 +5,7 @@ but accessible to RPython programs.
 from rpython.annotator import model as annmodel
 from rpython.annotator.signature import annotation
 from rpython.annotator.listdef import ListDef, TooLateForChange
-from rpython.tool.pairtype import pair, pairtype
+from rpython.tool.pairtype import pair, pairmethod, pairtype
 from rpython.rlib.rarithmetic import r_longlong, intmask, LONG_BIT, ovfcheck
 from rpython.rlib.rfloat import formatd, rstring_to_float
 from rpython.rlib.unroll import unrolling_iterable
@@ -359,7 +359,8 @@ def weakly_contains(s_bigger, s_smaller):
 
 class __extend__(pairtype(MTag, annmodel.SomeObject)):
 
-    def install_marshaller((tag, s_obj)):
+    @pairmethod
+    def install_marshaller(tag, s_obj):
         if not hasattr(s_obj, '_get_rmarshall_support_'):
             raise CannotMarshal(s_obj)
         # special support for custom annotation like SomeStatResult:
@@ -372,7 +373,8 @@ class __extend__(pairtype(MTag, annmodel.SomeObject)):
         reduceddumper = get_marshaller(s_reduced_obj)
         add_dumper(s_obj, dump_with_custom_reduce)
 
-    def install_unmarshaller((tag, s_obj)):
+    @pairmethod
+    def install_unmarshaller(tag, s_obj):
         if not hasattr(s_obj, '_get_rmarshall_support_'):
             raise CannotUnmarshall(s_obj)
         # special support for custom annotation like SomeStatResult
@@ -386,7 +388,8 @@ class __extend__(pairtype(MTag, annmodel.SomeObject)):
 
 class __extend__(pairtype(MTag, annmodel.SomeList)):
 
-    def install_marshaller((tag, s_list)):
+    @pairmethod
+    def install_marshaller(tag, s_list):
         def dump_list_or_none(buf, x):
             if x is None:
                 dump_none(buf, x)
@@ -404,7 +407,8 @@ class __extend__(pairtype(MTag, annmodel.SomeList)):
             s_general_list = annotation([s_item])
         add_dumper(s_general_list, dump_list_or_none)
 
-    def install_unmarshaller((tag, s_list)):
+    @pairmethod
+    def install_unmarshaller(tag, s_list):
         def load_list_or_none(loader):
             t = readchr(loader)
             if t == TYPE_LIST:
@@ -424,7 +428,8 @@ class __extend__(pairtype(MTag, annmodel.SomeList)):
 
 class __extend__(pairtype(MTag, annmodel.SomeDict)):
 
-    def install_marshaller((tag, s_dict)):
+    @pairmethod
+    def install_marshaller(tag, s_dict):
         def dump_dict_or_none(buf, x):
             if x is None:
                 dump_none(buf, x)
@@ -446,7 +451,8 @@ class __extend__(pairtype(MTag, annmodel.SomeDict)):
             s_general_dict = annotation({s_key: s_value})
         add_dumper(s_general_dict, dump_dict_or_none)
 
-    def install_unmarshaller((tag, s_dict)):
+    @pairmethod
+    def install_unmarshaller(tag, s_dict):
         def load_dict_or_none(loader):
             t = readchr(loader)
             if t == TYPE_DICT:
@@ -469,7 +475,8 @@ class __extend__(pairtype(MTag, annmodel.SomeDict)):
 
 class __extend__(pairtype(MTag, annmodel.SomeTuple)):
 
-    def install_marshaller((tag, s_tuple)):
+    @pairmethod
+    def install_marshaller(tag, s_tuple):
         def dump_tuple(buf, x):
             buf.append(TYPE_TUPLE)
             w_long(buf, len(x))
@@ -483,7 +490,8 @@ class __extend__(pairtype(MTag, annmodel.SomeTuple)):
         s_general_tuple = annmodel.SomeTuple(dumper_annotations)
         add_dumper(s_general_tuple, dump_tuple)
 
-    def install_unmarshaller((tag, s_tuple)):
+    @pairmethod
+    def install_unmarshaller(tag, s_tuple):
         def load_tuple(loader):
             if readchr(loader) != TYPE_TUPLE:
                 raise ValueError("expected a tuple")

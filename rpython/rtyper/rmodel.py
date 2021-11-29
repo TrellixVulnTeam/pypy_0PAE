@@ -3,7 +3,7 @@ from rpython.flowspace.model import Constant
 from rpython.rtyper.error import TyperError, MissingRTypeOperation
 from rpython.rtyper.lltypesystem import lltype
 from rpython.rtyper.lltypesystem.lltype import Void, Bool, LowLevelType, Ptr
-from rpython.tool.pairtype import pairtype, extendabletype, pair
+from rpython.tool.pairtype import pairmethod, pairtype, extendabletype, pair
 
 
 # initialization states for Repr instances
@@ -298,7 +298,8 @@ class __extend__(annmodel.SomeImpossibleValue):
 
 class __extend__(pairtype(Repr, Repr)):
 
-    def rtype_is_((robj1, robj2), hop):
+    @pairmethod
+    def rtype_is_(robj1, robj2, hop):
         if hop.s_result.is_constant():
             return inputconst(Bool, hop.s_result.const)
         roriginal1 = robj1
@@ -321,7 +322,8 @@ class __extend__(pairtype(Repr, Repr)):
 
     # default implementation for checked getitems
 
-    def rtype_getitem_idx((r_c1, r_o1), hop):
+    @pairmethod
+    def rtype_getitem_idx(r_c1, r_o1, hop):
         return pair(r_c1, r_o1).rtype_getitem(hop)
 
 
@@ -346,7 +348,8 @@ for opname in binaryop.BINARY_OPERATIONS:
 make_missing_op(pairtype(Repr, Repr), 'contains')
 
 class __extend__(pairtype(Repr, Repr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         return NotImplemented
 
 # ____________________________________________________________
@@ -360,7 +363,8 @@ class VoidRepr(Repr):
 impossible_repr = VoidRepr()
 
 class __extend__(pairtype(Repr, VoidRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         return inputconst(lltype.Void, None)
 
 class SimplePointerRepr(Repr):

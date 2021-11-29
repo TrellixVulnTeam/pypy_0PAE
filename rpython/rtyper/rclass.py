@@ -4,7 +4,7 @@ import types
 from rpython.flowspace.model import Constant
 from rpython.annotator import description, model as annmodel
 from rpython.rlib.objectmodel import UnboxedValue
-from rpython.tool.pairtype import pairtype, pair
+from rpython.tool.pairtype import pairmethod, pairtype, pair
 from rpython.tool.identity_dict import identity_dict
 from rpython.tool.flattenrec import FlattenRecursion
 from rpython.rtyper.extregistry import ExtRegistryEntry
@@ -1036,7 +1036,8 @@ class InstanceRepr(Repr):
 
 
 class __extend__(pairtype(InstanceRepr, InstanceRepr)):
-    def convert_from_to((r_ins1, r_ins2), v, llops):
+    @pairmethod
+    def convert_from_to(r_ins1, r_ins2, v, llops):
         # which is a subclass of which?
         if r_ins1.classdef is None or r_ins2.classdef is None:
             basedef = None
@@ -1057,7 +1058,8 @@ class __extend__(pairtype(InstanceRepr, InstanceRepr)):
         else:
             return NotImplemented
 
-    def rtype_is_((r_ins1, r_ins2), hop):
+    @pairmethod
+    def rtype_is_(r_ins1, r_ins2, hop):
         if r_ins1.gcflavor != r_ins2.gcflavor:
             # obscure logic, the is can be true only if both are None
             v_ins1, v_ins2 = hop.inputargs(

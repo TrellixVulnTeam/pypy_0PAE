@@ -4,7 +4,7 @@ from rpython.rtyper.lltypesystem.lltype import Signed, Void, Ptr
 from rpython.rtyper.rlist import dum_nocheck, dum_checkidx
 from rpython.rtyper.rmodel import Repr, IteratorRepr
 from rpython.rtyper.rint import IntegerRepr
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 
 
 class AbstractRangeRepr(Repr):
@@ -31,7 +31,8 @@ class AbstractRangeRepr(Repr):
 
 class __extend__(pairtype(AbstractRangeRepr, IntegerRepr)):
 
-    def rtype_getitem((r_rng, r_int), hop):
+    @pairmethod
+    def rtype_getitem(r_rng, r_int, hop):
         if hop.has_implicit_exception(IndexError):
             spec = dum_checkidx
         else:

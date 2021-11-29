@@ -14,7 +14,8 @@ methods whose 'self' is a pair of objects instead of just one:
 
     class __extend__(pairtype(X, Y)):
         attribute = 42
-        def method((x, y), other, arguments):
+        @pairtype_method
+        def method(x, y, other, arguments):
             ...
 
     pair(x, y).attribute
@@ -26,6 +27,8 @@ rules of method/attribute overriding in (pairs of) subclasses.
 
 For more information, see test_pairtype.
 """
+import functools
+
 
 class extendabletype(type):
     """A type with a syntax trick: 'class __extend__(t)' actually extends
@@ -49,6 +52,15 @@ def pair(a, b):
     return tp((a, b))   # tp is a subclass of tuple
 
 pairtypecache = {}
+
+
+def pairmethod(f):
+    """Return a method which unpacks self into the first arguments of f"""
+    @functools.wraps(f)
+    def wrapped(self, *args, **kwargs):
+        return f(self[0], self[1], *args, **kwargs)
+
+    return wrapped
 
 def pairtype(cls1, cls2):
     """type(pair(a,b)) is pairtype(a.__class__, b.__class__)."""

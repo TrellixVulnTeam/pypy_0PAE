@@ -7,7 +7,7 @@ from rpython.rtyper.lltypesystem.llmemory import (NULL, Address,
 from rpython.rtyper.rmodel import Repr
 from rpython.rtyper.rint import IntegerRepr
 from rpython.rtyper.rptr import PtrRepr
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 
 
 class __extend__(SomeAddress):
@@ -71,7 +71,8 @@ class TypedAddressAccessRepr(Repr):
 
 class __extend__(pairtype(TypedAddressAccessRepr, IntegerRepr)):
 
-    def rtype_getitem((r_acc, r_int), hop):
+    @pairmethod
+    def rtype_getitem(r_acc, r_int, hop):
         v_addr, v_offs = hop.inputargs(hop.args_r[0], lltype.Signed)
         c_size = hop.inputconst(lltype.Signed, sizeof(r_acc.type))
         v_offs_mult = hop.genop('int_mul', [v_offs, c_size],
@@ -79,7 +80,8 @@ class __extend__(pairtype(TypedAddressAccessRepr, IntegerRepr)):
         return hop.genop('raw_load', [v_addr, v_offs_mult],
                          resulttype = r_acc.type)
 
-    def rtype_setitem((r_acc, r_int), hop):
+    @pairmethod
+    def rtype_setitem(r_acc, r_int, hop):
         v_addr, v_offs, v_value = hop.inputargs(hop.args_r[0], lltype.Signed, r_acc.type)
         c_size = hop.inputconst(lltype.Signed, sizeof(r_acc.type))
         v_offs_mult = hop.genop('int_mul', [v_offs, c_size],
@@ -89,7 +91,8 @@ class __extend__(pairtype(TypedAddressAccessRepr, IntegerRepr)):
 
 class __extend__(pairtype(AddressRepr, IntegerRepr)):
 
-    def rtype_add((r_addr, r_int), hop):
+    @pairmethod
+    def rtype_add(r_addr, r_int, hop):
         if r_int.lowleveltype == lltype.Signed:
             v_addr, v_offs = hop.inputargs(Address, lltype.Signed)
             return hop.genop('adr_add', [v_addr, v_offs], resulttype=Address)
@@ -97,7 +100,8 @@ class __extend__(pairtype(AddressRepr, IntegerRepr)):
         return NotImplemented
     rtype_inplace_add = rtype_add
 
-    def rtype_sub((r_addr, r_int), hop):
+    @pairmethod
+    def rtype_sub(r_addr, r_int, hop):
         if r_int.lowleveltype == lltype.Signed:
             v_addr, v_offs = hop.inputargs(Address, lltype.Signed)
             return hop.genop('adr_sub', [v_addr, v_offs], resulttype=Address)
@@ -108,31 +112,38 @@ class __extend__(pairtype(AddressRepr, IntegerRepr)):
 
 class __extend__(pairtype(AddressRepr, AddressRepr)):
 
-    def rtype_sub((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_sub(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_delta', [v_addr1, v_addr2], resulttype=lltype.Signed)
 
-    def rtype_eq((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_eq(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_eq', [v_addr1, v_addr2], resulttype=lltype.Bool)
 
-    def rtype_ne((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_ne(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_ne', [v_addr1, v_addr2], resulttype=lltype.Bool)
 
-    def rtype_lt((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_lt(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_lt', [v_addr1, v_addr2], resulttype=lltype.Bool)
 
-    def rtype_le((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_le(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_le', [v_addr1, v_addr2], resulttype=lltype.Bool)
 
-    def rtype_gt((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_gt(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_gt', [v_addr1, v_addr2], resulttype=lltype.Bool)
 
-    def rtype_ge((r_addr1, r_addr2), hop):
+    @pairmethod
+    def rtype_ge(r_addr1, r_addr2, hop):
         v_addr1, v_addr2 = hop.inputargs(Address, Address)
         return hop.genop('adr_ge', [v_addr1, v_addr2], resulttype=lltype.Bool)
 
@@ -140,5 +151,6 @@ class __extend__(pairtype(AddressRepr, AddressRepr)):
 
 class __extend__(pairtype(PtrRepr, AddressRepr)):
 
-    def convert_from_to((r_ptr, r_addr), v, llops):
+    @pairmethod
+    def convert_from_to(r_ptr, r_addr, v, llops):
         return llops.genop('cast_ptr_to_adr', [v], resulttype=Address)
