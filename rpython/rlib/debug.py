@@ -26,7 +26,7 @@ class DebugLog(list):
         self.append(('debug_start', category, time))
 
     def debug_stop(self, category, time=None):
-        for i in xrange(len(self) - 1, -1, -1):
+        for i in range(len(self) - 1, -1, -1):
             if self[i][0] == 'debug_start':
                 assert self[i][1] == category, (
                     "nesting error: starts with %r but stops with %r" %

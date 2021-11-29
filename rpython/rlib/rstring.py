@@ -564,7 +564,7 @@ def _search(value, other, start, end, mode):
         while i - 1 >= start:
             i -= 1
             if value[i] == other[0]:
-                for j in xrange(mlast, 0, -1):
+                for j in range(mlast, 0, -1):
                     if value[i + j] != other[j]:
                         break
                 else:
@@ -782,7 +782,7 @@ class AbstractStringBuilder(object):
     def append_charpsize(self, s, size):
         assert size >= 0
         l = []
-        for i in xrange(size):
+        for i in range(size):
             l.append(s[i])
         self._l.append(self._tp("").join(l))
         self._grow(size)
@@ -820,7 +820,7 @@ class ByteListBuilder(object):
     @specialize.argtype(1)
     def append_slice(self, s, start, end):
         l = self.l
-        for i in xrange(start, end):
+        for i in range(start, end):
             l.append(s[i])
 
     def append_multiple_char(self, c, times):
@@ -830,7 +830,7 @@ class ByteListBuilder(object):
     def append_charpsize(self, s, size):
         assert size >= 0
         l = self.l
-        for i in xrange(size):
+        for i in range(size):
             l.append(s[i])
 
     def build(self):

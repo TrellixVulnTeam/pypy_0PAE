@@ -167,7 +167,7 @@ class TestFloatPacking:
     def test_random(self):
         # construct a Python float from random integer, using struct
         mantissa_mask = (1 << 53) - 1
-        for _ in xrange(10000):
+        for _ in range(10000):
             Q = random.randrange(2**64)
             x = struct.unpack('<d', struct.pack('<Q', Q))[0]
             # nans are tricky:  we can't hope to reproduce the bit

@@ -3,6 +3,7 @@ import py
 from rpython.rtyper.lltypesystem import lltype, llmemory, llarena
 from rpython.memory.gc.incminimark import IncrementalMiniMarkGC, WORD
 from rpython.memory.gc.incminimark import GCFLAG_VISITED
+from rpython.compat import xrange
 from test_direct import BaseDirectGCTest
 
 T = lltype.GcForwardReference()
@@ -68,7 +69,7 @@ class PinningGCTest(BaseDirectGCTest):
         # stackroots and remove from stackroots.
         import random
 
-        for i in xrange(10**3):
+        for i in range(10**3):
             obj = self.malloc(T)
             obj.someInt = 100
             #

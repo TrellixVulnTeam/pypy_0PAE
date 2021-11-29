@@ -3555,7 +3555,7 @@ class BaseLLtypeTests(BasicTests):
         @look_inside_iff(lambda arg, n: isvirtual(arg))
         def f(arg, n):
             if n == 100:
-                for i in xrange(n):
+                for i in range(n):
                     n += i
             return arg.x
         class A(object):

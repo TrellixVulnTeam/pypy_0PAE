@@ -17,6 +17,7 @@ from rpython.flowspace.model import Constant
 import rpython.rlib.rarithmetic
 import rpython.rlib.objectmodel
 from rpython.annotator.model import AnnotatorError
+from rpython.compat import xrange
 
 
 def constpropagate(func, args_s, s_result):

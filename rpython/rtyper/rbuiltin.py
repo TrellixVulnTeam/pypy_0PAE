@@ -341,7 +341,10 @@ def rtype_hlinvoke(hop):
     return hop.dispatch()
 
 typer_for(range)(rrange.rtype_builtin_range)
-typer_for(xrange)(rrange.rtype_builtin_xrange)
+try:
+    typer_for(xrange)(rrange.rtype_builtin_xrange)
+except NameError:
+    pass  # xrange is not valid rpython3
 typer_for(enumerate)(rrange.rtype_builtin_enumerate)
 
 

@@ -14,6 +14,7 @@
 import sys
 from . import _sre, sre_parse
 from .sre_constants import *
+from rpython.compat import xrange
 
 assert _sre.MAGIC == MAGIC, "SRE module mismatch"
 

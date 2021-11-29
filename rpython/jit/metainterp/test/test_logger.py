@@ -265,7 +265,7 @@ i4 = int_mul(i2, 2)
         ops2 = loop2.operations
 
         # Add forwarding
-        for i in xrange(3):
+        for i in range(3):
             ops[i].set_forwarded(ops2[i])
 
         # So the offsets are keyed by ops2 instances

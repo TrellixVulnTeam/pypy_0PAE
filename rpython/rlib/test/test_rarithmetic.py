@@ -389,7 +389,7 @@ def test_r_ulonglong():
 def test_highest_bit():
     py.test.raises(AssertionError, highest_bit, 0)
     py.test.raises(AssertionError, highest_bit, 14)
-    for i in xrange(31):
+    for i in range(31):
         assert highest_bit(2**i) == i
 
 def test_int_between():

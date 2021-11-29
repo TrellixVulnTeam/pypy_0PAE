@@ -305,7 +305,7 @@ class Function(object):
                     opc = cls.TraceForOpcode(so_far, storage, loopname)
                     if nothing_yet:
                         nothing_yet = False
-                        for i in xrange(opc.inline_level + 1):
+                        for i in range(opc.inline_level + 1):
                             stack.append([])
                     append_to_res(opc)
                     if limit:

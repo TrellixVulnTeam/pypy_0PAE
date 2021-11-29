@@ -824,9 +824,9 @@ class TestLL2Ctypes(object):
         s.a = lltype.malloc(A, len(data), flavor='raw')
         # the storage for the array should not be freed by lltype even
         # though the _ptr object appears to go away here
-        for i in xrange(len(data)):
+        for i in range(len(data)):
             s.a[i] = data[i]
-        for i in xrange(len(data)):
+        for i in range(len(data)):
             assert s.a[i] == data[i]
         lltype.free(s.a, flavor='raw')
         lltype.free(s, flavor='raw')

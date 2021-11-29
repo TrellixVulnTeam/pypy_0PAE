@@ -500,7 +500,7 @@ class Test_rbigint(object):
     def test_tofloat_precision(self):
         assert rbigint.fromlong(0).tofloat() == 0.0
         for sign in [1, -1]:
-            for p in xrange(100):
+            for p in range(100):
                 x = long(2**p * (2**53 + 1) + 1) * sign
                 y = long(2**p * (2**53+ 2)) * sign
                 rx = rbigint.fromlong(x)

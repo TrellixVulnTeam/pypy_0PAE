@@ -5,6 +5,9 @@ except ImportError:
     import py
     py.test.skip("cffi not installed")
 
+from rpython.compat import xrange
+
+
 ffi = cffi.FFI()
 
 ffi.cdef("""

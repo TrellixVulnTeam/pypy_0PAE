@@ -27,6 +27,7 @@ from rpython.jit.backend.llsupport import jitframe
 from rpython.jit.backend.llsupport.llmodel import AbstractLLCPU
 from rpython.jit.backend.llsupport.llmodel import MissingLatestDescrError
 from rpython.jit.backend.llsupport.rewrite import GcRewriterAssembler
+from rpython.compat import xrange
 
 
 IS_32_BIT = sys.maxint < 2**32

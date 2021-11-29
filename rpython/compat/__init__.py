@@ -7,5 +7,10 @@ else:
     from ._exec_py3 import execute
     from ._reraise_py3 import reraise
 
+try:
+    xrange = xrange
+except NameError:
+    xrange = range
+
 
 __all__ = ["execute", "reraise"]
