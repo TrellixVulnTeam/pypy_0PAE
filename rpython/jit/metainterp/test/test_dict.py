@@ -82,7 +82,7 @@ class DictTests:
                     myjitdriver.can_enter_jit(total=total, it=it)
                     myjitdriver.jit_merge_point(total=total, it=it)
                     try:
-                        x = it.next()
+                        x = next(it)
                     except StopIteration:
                         break
                     if extract is not None:

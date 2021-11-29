@@ -1167,7 +1167,7 @@ class LLFrame(object):
             else:
                 raise NotImplementedError("accum operator in fail guard")
             values[i] = value
-            info = info.next()
+            info = next(info)
 
     def fail_guard(self, descr, saved_data=None, extra_value=None,
                    propagate_exception=False):

@@ -3998,7 +3998,7 @@ class BaseLLtypeTests(BasicTests):
             yield n+3
         def f(n):
             gen = g(n)
-            return gen.next() * gen.next() * gen.next()
+            return next(gen) * next(gen) * next(gen)
         res = self.interp_operations(f, [10])
         assert res == 11 * 12 * 13
         self.check_operations_history(int_add=3, int_mul=2)

@@ -22,7 +22,7 @@ def count_loops_and_bridges(log):
             time0 = get_timestamp(line)
         if '{jit-mem-looptoken-' in line:
             time_now = get_timestamp(line) - time0
-            text = lines.next()
+            text = next(lines)
             if text.startswith('allocating Loop #'):
                 loops += 1
             elif text.startswith('allocating Bridge #'):

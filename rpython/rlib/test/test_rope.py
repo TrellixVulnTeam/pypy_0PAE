@@ -344,11 +344,11 @@ def test_fringe_iterator():
     GHI = LiteralStringNode("ghi")
     rope = BinaryConcatNode(BinaryConcatNode(ABC, DEF), GHI)
     iter = FringeIterator(rope)
-    n = iter.next()
+    n = next(iter)
     assert n is ABC
-    n = iter.next()
+    n = next(iter)
     assert n is DEF
-    n = iter.next()
+    n = next(iter)
     assert n is GHI
     py.test.raises(StopIteration, iter.next)
     iter = FringeIterator(rope)
@@ -359,17 +359,17 @@ def test_fringe_iterator_seekforward():
     GHI = LiteralStringNode("ghi")
     rope = BinaryConcatNode(BinaryConcatNode(ABC, DEF), GHI)
     iter = FringeIterator(rope)
-    n = iter.next()
+    n = next(iter)
     assert n is ABC
     i = iter._seekforward(5)
     assert i == 2
-    n = iter.next()
+    n = next(iter)
     assert n is GHI
     py.test.raises(StopIteration, iter.next)
     iter = FringeIterator(rope)
     i = iter._seekforward(7)
     assert i == 1
-    n = iter.next()
+    n = next(iter)
     assert n is GHI
 
 
@@ -488,7 +488,7 @@ def test_find_iterator():
         while 1:
             r2 = s.find(searchstring, start)
             try:
-                r1 = iter.next()
+                r1 = next(iter)
             except StopIteration:
                 assert r2 == -1
                 break
@@ -513,7 +513,7 @@ def test_find_iterator_unicode():
         while 1:
             r2 = s.find(searchstring, start)
             try:
-                r1 = iter.next()
+                r1 = next(iter)
             except StopIteration:
                 assert r2 == -1
                 break

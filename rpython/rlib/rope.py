@@ -918,7 +918,7 @@ def fringe(node):
     iter = FringeIterator(node)
     while 1:
         try:
-            result.append(iter.next())
+            result.append(next(iter))
         except StopIteration:
             return result
 
@@ -950,14 +950,14 @@ class ItemIterator(object):
 
     def _advance_to(self, index):
         self.index = self.iter._seekforward(index)
-        self.node = self.iter.next()
+        self.node = next(self.iter)
         self.nodelength = self.node.length()
 
     def getnode(self):
         node = self.node
         if node is None:
             while 1:
-                node = self.node = self.iter.next()
+                node = self.node = next(self.iter)
                 nodelength = self.nodelength = node.length()
                 if nodelength != 0:
                     self.index = 0
@@ -1006,7 +1006,7 @@ class ReverseItemIterator(object):
         index = self.index
         if node is None:
             while 1:
-                node = self.node = self.iter.next()
+                node = self.node = next(self.iter)
                 index = self.index = node.length() - 1
                 if index != -1:
                     return node
@@ -1282,7 +1282,7 @@ def split(node, sub, maxsplit=-1):
     iter = FindIterator(node, sub)
     while maxsplit != 0:
         try:
-            foundidx = iter.next()
+            foundidx = next(iter)
         except StopIteration:
             break
         substrings.append(getslice_one(node, startidx, foundidx))

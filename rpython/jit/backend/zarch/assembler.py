@@ -1577,8 +1577,8 @@ class AssemblerZARCH(BaseAssembler, OpAssembler,
                     # the mapping might be wrong!
                     if bridge_accum_info.location is not guard_accum_info.location:
                         self.regalloc_mov(guard_accum_info.location, bridge_accum_info.location)
-                bridge_accum_info = bridge_accum_info.next()
-            guard_accum_info = guard_accum_info.next()
+                bridge_accum_info = next(bridge_accum_info)
+            guard_accum_info = next(guard_accum_info)
 
         # register mapping is most likely NOT valid, thus remap it
         src_locations1 = []

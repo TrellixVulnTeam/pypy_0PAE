@@ -903,7 +903,7 @@ class Stats(object):
         insns = {}
         t = self.history.trace.get_iter()
         while not t.done():
-            op = t.next()
+            op = next(t)
             opname = op.getopname()
             insns[opname] = insns.get(opname, 0) + 1
         if expected is not None:

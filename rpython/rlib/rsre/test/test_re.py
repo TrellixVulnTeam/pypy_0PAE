@@ -587,7 +587,7 @@ class TestRe:
 
     def test_bug_581080(self):
         iter = re.finditer(r"\s", "a b")
-        assert iter.next().span() == (1,2)
+        assert next(iter).span() == (1,2)
         py.test.raises(StopIteration, iter.next)
 
         if 0:    # XXX
@@ -597,8 +597,8 @@ class TestRe:
 
     def test_bug_817234(self):
         iter = re.finditer(r".*", "asdf")
-        assert iter.next().span() == (0, 4)
-        assert iter.next().span() == (4, 4)
+        assert next(iter).span() == (0, 4)
+        assert next(iter).span() == (4, 4)
         py.test.raises(StopIteration, iter.next)
 
     def test_empty_array(self):

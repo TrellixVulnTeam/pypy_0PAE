@@ -154,25 +154,25 @@ def builtin_list(s_iterable):
     if isinstance(s_iterable, SomeList):
         return s_iterable.listdef.offspring(bk)
     s_iter = s_iterable.iter()
-    return bk.newlist(s_iter.next())
+    return bk.newlist(next(s_iter))
 
 def builtin_zip(s_iterable1, s_iterable2): # xxx not actually implemented
     s_iter1 = s_iterable1.iter()
     s_iter2 = s_iterable2.iter()
-    s_tup = SomeTuple((s_iter1.next(),s_iter2.next()))
+    s_tup = SomeTuple((next(s_iter1), next(s_iter2)))
     return getbookkeeper().newlist(s_tup)
 
 def builtin_min(*s_values):
     if len(s_values) == 1: # xxx do we support this?
         s_iter = s_values[0].iter()
-        return s_iter.next()
+        return next(s_iter)
     else:
         return union(*s_values)
 
 def builtin_max(*s_values):
     if len(s_values) == 1: # xxx do we support this?
         s_iter = s_values[0].iter()
-        return s_iter.next()
+        return next(s_iter)
     else:
         s = union(*s_values)
         if type(s) is SomeInteger and not s.nonneg:

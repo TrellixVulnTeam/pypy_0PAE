@@ -600,7 +600,7 @@ class TestAnnotateTestCase:
     def test_simple_iter_next(self):
         def f(x):
             i = iter(range(x))
-            return i.next()
+            return next(i)
         a = self.RPythonAnnotator()
         s = a.build_types(f, [int])
         assert isinstance(s, annmodel.SomeInteger)
@@ -4380,7 +4380,7 @@ class TestAnnotateTestCase:
                 x = None
             else:
                 x = [42]
-            return enumerate(x).next()
+            return next(enumerate(x))
         a = self.RPythonAnnotator()
         s = a.build_types(f, [int])
         assert isinstance(s, annmodel.SomeTuple)

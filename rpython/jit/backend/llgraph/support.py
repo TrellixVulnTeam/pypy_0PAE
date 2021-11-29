@@ -112,21 +112,21 @@ def cast_call_args(ARGS, args_i, args_r, args_f, args_in_order=None):
         else:
             if isinstance(TYPE, lltype.Ptr) and TYPE.TO._gckind == 'gc':
                 if args_in_order is not None:
-                    n = orderiter.next()
+                    n = next(orderiter)
                     assert n == 'r'
-                x = argsiter_r.next()
+                x = next(argsiter_r)
                 x = cast_from_ptr(TYPE, x)
             elif TYPE is lltype.Float or longlong.is_longlong(TYPE):
                 if args_in_order is not None:
-                    n = orderiter.next()
+                    n = next(orderiter)
                     assert n == 'f'
-                x = argsiter_f.next()
+                x = next(argsiter_f)
                 x = cast_from_floatstorage(TYPE, x)
             else:
                 if args_in_order is not None:
-                    n = orderiter.next()
+                    n = next(orderiter)
                     assert n == 'i'
-                x = argsiter_i.next()
+                x = next(argsiter_i)
                 x = cast_from_int(TYPE, x)
         args.append(x)
     assert list(argsiter_i) == []

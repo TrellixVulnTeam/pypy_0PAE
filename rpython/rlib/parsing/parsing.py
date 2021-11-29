@@ -37,7 +37,7 @@ class LazyInputStream(object):
         assert index >= 0
         while len(self.data) <= index:
             try:
-                self.data.append(self.iterator.next())
+                self.data.append(next(self.iterator))
             except StopIteration:
                 raise IndexError("index out of range")
         return self.data[index]

@@ -8,7 +8,9 @@ def entry_point(argv):
     else:
         name = "py3"
 
-    print("Hello,", name + "!")
+    value = next(iter(range(3)))
+
+    print("Hello,", name + "!", "Value is:", value)
 
     return 0
 

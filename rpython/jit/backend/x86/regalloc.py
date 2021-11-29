@@ -351,7 +351,7 @@ class RegAlloc(BaseRegalloc, VectorRegallocMixin):
                 accuminfo.location = faillocs[accuminfo.getpos_in_failargs()]
                 loc = self.loc(accuminfo.getoriginal())
                 faillocs[accuminfo.getpos_in_failargs()] = loc
-                accuminfo = accuminfo.next()
+                accuminfo = next(accuminfo)
         return faillocs
 
     def perform_guard(self, guard_op, arglocs, result_loc):

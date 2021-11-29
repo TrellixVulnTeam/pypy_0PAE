@@ -860,7 +860,7 @@ class Utf8StringPosIterator(object):
 
     def next(self):
         pos = self.it.get_pos()
-        return (self.it.next(), pos)
+        return (next(self.it), pos)
 
 
 def decode_latin_1(s):

@@ -60,7 +60,7 @@ def format_code_dump_with_labels(originaddr, lines, label_list):
         label_list = []
     originaddr = r_uint(originaddr)
     itlines = iter(lines)
-    yield itlines.next() # don't process the first line
+    yield next(itlines) # don't process the first line
     for lbl_start, lbl_name in label_list:
         for line in itlines:
             addr, _ = line.split(':', 1)

@@ -153,7 +153,7 @@ class VectorAssemblerMixin(object):
                 regalloc.rm.possibly_free_var(tmpvar)
             if scalar_loc is not orig_scalar_loc:
                 self.mov(scalar_loc, orig_scalar_loc)
-            accum_info = accum_info.next()
+            accum_info = next(accum_info)
 
     def _accum_reduce_mul(self, arg, accumloc, targetloc):
         self.mov(accumloc, targetloc)

@@ -217,6 +217,7 @@ class TraceIterator(BaseTrace):
         self._count += 1
         return res
 
+
 class CutTrace(BaseTrace):
     def __init__(self, trace, start, count, index, inputargs):
         self.trace = trace
@@ -497,7 +498,7 @@ class Trace(BaseTrace):
         ops = []
         try:
             while True:
-                ops.append(iter.next())
+                ops.append(next(iter))
         except IndexError:
             pass
         return iter.inputargs, ops

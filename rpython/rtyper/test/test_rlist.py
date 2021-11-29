@@ -252,7 +252,7 @@ class TestRlist(BaseRtypingTest):
             it = iter([1, 3, 5, 7, 9])
             while 1:
                 try:
-                    x = it.next()
+                    x = next(it)
                 except StopIteration:
                     break
                 total += x
@@ -266,7 +266,7 @@ class TestRlist(BaseRtypingTest):
             it = iter(l)
             while 1:
                 try:
-                    x = it.next()
+                    x = next(it)
                 except StopIteration:
                     break
                 total += x

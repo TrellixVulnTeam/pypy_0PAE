@@ -466,7 +466,7 @@ class LogTrace(BaseLogTrace):
         ops = []
         i = trace.get_iter()
         while not i.done():
-            ops.append(i.next())
+            ops.append(next(i))
         self.write(i.inputargs, ops)
 
     def write(self, args, ops, ops_offset={}):

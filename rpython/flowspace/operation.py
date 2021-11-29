@@ -365,8 +365,10 @@ def inplace_xor(x, y):
     x ^= y
     return x
 
+_next = next
+
 def next(x):
-    return x.next()
+    return _next(x)
 
 def get(x, y, z=None):
     return x.__get__(y, z)
