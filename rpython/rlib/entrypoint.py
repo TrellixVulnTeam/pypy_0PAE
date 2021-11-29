@@ -4,6 +4,7 @@ import py
 from rpython.rtyper.lltypesystem import lltype, rffi
 from rpython.rtyper.lltypesystem.lloperation import llop
 from rpython.rlib.objectmodel import we_are_translated
+from rpython.compat import execute
 
 annotated_jit_entrypoints = []
 
@@ -84,7 +85,7 @@ def entrypoint_highlevel(key, argtypes, c_name=None):
         d = {'rffi': rffi, 'lltype': lltype,
          'pypy_debug_catch_fatal_exception': pypy_debug_catch_fatal_exception,
          'llop': llop, 'func': func, 'we_are_translated': we_are_translated}
-        exec source.compile() in d
+        execute(source.compile(), d)
         wrapper = d['wrapper']
         secondary_entrypoints.setdefault(key, []).append((wrapper, argtypes))
         wrapper.__name__ = func.__name__

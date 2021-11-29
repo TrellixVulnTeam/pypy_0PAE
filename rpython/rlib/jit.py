@@ -7,6 +7,7 @@ from rpython.rlib.objectmodel import CDefinedIntSymbolic, keepalive_until_here, 
 from rpython.rlib.unroll import unrolling_iterable
 from rpython.rtyper.extregistry import ExtRegistryEntry
 from rpython.tool.sourcetools import rpython_wrapper
+from rpython.compat import execute
 
 DEBUG_ELIDABLE_FUNCTIONS = False
 
@@ -194,7 +195,7 @@ def elidable_promote(promote_args='all'):
                 (arg, arg))
         code.append("    return _orig_func_unlikely_name(%s)\n" % (argstring, ))
         d = {"_orig_func_unlikely_name": func, "hint": hint}
-        exec py.code.Source("\n".join(code)).compile() in d
+        execute(py.code.Source("\n".join(code)).compile(), d)
         result = d["f"]
         result.__name__ = func.__name__ + "_promote"
         return result
@@ -227,7 +228,7 @@ def look_inside_iff(predicate):
             "func": func,
             "we_are_jitted": we_are_jitted,
         }
-        exec py.code.Source("""
+        execute(py.code.Source("""
             @dont_look_inside
             def trampoline(%(arguments)s):
                 return func(%(arguments)s)
@@ -243,7 +244,7 @@ def look_inside_iff(predicate):
                 else:
                     return trampoline(%(arguments)s)
             f.__name__ = func.__name__ + "_look_inside_iff"
-        """ % {"arguments": ", ".join(args)}).compile() in d
+        """ % {"arguments": ", ".join(args)}).compile(), d)
         return d["f"]
     return inner
 
@@ -435,7 +436,7 @@ def jit_callback(name):
             'jitdriver': jitdriver,
             'real_callback': func,
             }
-        exec compile2(source) in miniglobals
+        execute(compile2(source), miniglobals)
         return miniglobals['callback_with_jitdriver']
     return decorate
 

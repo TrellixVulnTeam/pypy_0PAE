@@ -9,6 +9,7 @@ from rpython.jit.codewriter import heaptracker, longlong
 from rpython.jit.codewriter.longlong import is_longlong
 from rpython.jit.metainterp.optimizeopt import intbounds
 from rpython.rtyper import rclass
+from rpython.compat import execute
 
 
 class GcCache(object):
@@ -605,7 +606,7 @@ class CallDescr(AbstractDescr):
         FUNC = lltype.FuncType(ARGS, RESULT)
         d = globals().copy()
         d.update(locals())
-        exec source.compile() in d
+        execute(source.compile(), d)
         call_stub = d['call_stub']
         # store the function into one of three attributes, to preserve
         # type-correctness of the return value
