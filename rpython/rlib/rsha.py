@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 """A sample implementation of SHA-1 in RPython.
 
@@ -6,10 +6,10 @@
    or might not be faster than this one on top of CPython.
 
    Framework adapted from Dinu Gherman's MD5 implementation by
-   J. Hallén and L. Creighton. SHA-1 implementation based directly on
+   J. HallÃ©n and L. Creighton. SHA-1 implementation based directly on
    the text of the NIST standard FIPS PUB 180-1.
 
-   Modernised by J. Hallén and L. Creighton for Pypy,
+   Modernised by J. HallÃ©n and L. Creighton for Pypy,
    converted to RPython by arigo.
 """
 
@@ -82,10 +82,10 @@ f = [f0_19, f20_39, f40_59, f60_79]
 
 # Constants to be used
 K = [
-    0x5A827999L, # ( 0 <= t <= 19)
-    0x6ED9EBA1L, # (20 <= t <= 39)
-    0x8F1BBCDCL, # (40 <= t <= 59)
-    0xCA62C1D6L  # (60 <= t <= 79)
+    0x5A827999, # ( 0 <= t <= 19)
+    0x6ED9EBA1, # (20 <= t <= 39)
+    0x8F1BBCDC, # (40 <= t <= 59)
+    0xCA62C1D6  # (60 <= t <= 79)
     ]
 
 unroll_f_K = unrolling_iterable(zip(f, map(r_uint, K)))
@@ -107,11 +107,11 @@ class RSHA(object):
         self.uintbuffer = [r_uint(0)] * 80
 
         # Initial 160 bit message digest (5 times 32 bit).
-        self.H0 = r_uint(0x67452301L)
-        self.H1 = r_uint(0xEFCDAB89L)
-        self.H2 = r_uint(0x98BADCFEL)
-        self.H3 = r_uint(0x10325476L)
-        self.H4 = r_uint(0xC3D2E1F0L)
+        self.H0 = r_uint(0x67452301)
+        self.H1 = r_uint(0xEFCDAB89)
+        self.H2 = r_uint(0x98BADCFE)
+        self.H3 = r_uint(0x10325476)
+        self.H4 = r_uint(0xC3D2E1F0)
 
     def _transform(self, W):
 

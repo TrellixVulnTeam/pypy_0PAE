@@ -578,7 +578,7 @@ def call_star_args_multiple(z):
     c = star_args(z, 5, 10, 15, 20)
     return a+b+c
 
-def default_args(x, y=2, z=3L):
+def default_args(x, y=2, z=3):
     return x+y+z
 
 def call_default_args(u):
@@ -599,36 +599,6 @@ def call_with_keyword(z):
 
 def call_very_complex(z, args, kwds):
     return default_args(-20, z=z, *args, **kwds)
-
-def powerset(setsize=int):
-    """Powerset
-
-    This one is from a Philippine Pythonista Hangout, an modified
-    version of Andy Sy's code.
-
-    list.append is modified to list concatenation, and powerset
-    is pre-allocated and stored, instead of printed.
-
-    URL is: http://lists.free.net.ph/pipermail/python/2002-November/
-    """
-    set = range(setsize)
-    maxcardinality = pow(2, setsize)
-    bitmask = 0L
-    powerset = [None] * maxcardinality
-    ptr = 0
-    while bitmask < maxcardinality:
-        bitpos = 1L
-        index = 0
-        subset = []
-        while bitpos < maxcardinality:
-            if bitpos & bitmask:
-                subset = subset + [set[index]]
-            index += 1
-            bitpos <<= 1
-        powerset[ptr] = subset
-        ptr += 1
-        bitmask += 1
-    return powerset
 
 def harmonic(n):
     result = 0.0
