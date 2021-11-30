@@ -4,7 +4,10 @@ from __future__ import print_function
 import sys
 import collections
 import types
-import __builtin__
+try:
+    import __builtin__
+except ModuleNotFoundError:
+    import builtins as __builtin__
 
 from rpython.tool.error import source_lines
 from rpython.rlib import rstackovf

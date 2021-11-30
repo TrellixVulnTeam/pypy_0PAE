@@ -2,7 +2,10 @@
 This module defines all the SpaceOperations used in rpython.flowspace.
 """
 
-import __builtin__
+try:
+    import __builtin__
+except ModuleNotFoundError:
+    import builtins as __builtin__
 import __future__
 import operator
 import sys

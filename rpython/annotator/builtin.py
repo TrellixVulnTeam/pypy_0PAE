@@ -184,7 +184,10 @@ def builtin_max(*s_values):
         return s
 
 # collect all functions
-import __builtin__
+try:
+    import __builtin__
+except ModuleNotFoundError:
+    import builtins as __builtin__
 for name, value in globals().items():
     if name.startswith('builtin_'):
         original = getattr(__builtin__, name[8:])
