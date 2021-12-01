@@ -1,6 +1,7 @@
 from __future__ import print_function
 import optparse
 from rpython.tool.pairtype import extendabletype
+from rpython.compat import with_metaclass
 
 SUPPRESS_USAGE = optparse.SUPPRESS_USAGE
 
@@ -209,8 +210,8 @@ class Config(object):
 DEFAULT_OPTION_NAME = object()
 
 
+@with_metaclass(extendabletype)
 class Option(object):
-    __metaclass__ = extendabletype
 
     def __init__(self, name, doc, cmdline=DEFAULT_OPTION_NAME):
         self._name = name
@@ -424,9 +425,8 @@ class ArbitraryOption(Option):
         return self.default
 
 
+@with_metaclass(extendabletype)
 class OptionDescription(object):
-    __metaclass__ = extendabletype
-
     cmdline = None
 
     def __init__(self, name, doc, children):
@@ -631,4 +631,3 @@ def make_dict(config):
     paths = config.getpaths()
     options = dict([(path, getattr(config, path)) for path in paths])
     return options
-

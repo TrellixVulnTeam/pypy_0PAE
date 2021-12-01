@@ -8,6 +8,7 @@ from rpython.rtyper.rmodel import Repr
 from rpython.rtyper.extregistry import ExtRegistryEntry
 from rpython.rtyper.annlowlevel import cachedtype
 from rpython.rtyper.error import TyperError
+from rpython.compat import with_metaclass
 
 
 class ControllerEntry(ExtRegistryEntry):
@@ -58,8 +59,8 @@ class ControllerEntryForPrebuilt(ExtRegistryEntry):
         return self._controller_()
 
 
+@with_metaclass(cachedtype)
 class Controller(object):
-    __metaclass__ = cachedtype
     can_be_None = False
 
     def _freeze_(self):

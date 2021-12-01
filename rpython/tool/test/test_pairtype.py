@@ -1,3 +1,4 @@
+from rpython.compat import with_metaclass
 from rpython.tool.pairtype import (
     pairmethod, pairtype, pair, extendabletype, pairmro,
     DoubleDispatchRegistry, doubledispatch
@@ -105,11 +106,13 @@ def test_some_multimethod():
     assert g.progn == ["(do 'something)"]
 
 def test_multiple_extend():
+    @with_metaclass(extendabletype)
     class A:
-        __metaclass__ = extendabletype
+        pass
 
+    @with_metaclass(extendabletype)
     class B:
-        __metaclass__ = extendabletype
+        pass
 
     class __extend__(A, B):
         def f(self):

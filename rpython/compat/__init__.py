@@ -34,4 +34,24 @@ else:
         return iter(d.values())
 
 
-__all__ = ["execute", "iteritems", "iterkeys", "itervalues", "reraise", "xrange"]
+def with_metaclass(metaclass):
+    """Use this decorator to add a metaclass to classes."""
+
+    def decorator(cls):
+        orig_vars = cls.__dict__.copy()
+        orig_vars.pop('__dict__', None)
+        orig_vars.pop('__weakref__', None)
+        return metaclass(cls.__name__, cls.__bases__, orig_vars)
+
+    return decorator
+
+
+__all__ = [
+    "execute",
+    "iteritems",
+    "iterkeys",
+    "itervalues",
+    "reraise",
+    "with_metaclass",
+    "xrange",
+]

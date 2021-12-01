@@ -8,6 +8,7 @@ a drop-in replacement for the 'socket' module.
 # supported by CPython.  See http://bugs.pypy.org/issue1942
 
 from errno import EINVAL
+from rpython.compat import with_metaclass
 from rpython.rlib import _rsocket_rffi as _c, jit, rgc
 from rpython.rlib.buffer import LLBuffer
 from rpython.rlib.objectmodel import (
@@ -68,18 +69,22 @@ def htonl(x):
 
 _FAMILIES = {}
 
+
+class __AddressMeta(type):
+    def __new__(cls, name, bases, dict):
+        family = dict.get('family')
+        A = type.__new__(cls, name, bases, dict)
+        if family is not None:
+            _FAMILIES[family] = A
+        return A
+
+
+@with_metaclass(__AddressMeta)
 class Address(object):
     """The base class for RPython-level objects representing addresses.
     Fields:  addr    - a _c.sockaddr_ptr (memory owned by the Address instance)
              addrlen - size used within 'addr'
     """
-    class __metaclass__(type):
-        def __new__(cls, name, bases, dict):
-            family = dict.get('family')
-            A = type.__new__(cls, name, bases, dict)
-            if family is not None:
-                _FAMILIES[family] = A
-            return A
 
     # default uninitialized value: NULL ptr
     addr_p = lltype.nullptr(_c.sockaddr_ptr.TO)

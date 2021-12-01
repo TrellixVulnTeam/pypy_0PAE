@@ -4,6 +4,7 @@ from rpython.rtyper.error import TyperError, MissingRTypeOperation
 from rpython.rtyper.lltypesystem import lltype
 from rpython.rtyper.lltypesystem.lltype import Void, Bool, LowLevelType, Ptr
 from rpython.tool.pairtype import pairmethod, pairtype, extendabletype, pair
+from rpython.compat import with_metaclass
 
 
 # initialization states for Repr instances
@@ -15,6 +16,7 @@ class setupstate(object):
     FINISHED = 3
     DELAYED = 4
 
+@with_metaclass(extendabletype)
 class Repr(object):
     """ An instance of Repr is associated with each instance of SomeXxx.
     It defines the chosen representation for the SomeXxx.  The Repr subclasses
@@ -23,7 +25,6 @@ class Repr(object):
     we need different representations according to the type of container we are
     iterating over.
     """
-    __metaclass__ = extendabletype
     _initialized = setupstate.NOTINITIALIZED
     __NOT_RPYTHON__ = True
 

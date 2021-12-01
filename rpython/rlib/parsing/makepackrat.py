@@ -4,6 +4,7 @@ import sys
 from rpython.rlib.parsing.tree import Nonterminal, Symbol, RPythonVisitor
 from rpython.rlib.parsing.codebuilder import Codebuilder
 from rpython.rlib.objectmodel import we_are_translated
+from rpython.compat import with_metaclass
 
 class BacktrackException(Exception):
     def __init__(self, error=None):
@@ -674,8 +675,8 @@ class MetaPackratParser(type):
         result._code = visitor.get_code()
         return result
 
+@with_metaclass(MetaPackratParser)
 class PackratParser(object):
-    __metaclass__ = MetaPackratParser
 
     _ErrorInformation = ErrorInformation
     _BacktrackException = BacktrackException

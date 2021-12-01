@@ -1,8 +1,8 @@
 """
 Two magic tricks for classes:
 
+    @with_metaclass(extendabletype)
     class X:
-        __metaclass__ = extendabletype
         ...
 
     # in some other file...

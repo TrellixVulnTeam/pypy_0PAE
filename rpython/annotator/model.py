@@ -36,6 +36,7 @@ from types import BuiltinFunctionType, MethodType
 from collections import OrderedDict, defaultdict
 
 import rpython
+from rpython.compat import with_metaclass
 from rpython.tool import descriptor
 from rpython.tool.pairtype import pair, extendabletype, doubledispatch
 from rpython.rlib.rarithmetic import r_uint, base_int, r_singlefloat, r_longfloat
@@ -48,10 +49,10 @@ class State(object):
     allow_int_to_float = True
 TLS = State()
 
+@with_metaclass(extendabletype)
 class SomeObject(object):
     """The set of all objects.  Each instance stands
     for an arbitrary object about which nothing is known."""
-    __metaclass__ = extendabletype
     immutable = False
     knowntype = object
 

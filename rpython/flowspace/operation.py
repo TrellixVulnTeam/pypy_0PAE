@@ -10,6 +10,7 @@ import __future__
 import operator
 import sys
 import types
+from rpython.compat import with_metaclass
 from rpython.tool.pairtype import pair, DoubleDispatchRegistry
 from rpython.rlib.unroll import unrolling_iterable, _unroller
 from rpython.tool.sourcetools import compile2
@@ -66,8 +67,8 @@ class HLOperationMeta(type):
             cls._transform = DoubleDispatchRegistry()
 
 
+@with_metaclass(HLOperationMeta)
 class HLOperation(SpaceOperation):
-    __metaclass__ = HLOperationMeta
     pure = False
     can_overflow = False
     dispatch = None  # number of arguments to dispatch on
