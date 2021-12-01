@@ -8,6 +8,7 @@ import sys, types, inspect, weakref
 from contextlib import contextmanager
 from collections import OrderedDict
 
+import rpython.compat as compat
 from rpython.flowspace.model import Constant
 from rpython.flowspace.bytecode import cpython_code_signature
 from rpython.annotator.model import (
@@ -364,7 +365,7 @@ class Bookkeeper(object):
         except KeyError:
             if isinstance(pyobj, types.FunctionType):
                 result = self.newfuncdesc(pyobj)
-            elif isinstance(pyobj, (type, types.ClassType)):
+            elif isinstance(pyobj, (type, compat.ClassType)):
                 if pyobj is object:
                     raise AnnotatorError("ClassDesc for object not supported")
                 if pyobj.__module__ == '__builtin__': # avoid making classdefs for builtin types

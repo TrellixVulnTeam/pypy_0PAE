@@ -3,6 +3,7 @@ import pdb, bdb
 import types
 import code
 import sys
+import rpython.compat as compat
 from rpython.flowspace.model import FunctionGraph
 
 class NoTTY(Exception):
@@ -185,7 +186,7 @@ if obj is a class or ClassDef the class definition graph is shown"""
             page = graphpage.LocalizedCallGraphPage(translator, self._allgraphs(obj))
         elif isinstance(obj, FunctionGraph):
             page = graphpage.FlowGraphPage(translator, [obj])
-        elif isinstance(obj, (type, types.ClassType)):
+        elif isinstance(obj, (type, compat.ClassType)):
             classdef = self._getcdef(obj)
             if classdef is None:
                 return
@@ -234,7 +235,7 @@ find a stack frame that has a certain variable (the default is "graph")
             obj = [obj]
         clsdefs = []
         for x in obj:
-            if isinstance(x, (type, types.ClassType)):
+            if isinstance(x, (type, compat.ClassType)):
                 cdef = self._getcdef(x)
                 if cdef is None:
                     continue
@@ -311,7 +312,7 @@ the list of the read positions functions is set to var or _."""
         obj = self._getobj(arg)
         if obj is None:
             return
-        if isinstance(obj, (type, types.ClassType)):
+        if isinstance(obj, (type, compat.ClassType)):
             obj = self._getcdef(obj)
             if obj is None:
                 return

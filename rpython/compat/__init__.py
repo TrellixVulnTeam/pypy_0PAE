@@ -1,5 +1,7 @@
 import sys
+import types
 
+# Exec statement
 if sys.version_info.major == 2:
     from ._exec_py2 import execute
     from ._reraise_py2 import reraise
@@ -7,12 +9,13 @@ else:
     from ._exec_py3 import execute
     from ._reraise_py3 import reraise
 
+# Builtins that no longer exist
 try:
     xrange = xrange
 except NameError:
     xrange = range
 
-
+# Dict methods
 if sys.version_info.major == 2:
     def iteritems(d):
         return d.iteritems()
@@ -34,6 +37,7 @@ else:
         return iter(d.values())
 
 
+# Metaclass compatibility
 def with_metaclass(metaclass):
     """Use this decorator to add a metaclass to classes."""
 
@@ -46,7 +50,14 @@ def with_metaclass(metaclass):
     return decorator
 
 
+# Types that no longer exist in the types module
+NoneType = type(None)
+ClassType = getattr(types, "ClassType", type)
+
+
 __all__ = [
+    "ClassType",
+    "NoneType",
     "execute",
     "iteritems",
     "iterkeys",

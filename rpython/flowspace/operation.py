@@ -10,6 +10,8 @@ import __future__
 import operator
 import sys
 import types
+
+import rpython.compat as compat
 from rpython.compat import with_metaclass
 from rpython.tool.pairtype import pair, DoubleDispatchRegistry
 from rpython.rlib.unroll import unrolling_iterable, _unroller
@@ -610,8 +612,8 @@ class CallOp(HLOperation):
             c = w_callable.value
             if (isinstance(c, (types.BuiltinFunctionType,
                                types.BuiltinMethodType,
-                               types.ClassType,
-                               types.TypeType)) and
+                               compat.ClassType,
+                               type)) and
                     c.__module__ in ['__builtin__', 'exceptions']):
                 return builtins_exceptions.get(c, [])
         # *any* exception for non-builtins

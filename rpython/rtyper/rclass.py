@@ -1,6 +1,7 @@
 import sys
 import types
 
+import rpython.compat as compat
 from rpython.flowspace.model import Constant
 from rpython.annotator import description, model as annmodel
 from rpython.rlib.objectmodel import UnboxedValue
@@ -222,7 +223,7 @@ class ClassRepr(Repr):
         return r_subclass.getruntime(self.lowleveltype)
 
     def convert_const(self, value):
-        if not isinstance(value, (type, types.ClassType)):
+        if not isinstance(value, (type, compat.ClassType)):
             raise TyperError("not a class: %r" % (value,))
         bk = self.rtyper.annotator.bookkeeper
         return self.convert_desc(bk.getdesc(value))

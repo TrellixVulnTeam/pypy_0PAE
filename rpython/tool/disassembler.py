@@ -9,6 +9,7 @@ import sys
 import types
 import inspect
 
+import rpython.compat as compat
 from opcode import *
 from opcode import __all__ as _opcodes_all
 
@@ -102,7 +103,7 @@ def dis(x=None):
             if type(x1) in (types.MethodType,
                             types.FunctionType,
                             types.CodeType,
-                            types.ClassType):
+                            compat.ClassType):
                 print("Disassembly of %s:" % name)
                 try:
                     dis(x1)
