@@ -135,7 +135,7 @@ class TestFile(BaseRtypingTest):
         def f():
             f = open(fname, 'w', 128)
             f.write('dupa\ndupb')
-            f2 = open(fname, 'r')
+            f2 = open(fname, 'r', 0)
             assert f2.read() == ''
             f.write('z' * 120)
             assert f2.read() != ''
@@ -155,7 +155,7 @@ class TestFile(BaseRtypingTest):
             f = os.fdopen(os.dup(g.fileno()), 'w', 128)
             g.close()
             f.write('dupa\ndupb')
-            f2 = open(fname, 'r')
+            f2 = open(fname, 'r', 0)
             assert f2.read() == ''
             f.write('z' * 120)
             assert f2.read() != ''

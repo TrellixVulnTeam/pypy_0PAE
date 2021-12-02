@@ -516,7 +516,7 @@ def test_enforceargs_translates():
 
 def test_enforceargs_not_constant():
     from rpython.translator.translator import TranslationContext, graphof
-    @enforceargs(NOT_CONSTANT)
+    @enforceargs(NOT_CONSTANT, typecheck=False)
     def f(a):
         return a
     def f42():
