@@ -60,7 +60,11 @@ def test_traceback():
     assert 'leakfinder.remember_malloc(x)' in res[x]
 
 def test_malloc_mismatch():
-    import sys, traceback, cStringIO
+    import sys, traceback
+    try:
+        import cStringIO
+    except ImportError:
+        import io as cStringIO
     sio = cStringIO.StringIO()
     traceback.print_stack(sys._getframe(), limit=10, file=sio)
     tb = sio.getvalue()

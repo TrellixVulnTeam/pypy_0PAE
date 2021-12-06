@@ -296,7 +296,10 @@ class SimpleIOSandboxedProc(SandboxedProc):
         """Send data to stdin. Read data from stdout and stderr,
         until end-of-file is reached. Wait for process to terminate.
         """
-        import cStringIO
+        try:
+            import cStringIO
+        except ImportError:
+            import io as cStringIO
         if input:
             if isinstance(input, str):
                 input = cStringIO.StringIO(input)

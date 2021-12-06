@@ -462,7 +462,10 @@ if __name__ == '__main__':
         print(__doc__, file=sys.stderr)
         sys.exit(2)
     #
-    import cStringIO
+    try:
+        import cStringIO
+    except ImportError:
+        import io as cStringIO
     from rpython.tool import logparser
     log1 = logparser.parse_log_file(sys.argv[1])
     text1 = logparser.extract_category(log1, catprefix='jit-backend-dump')

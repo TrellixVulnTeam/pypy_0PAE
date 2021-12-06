@@ -1,5 +1,8 @@
 from __future__ import print_function
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 from rpython.jit.backend.tool.viewcode import format_code_dump_with_labels
 from rpython.jit.backend.tool.viewcode import find_objdump
 import os

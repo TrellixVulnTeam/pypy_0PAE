@@ -86,7 +86,11 @@ class TestParser(object):
 
     def tokenize(self, source):
         # use tokenize module but rewrite tokens slightly
-        import tokenize, cStringIO
+        import tokenize
+        try:
+            import cStringIO
+        except ImportError:
+            import io as cStringIO
         pos = 0
         readline = cStringIO.StringIO(source).readline
         for token in tokenize.generate_tokens(readline):
@@ -251,4 +255,3 @@ a = 1 - 2 - 3
         s = py.path.local(__file__).dirpath().dirpath().join("parsing.py").read()
         t = self.parse(s)
         t = self.ToAST.transform(t)
-

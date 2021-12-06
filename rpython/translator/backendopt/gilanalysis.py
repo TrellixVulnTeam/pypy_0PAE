@@ -33,7 +33,10 @@ def analyze(graphs, translator):
         if func and getattr(func, '_no_release_gil_', False):
             if gilanalyzer.analyze_direct_call(graph):
                 # 'no_release_gil' function can release the gil
-                import cStringIO
+                try:
+                    import cStringIO
+                except ImportError:
+                    import io as cStringIO
                 err = cStringIO.StringIO()
                 import sys
                 prev = sys.stdout
@@ -49,5 +52,3 @@ def analyze(graphs, translator):
                 # causes it to return True
                 raise Exception("'no_release_gil' function can release the GIL:"
                                 " %s\n%s" % (func, err.getvalue()))
-
-

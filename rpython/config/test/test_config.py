@@ -411,7 +411,7 @@ def test_more_set():
     assert config.int == 23
 
 def test_optparse_help():
-    import cStringIO
+    import io
     descr = OptionDescription("opt", "", [
         BoolOption("bool1", 'do bool1', default=False, cmdline='--bool1'),
         BoolOption("bool2", 'do bool2', default=False, cmdline='--bool2', negation=False),
@@ -422,7 +422,7 @@ def test_optparse_help():
     ])
     conf = Config(descr)
     parser = to_optparse(conf)
-    out = cStringIO.StringIO()
+    out = io.StringIO()
     parser.print_help(out)
     help = out.getvalue()
     #print help

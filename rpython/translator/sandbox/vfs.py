@@ -119,7 +119,10 @@ class File(FSObject):
     def getsize(self):
         return len(self.data)
     def open(self):
-        import cStringIO
+        try:
+            import cStringIO
+        except ImportError:
+            import io as cStringIO
         return cStringIO.StringIO(self.data)
 
 class RealFile(File):

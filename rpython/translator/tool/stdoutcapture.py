@@ -42,7 +42,10 @@ class Capture:
     def done(self):
         "End capture and return the captured text (stdoutfile, stderrfile)."
         if self.dummy:
-            import cStringIO
+            try:
+                import cStringIO
+            except ImportError:
+                import io as cStringIO
             return cStringIO.StringIO(), cStringIO.StringIO()
         else:
             os.dup2(self.localoutfd, 1)

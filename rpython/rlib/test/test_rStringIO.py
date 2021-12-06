@@ -139,7 +139,11 @@ def test_bug():
     assert f.getvalue() == '0123'
 
 def test_stress():
-    import cStringIO, random
+    import random
+    try:
+        import cStringIO
+    except ImportError:
+        import io as cStringIO
     f = RStringIO()
     expected = cStringIO.StringIO()
     for i in range(2000):
