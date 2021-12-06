@@ -1,4 +1,5 @@
 from __future__ import print_function
+from rpython.compat import cmp, ordering_from_cmp
 from rpython.annotator import model as annmodel, description
 from rpython.flowspace.argument import Signature
 from rpython.flowspace.model import (Variable, Constant, Block, Link,
@@ -299,6 +300,7 @@ def create_instantiate_function(annotator, classdef):
 class TooLateForNewSubclass(Exception):
     pass
 
+@ordering_from_cmp
 class TotalOrderSymbolic(ComputedIntSymbolic):
 
     def __init__(self, orderwitness, peers):

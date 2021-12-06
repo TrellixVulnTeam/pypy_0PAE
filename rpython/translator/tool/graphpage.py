@@ -93,7 +93,7 @@ class FlowGraphPage(GraphPage):
                 graphs = list(graphs)
                 graphs += graphsof(translator, translator.entrypoint)
         gs = [(graph.name, graph) for graph in graphs]
-        gs.sort(lambda gpair, hpair: cmp(gpair[1].tag, hpair[1].tag))
+        gs.sort(key=lambda gpair: gpair[1].tag)
         if self.annotator and self.annotator.blocked_graphs:
             for block, was_annotated in self.annotator.annotated.items():
                 if not was_annotated:

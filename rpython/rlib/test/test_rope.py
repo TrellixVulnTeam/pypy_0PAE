@@ -1,6 +1,7 @@
 from __future__ import print_function
 import py
 import random, sys
+from rpython.compat import cmp
 from rpython.rlib.rope import *
 
 def make_random_string(operations=10, slicing=True, print_seed=True,

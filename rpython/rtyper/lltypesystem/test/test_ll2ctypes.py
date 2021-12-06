@@ -2,6 +2,7 @@ from __future__ import print_function
 import py, pytest
 import sys, struct
 import ctypes
+from rpython.compat import cmp
 from rpython.rtyper.lltypesystem import lltype, rffi, llmemory
 from rpython.rtyper.tool import rffi_platform
 from rpython.rtyper.lltypesystem.ll2ctypes import lltype2ctypes, ctypes2lltype

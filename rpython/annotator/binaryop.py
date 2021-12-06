@@ -3,6 +3,7 @@ Binary operations between SomeValues.
 """
 from collections import defaultdict
 
+from rpython.compat import cmp
 from rpython.tool.pairtype import pair, pairmethod, pairtype
 from rpython.annotator.model import (
     SomeObject, SomeInteger, SomeBool, s_Bool, SomeString, SomeChar, SomeList,

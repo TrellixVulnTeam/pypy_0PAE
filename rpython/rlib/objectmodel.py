@@ -11,11 +11,11 @@ import math
 import inspect
 from collections import OrderedDict
 
+from rpython.compat import iteritems, itervalues, ordering_from_cmp
 from rpython.tool.sourcetools import rpython_wrapper, func_with_new_name
 from rpython.rtyper.extregistry import ExtRegistryEntry
 from rpython.flowspace.specialcase import register_flow_sc
 from rpython.flowspace.model import Constant
-from rpython.compat import iteritems, itervalues
 
 # specialize is a decorator factory for attaching _annspecialcase_
 # attributes to functions: for example
@@ -246,6 +246,7 @@ def llhelper_error_value(error_value):
 
 # ____________________________________________________________
 
+@ordering_from_cmp
 class Symbolic(object):
 
     def annotation(self):

@@ -37,6 +37,7 @@ mark where overflow checking is required.
 
 """
 import sys, struct, math
+from rpython.compat import ordering_from_cmp
 from rpython.rtyper import extregistry
 from rpython.rlib import objectmodel
 from rpython.flowspace.model import Constant, const
@@ -636,6 +637,7 @@ UINT_MAX = r_uint(2**_get_bitsize('i') - 1)
 
 # the 'float' C type
 
+@ordering_from_cmp
 class r_singlefloat(object):
     """A value of the C type 'float'.
 
@@ -671,6 +673,7 @@ class r_singlefloat(object):
     def __repr__(self):
         return 'r_singlefloat(%s)' % (float(self),)
 
+@ordering_from_cmp
 class r_longfloat(object):
     """A value of the C type 'long double'.
 

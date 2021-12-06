@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 import cPickle as pickle
 
+from rpython.compat import cmp, ordering_from_cmp
 from rpython.tool.ansicolor import red, yellow, green
 from rpython.rtyper.lltypesystem.lltype import typeOf, _ptr, Ptr, ContainerType
 from rpython.rtyper.lltypesystem.lltype import GcOpaqueType
@@ -10,6 +11,7 @@ from rpython.memory.lltypelayout import convert_offset_to_int
 class Info:
     pass
 
+@ordering_from_cmp
 class ModuleReport:
     def __init__(self, modulename, totalsize, typereports):
         self.modulename = modulename
@@ -22,6 +24,7 @@ class ModuleReport:
     def __cmp__(self, other):
         return cmp((self.totalsize, self.modulename), (other.totalsize, other.modulename))
 
+@ordering_from_cmp
 class TypeReport:
     def __init__(self, typename, size, numobjects):
         self.typename = typename
