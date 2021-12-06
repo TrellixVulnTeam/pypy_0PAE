@@ -1,6 +1,14 @@
 import sys
+import struct
 from ._cmp import cmp, ordering_from_cmp
 from ._types import ClassType, NoneType
+
+# Evil side-effect to patch sys to have the maxint property
+if not hasattr(sys, "maxint"):
+    # sys.maxint represents the largest Python2 integer,
+    # which means the largest platform C long
+    sys.maxint = 2 ** (struct.Struct('l').size * 8 - 1) - 1
+
 
 # Exec statement
 if sys.version_info.major == 2:
