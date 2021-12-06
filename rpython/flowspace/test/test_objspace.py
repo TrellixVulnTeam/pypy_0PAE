@@ -667,6 +667,7 @@ class TestFlowObjSpace(Base):
         class C:
             def __nonzero__(self):
                 return True
+            __bool__ = __nonzero__
         c = C()
         def f():
             if c:
@@ -701,6 +702,7 @@ class TestFlowObjSpace(Base):
         class C:
             def __nonzero__(self):
                 return True
+            __bool__ = __nonzero__
             def _freeze_(self):
                 return True
         c = C()
