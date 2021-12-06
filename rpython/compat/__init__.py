@@ -1,5 +1,6 @@
 import sys
-import types
+from ._cmp import cmp, ordering_from_cmp
+from ._types import ClassType, NoneType
 
 # Exec statement
 if sys.version_info.major == 2:
@@ -50,18 +51,15 @@ def with_metaclass(metaclass):
     return decorator
 
 
-# Types that no longer exist in the types module
-NoneType = type(None)
-ClassType = getattr(types, "ClassType", type)
-
-
 __all__ = [
     "ClassType",
     "NoneType",
+    "cmp",
     "execute",
     "iteritems",
     "iterkeys",
     "itervalues",
+    "ordering_from_cmp",
     "reraise",
     "with_metaclass",
     "xrange",
