@@ -37,7 +37,7 @@ mark where overflow checking is required.
 
 """
 import sys, struct, math
-from rpython.compat import ordering_from_cmp
+from rpython.compat import long, ordering_from_cmp
 from rpython.rtyper import extregistry
 from rpython.rlib import objectmodel
 from rpython.flowspace.model import Constant, const

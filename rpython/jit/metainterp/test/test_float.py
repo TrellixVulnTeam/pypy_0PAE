@@ -1,4 +1,5 @@
-import math, sys
+import sys
+from rpython.compat import long
 from rpython.jit.metainterp.test.support import LLJitMixin
 from rpython.rlib.rarithmetic import intmask, r_uint
 

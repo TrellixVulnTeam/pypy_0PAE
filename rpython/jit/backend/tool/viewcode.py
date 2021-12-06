@@ -18,6 +18,8 @@ import sys
 import subprocess
 from bisect import bisect_left
 
+from rpython.compat import long
+
 # ____________________________________________________________
 # Some support code from Psyco.  There is more over there,
 # I am porting it in a lazy fashion...  See py-utils/xam.py
@@ -479,4 +481,3 @@ if __name__ == '__main__':
 else:
     from rpython.tool.udir import udir
     tmpfile = str(udir.join('dump.tmp'))
-

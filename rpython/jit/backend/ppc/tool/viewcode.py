@@ -17,6 +17,8 @@ import sys
 import subprocess
 from bisect import bisect_left
 
+from rpython.compat import long
+
 # don't use pypy.tool.udir here to avoid removing old usessions which
 # might still contain interesting executables
 udir = py.path.local.make_numbered_dir(prefix='viewcode-', keep=2)

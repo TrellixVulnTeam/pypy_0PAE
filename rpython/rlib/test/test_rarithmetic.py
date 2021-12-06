@@ -1,4 +1,5 @@
 from __future__ import print_function
+from rpython.compat import long
 from rpython.rtyper.test.tool import BaseRtypingTest
 from rpython.rtyper.test.test_llinterp import interpret
 from rpython.rlib import rarithmetic

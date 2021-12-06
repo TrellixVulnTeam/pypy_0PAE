@@ -5,6 +5,7 @@ import sys
 import py
 import weakref
 
+from rpython.compat import long
 from rpython.rlib import rgc
 from rpython.jit.codewriter.policy import StopAtXPolicy
 from rpython.jit.metainterp import history

@@ -1,5 +1,6 @@
 from __future__ import print_function
 import py, random
+from rpython.compat import long
 from rpython.rtyper.lltypesystem.lltype import *
 from rpython.rtyper.lltypesystem import rffi
 from rpython.translator.c.test.test_genc import compile

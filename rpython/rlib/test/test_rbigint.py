@@ -5,6 +5,8 @@ import sys, os
 import math
 from random import random, randint, sample
 
+from rpython.compat import long
+
 try:
     import pytest
 except ImportError:

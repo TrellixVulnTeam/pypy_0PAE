@@ -1,7 +1,7 @@
 import weakref
 from types import MethodType
 
-from rpython.compat import NoneType
+from rpython.compat import NoneType, long
 from rpython.annotator.bookkeeper import analyzer_for, immutablevalue
 from rpython.annotator.model import (
         AnnotatorError, SomeBool, SomeInteger, SomeObject)

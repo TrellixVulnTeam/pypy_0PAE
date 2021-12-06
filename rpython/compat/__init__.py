@@ -20,8 +20,10 @@ else:
 
 # Builtins that no longer exist
 try:
+    long = long
     xrange = xrange
 except NameError:
+    long = int
     xrange = range
 
 # Dict methods

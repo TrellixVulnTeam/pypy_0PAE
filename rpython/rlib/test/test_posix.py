@@ -1,4 +1,5 @@
 import py.test
+from rpython.compat import long
 from rpython.rtyper.test.tool import BaseRtypingTest
 from rpython.rtyper.annlowlevel import hlstr
 from rpython.tool.udir import udir
