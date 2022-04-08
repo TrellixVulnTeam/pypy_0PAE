@@ -12,6 +12,20 @@ class TestGenerator(BaseRtypingTest):
             yield c
         def f():
             gen = g(3, 5, 8)
+            x = next(gen) * 100
+            x += next(gen) * 10
+            x += next(gen)
+            return x
+        res = self.interpret(f, [])
+        assert res == 358
+
+    def test_simple_explicit_old(self):
+        def g(a, b, c):
+            yield a
+            yield b
+            yield c
+        def f():
+            gen = g(3, 5, 8)
             x = gen.next() * 100
             x += gen.next() * 10
             x += gen.next()
@@ -31,7 +45,7 @@ class TestGenerator(BaseRtypingTest):
             def __init__(self, a):
                 self._gen = self.g1(a)
             def next(self):
-                return self._gen.next()
+                return next(self._gen)
             @staticmethod
             def g1(a):
                 yield a + 1
@@ -41,7 +55,7 @@ class TestGenerator(BaseRtypingTest):
             def __init__(self):
                 self._gen = self.g2()
             def next(self):
-                return self._gen.next()
+                return next(self._gen)
             @staticmethod
             def g2():
                 yield 42
@@ -50,7 +64,7 @@ class TestGenerator(BaseRtypingTest):
                 gen = MyG1(n)
             else:
                 gen = MyG2()
-            return gen.next()
+            return next(gen)
         res = self.interpret(f, [10])
         assert res == 11
         res = self.interpret(f, [0])
@@ -69,9 +83,9 @@ class TestGenerator(BaseRtypingTest):
             yield c
         def f():
             gen = g(3, 5, 8)
-            x = gen.next() * 100
-            x += gen.next() * 10
-            x += gen.next()
+            x = next(gen) * 100
+            x += next(gen) * 10
+            x += next(gen)
             return x
         res = self.interpret(f, [])
         assert res == 358

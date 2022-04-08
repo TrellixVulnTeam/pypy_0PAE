@@ -2,11 +2,17 @@
 This module defines all the SpaceOperations used in rpython.flowspace.
 """
 
-import __builtin__
+try:
+    import __builtin__
+except ModuleNotFoundError:
+    import builtins as __builtin__
 import __future__
 import operator
 import sys
 import types
+
+import rpython.compat as compat
+from rpython.compat import with_metaclass
 from rpython.tool.pairtype import pair, DoubleDispatchRegistry
 from rpython.rlib.unroll import unrolling_iterable, _unroller
 from rpython.tool.sourcetools import compile2
@@ -63,8 +69,8 @@ class HLOperationMeta(type):
             cls._transform = DoubleDispatchRegistry()
 
 
+@with_metaclass(HLOperationMeta)
 class HLOperation(SpaceOperation):
-    __metaclass__ = HLOperationMeta
     pure = False
     can_overflow = False
     dispatch = None  # number of arguments to dispatch on
@@ -365,8 +371,10 @@ def inplace_xor(x, y):
     x ^= y
     return x
 
+_next = next
+
 def next(x):
-    return x.next()
+    return _next(x)
 
 def get(x, y, z=None):
     return x.__get__(y, z)
@@ -604,8 +612,8 @@ class CallOp(HLOperation):
             c = w_callable.value
             if (isinstance(c, (types.BuiltinFunctionType,
                                types.BuiltinMethodType,
-                               types.ClassType,
-                               types.TypeType)) and
+                               compat.ClassType,
+                               type)) and
                     c.__module__ in ['__builtin__', 'exceptions']):
                 return builtins_exceptions.get(c, [])
         # *any* exception for non-builtins

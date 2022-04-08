@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.jit.backend.llsupport.regalloc import (RegisterManager, FrameManager,
                                                     TempVar, compute_vars_longevity,
                                                     BaseRegalloc, NoVariableToSpill,
@@ -324,7 +325,7 @@ class ZARCHRegisterManager(RegisterManager):
                     continue # duh!
                 self._sync_var_to_stack(orig_var_odd)
                 del self.reg_bindings[orig_var_odd]
-            
+
             # well, we got away with a single spill :)
             self.free_regs = [fr for fr in self.free_regs \
                               if fr is not even and \
@@ -638,7 +639,7 @@ class Regalloc(BaseRegalloc, vector_ext.VectorRegalloc):
         frame_depth = self.fm.get_frame_depth()
         gcmap = allocate_gcmap(self.assembler, frame_depth,
                                r.JITFRAME_FIXED_SIZE)
-        for box, loc in self.rm.reg_bindings.iteritems():
+        for box, loc in self.rm.reg_bindings.items():
             if loc in forbidden_regs:
                 continue
             if box.type == REF and self.rm.is_still_alive(box):
@@ -646,7 +647,7 @@ class Regalloc(BaseRegalloc, vector_ext.VectorRegalloc):
                 assert loc.is_core_reg()
                 val = self.assembler.cpu.all_reg_indexes[loc.value]
                 gcmap[val // WORD // 8] |= r_uint(1) << (val % (WORD * 8))
-        for box, loc in self.fm.bindings.iteritems():
+        for box, loc in self.fm.bindings.items():
             if box.type == REF and self.rm.is_still_alive(box):
                 assert isinstance(loc, l.StackLocation)
                 val = loc.get_position() + r.JITFRAME_FIXED_SIZE
@@ -779,7 +780,7 @@ class Regalloc(BaseRegalloc, vector_ext.VectorRegalloc):
             return rffi.cast(lltype.Signed, c.value)
 
     # ******************************************************
-    # *         P R E P A R E  O P E R A T I O N S         * 
+    # *         P R E P A R E  O P E R A T I O N S         *
     # ******************************************************
 
     def prepare_increment_debug_counter(self, op):
@@ -1189,7 +1190,7 @@ class Regalloc(BaseRegalloc, vector_ext.VectorRegalloc):
                 accuminfo.location = args[i]
                 loc = self.loc(accuminfo.getoriginal())
                 args[i] = loc
-                accuminfo = accuminfo.next()
+                accuminfo = next(accuminfo)
         return args
 
     def load_condition_into_cc(self, box):
@@ -1403,8 +1404,8 @@ if not we_are_translated():
 
     if __name__ == '__main__':
         for m in missing:
-            print(" " * 4 + m)
-        print
-        print("regalloc implements %d of %d = %.2f%% of all resops" % \
-              (implemented_count, total_count, (100.0 * implemented_count / total_count)))
+            print((" " * 4 + m))
+        print()
+        print(("regalloc implements %d of %d = %.2f%% of all resops" % \
+              (implemented_count, total_count, (100.0 * implemented_count / total_count))))
 

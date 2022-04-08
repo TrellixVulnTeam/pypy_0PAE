@@ -1,4 +1,8 @@
-import cStringIO
+from __future__ import print_function
+try:
+    import cStringIO
+except ImportError
+    import io as cStringIO
 import os
 import sys
 import traceback
@@ -468,12 +472,12 @@ class LLFrame(object):
                                 TypeError, NameError,
                                 KeyboardInterrupt, SystemExit,
                                 ImportError, SyntaxError)):
-                raise original[0], original[1], original[2]     # re-raise it
+                raise  # re-raise it
             # for testing the JIT (see ContinueRunningNormally) we need
             # to let some exceptions introduced by the JIT go through
             # the llinterpreter uncaught
             if getattr(exc, '_go_through_llinterp_uncaught_', False):
-                raise original[0], original[1], original[2]     # re-raise it
+                raise   # re-raise it
             extraargs = (original,)
         else:
             extraargs = ()
@@ -1324,7 +1328,7 @@ class Tracer(object):
         Tracer.Counter += 1
         filename = 'llinterp_trace_%d.html' % n
         self.file = udir.join(filename).open('w')
-        print >> self.file, self.HEADER
+        print(self.HEADER, file=self.file)
 
         linkname = str(udir.join('llinterp_trace.html'))
         try:
@@ -1344,7 +1348,7 @@ class Tracer(object):
     def stop(self):
         # end of a dump file
         if self.file:
-            print >> self.file, self.FOOTER % (self.latest_call_chain[1:])
+            print(self.FOOTER % (self.latest_call_chain[1:]), file=self.file)
             self.file.close()
             self.file = None
 

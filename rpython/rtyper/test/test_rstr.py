@@ -157,7 +157,7 @@ class AbstractTestRstr(BaseRtypingTest):
         def fn(i):
             consts = [const(''), const('anc'), const('abc123'), const('123')]
             return consts[i].isdigit()
-        for i in xrange(3):
+        for i in range(3):
             assert self.interpret(fn, [i]) == fn(i)
 
     def test_str_isalpha(self):
@@ -166,7 +166,7 @@ class AbstractTestRstr(BaseRtypingTest):
         def fn(i):
             consts = [const(''), const('anc'), const('abc123')]
             return consts[i].isalpha()
-        for i in xrange(3):
+        for i in range(3):
             assert self.interpret(fn, [i]) == fn(i)
 
     def test_str_isalnum(self):
@@ -175,7 +175,7 @@ class AbstractTestRstr(BaseRtypingTest):
         def fn(i):
             consts = [const(''), const('abc'), const('abc123'), const('abc123!')]
             return consts[i].isalnum()
-        for i in xrange(3):
+        for i in range(3):
             assert self.interpret(fn, [i]) == fn(i)
 
     def test_char_compare(self):
@@ -221,7 +221,7 @@ class AbstractTestRstr(BaseRtypingTest):
         def fn(i, mul):
             s = ["", "a", "aba"][i]
             return s * mul + mul * s
-        for i in xrange(3):
+        for i in range(3):
             for m in [0, 1, 4]:
                 res1 = fn(i, m)
                 res = self.interpret(fn, [i, m])
@@ -726,7 +726,7 @@ class AbstractTestRstr(BaseRtypingTest):
             else:
                 return len(test_string.splitlines())
         for newlines in (True, False):
-            for i in xrange(5):
+            for i in range(5):
                 res = self.interpret(f, [i, newlines])
                 assert res == f(i, newlines)
 

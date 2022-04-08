@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.tool import leakfinder
 
@@ -53,18 +54,22 @@ def test_traceback():
     leakfinder.remember_malloc(x)
     res = leakfinder.stop_tracking_allocations(check=False)
     assert res.keys() == [x]
-    print res[x]
+    print(res[x])
     assert isinstance(res[x], str)
     assert 'test_traceback' in res[x]
     assert 'leakfinder.remember_malloc(x)' in res[x]
 
 def test_malloc_mismatch():
-    import sys, traceback, cStringIO
+    import sys, traceback
+    try:
+        import cStringIO
+    except ImportError:
+        import io as cStringIO
     sio = cStringIO.StringIO()
     traceback.print_stack(sys._getframe(), limit=10, file=sio)
     tb = sio.getvalue()
     e = leakfinder.MallocMismatch({1234: tb, 2345: tb})
-    print str(e)
+    print(str(e))
     # grouped entries for 1234 and 2345
     assert '1234:\n2345:\n' in str(e) or '2345:\n1234:\n' in str(e)
     assert tb[-80:] in str(e)

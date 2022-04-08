@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.memory.gc.minimarkpage import ArenaCollection
 from rpython.memory.gc.minimarkpage import PAGE_HEADER, PAGE_PTR
@@ -417,8 +418,8 @@ def test_random(incremental=False):
         # the following output looks cool on a 112-character-wide terminal.
         lst = sorted(ac._all_arenas(), key=lambda a: a.base.arena._arena_index)
         for a in lst:
-            print a.base.arena, a.base.arena.usagemap
-        print '-' * 80
+            print(a.base.arena, a.base.arena.usagemap)
+        print('-' * 80)
         ac.__class__.allocate_new_arena(ac)
         a = ac.current_arena.base.arena
         def my_mark_freed():
@@ -454,7 +455,7 @@ def test_random(incremental=False):
                 ac.mass_free_prepare()
                 while not ac.mass_free_incremental(ok_to_free,
                                                    random.randrange(1, 3)):
-                    print '[]'
+                    print('[]')
                     prev = ac.total_memory_used
                     allocate_object(live_objects_extra)
                     fresh_extra += ac.total_memory_used - prev

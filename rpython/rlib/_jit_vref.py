@@ -1,5 +1,5 @@
 from rpython.annotator import model as annmodel
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 from rpython.rtyper.rmodel import Repr
 from rpython.rtyper.rclass import (getinstancerepr, OBJECTPTR)
 from rpython.rtyper.lltypesystem import lltype
@@ -32,7 +32,8 @@ class SomeVRef(annmodel.SomeObject):
 
 class __extend__(pairtype(SomeVRef, SomeVRef)):
 
-    def union((vref1, vref2)):
+    @pairmethod
+    def union(vref1, vref2):
         return SomeVRef(annmodel.unionof(vref1.s_instance, vref2.s_instance))
 
 

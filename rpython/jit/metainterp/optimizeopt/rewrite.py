@@ -938,7 +938,7 @@ class OptRewrite(Optimization):
 
     def serialize_optrewrite(self, available_boxes):
         res = []
-        for i, box in self.loop_invariant_results.iteritems():
+        for i, box in self.loop_invariant_results.items():
             box = get_box_replacement(box)
             if box in available_boxes:
                 res.append((i, box))

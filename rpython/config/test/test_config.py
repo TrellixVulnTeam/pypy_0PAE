@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.config.config import *
 import py, sys
 
@@ -14,7 +15,7 @@ def make_description():
     wantframework_option = BoolOption('wantframework', 'Test requires',
                                       default=False,
                                       requires=[('gc.name', 'framework')])
-    
+
     gcgroup = OptionDescription('gc', '', [gcoption, gcdummy, floatoption])
     descr = OptionDescription('pypy', '', [gcgroup, booloption,
                                            wantref_option, stroption,
@@ -96,7 +97,7 @@ def test_annotator_folding():
     gcgroup = OptionDescription('gc', '', [gcoption])
     descr = OptionDescription('pypy', '', [gcgroup])
     config = Config(descr)
-    
+
     def f(x):
         if config.gc.name == 'ref':
             return x + 1
@@ -105,7 +106,7 @@ def test_annotator_folding():
 
     t = Translation(f, [int])
     t.rtype()
-    
+
     block = t.context.graphs[0].startblock
     assert len(block.exits[0].target.operations) == 0
     assert len(block.operations) == 1
@@ -136,19 +137,19 @@ def test_loop():
         zip(conf.gc, [("name", "ref"), ("dummy", False)]):
         assert name == gname
         assert value == gvalue
-        
+
 def test_to_optparse():
     gcoption = ChoiceOption('name', 'GC name', ['ref', 'framework'], 'ref',
                                 cmdline='--gc -g')
     gcgroup = OptionDescription('gc', '', [gcoption])
     descr = OptionDescription('pypy', '', [gcgroup])
     config = Config(descr)
-    
+
     parser = to_optparse(config, ['gc.name'])
     (options, args) = parser.parse_args(args=['--gc=framework'])
-    
+
     assert config.gc.name == 'framework'
-    
+
 
     config = Config(descr)
     parser = to_optparse(config, ['gc.name'])
@@ -161,7 +162,7 @@ def test_to_optparse():
 
 def test_to_optparse_number():
     intoption = IntOption('int', 'Int option test', cmdline='--int -i')
-    floatoption = FloatOption('float', 'Float option test', 
+    floatoption = FloatOption('float', 'Float option test',
                                 cmdline='--float -f')
     descr = OptionDescription('test', '', [intoption, floatoption])
     config = Config(descr)
@@ -171,10 +172,10 @@ def test_to_optparse_number():
 
     assert config.int == 2
     assert config.float == 0.1
-    
+
     py.test.raises(SystemExit,
         "(options, args) = parser.parse_args(args=['--int=foo', '-f bar'])")
-    
+
 def test_to_optparse_bool():
     booloption1 = BoolOption('bool1', 'Boolean option test', default=False,
                              cmdline='--bool1 -b')
@@ -240,17 +241,17 @@ def test_star_works_recursively():
     assert not config.a.b1
     assert not config.a.sub.b2
     # does not lead to an option conflict
-    parser = to_optparse(config, ['a.*', 'a.sub.*']) 
+    parser = to_optparse(config, ['a.*', 'a.sub.*'])
     options, args = parser.parse_args(args=["--b1", "--b2"])
     assert config.a.b1
     assert config.a.sub.b2
-    
+
 def test_optparse_path_options():
     gcoption = ChoiceOption('name', 'GC name', ['ref', 'framework'], 'ref')
     gcgroup = OptionDescription('gc', '', [gcoption])
     descr = OptionDescription('pypy', '', [gcgroup])
     config = Config(descr)
-    
+
     parser = to_optparse(config, ['gc.name'])
     (options, args) = parser.parse_args(args=['--gc-name=framework'])
 
@@ -259,7 +260,7 @@ def test_optparse_path_options():
 def test_getpaths():
     descr = make_description()
     config = Config(descr)
-    
+
     assert config.getpaths() == ['gc.name', 'gc.dummy', 'gc.float', 'bool',
                                  'wantref', 'str', 'wantframework',
                                  'int']
@@ -288,7 +289,7 @@ def test_none():
     parser = to_optparse(config)
     py.test.raises(SystemExit,
         "(options, args) = parser.parse_args(args=['--dummy1'])")
- 
+
 def test_requirements_from_top():
     descr = OptionDescription("test", '', [
         BoolOption("toplevel", "", default=False),
@@ -335,7 +336,7 @@ def test_overrides_are_defaults():
     assert config.b2
     config.b1 = True
     assert not config.b2
-    print config._cfgimpl_value_owners
+    print(config._cfgimpl_value_owners)
 
 def test_overrides_require_as_default():
     descr = OptionDescription("test", "", [
@@ -370,11 +371,11 @@ def test_overrides_dont_change_user_options():
     config.b = True
     config.override({'b': False})
     assert config.b
-    
+
 def test_str():
     descr = make_description()
     c = Config(descr)
-    print c # does not crash
+    print(c) # does not crash
 
 def test_dwim_set():
     descr = OptionDescription("opt", "", [
@@ -410,7 +411,7 @@ def test_more_set():
     assert config.int == 23
 
 def test_optparse_help():
-    import cStringIO
+    import io
     descr = OptionDescription("opt", "", [
         BoolOption("bool1", 'do bool1', default=False, cmdline='--bool1'),
         BoolOption("bool2", 'do bool2', default=False, cmdline='--bool2', negation=False),
@@ -421,7 +422,7 @@ def test_optparse_help():
     ])
     conf = Config(descr)
     parser = to_optparse(conf)
-    out = cStringIO.StringIO()
+    out = io.StringIO()
     parser.print_help(out)
     help = out.getvalue()
     #print help

@@ -79,7 +79,7 @@ def normalize(x):
     return a[0]
 
 
-def make_test_case((fnname, args, expected), dict):
+def make_test_case(dict, fnname, args, expected):
     #
     def test_func(self):
         fn = getattr(ll_math, 'll_math_' + fnname)
@@ -103,4 +103,4 @@ def make_test_case((fnname, args, expected), dict):
 
 _d = {}
 for testcase in TestMath.TESTCASES:
-    make_test_case(testcase, _d)
+    make_test_case(_d, *testcase)

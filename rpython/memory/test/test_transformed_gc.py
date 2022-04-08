@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import inspect
 
@@ -1426,7 +1427,7 @@ class MyGcHooks(GcHooks):
 
     def on_gc_collect_step(self, duration, oldstate, newstate):
         self.stats.steps += 1
-        
+
     def on_gc_collect(self, num_major_collects,
                       arenas_count_before, arenas_count_after,
                       arenas_bytes, rawmalloc_bytes_before,
@@ -1583,7 +1584,7 @@ class TaggedPointerGCTests(GCTest):
     def test_gettypeid(self):
         func = self.runner("gettypeid")
         res = func([])
-        print res
+        print(res)
 
 
 from rpython.rlib.objectmodel import UnboxedValue

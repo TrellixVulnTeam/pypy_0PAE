@@ -1,6 +1,8 @@
+from __future__ import print_function
 import py, pytest
 import sys, struct
 import ctypes
+from rpython.compat import cmp
 from rpython.rtyper.lltypesystem import lltype, rffi, llmemory
 from rpython.rtyper.tool import rffi_platform
 from rpython.rtyper.lltypesystem.ll2ctypes import lltype2ctypes, ctypes2lltype
@@ -563,7 +565,7 @@ class TestLL2Ctypes(object):
         def my_compar(p1, p2):
             p1 = rffi.cast(SIGNEDPTR, p1)
             p2 = rffi.cast(SIGNEDPTR, p2)
-            print 'my_compar:', p1[0], p2[0]
+            print('my_compar:', p1[0], p2[0])
             return rffi.cast(rffi.INT, cmp(p1[0], p2[0]))
 
         qsort(rffi.cast(rffi.VOIDP, a),
@@ -572,8 +574,8 @@ class TestLL2Ctypes(object):
               llhelper(lltype.Ptr(CMPFUNC), my_compar))
 
         for i in range(10):
-            print a[i],
-        print
+            print(a[i], end=' ')
+        print()
         lst.sort()
         for i in range(10):
             assert a[i] == lst[i]
@@ -823,9 +825,9 @@ class TestLL2Ctypes(object):
         s.a = lltype.malloc(A, len(data), flavor='raw')
         # the storage for the array should not be freed by lltype even
         # though the _ptr object appears to go away here
-        for i in xrange(len(data)):
+        for i in range(len(data)):
             s.a[i] = data[i]
-        for i in xrange(len(data)):
+        for i in range(len(data)):
             assert s.a[i] == data[i]
         lltype.free(s.a, flavor='raw')
         lltype.free(s, flavor='raw')
@@ -1438,7 +1440,7 @@ class TestLL2Ctypes(object):
         static int forty_two(void) { return 42; }
         static int forty_three(void) { return 43; }
         static funcptr_t testarray[2];
-        RPY_EXPORTED void runtest(void cb(funcptr_t *)) { 
+        RPY_EXPORTED void runtest(void cb(funcptr_t *)) {
             testarray[0] = &forty_two;
             testarray[1] = &forty_three;
             fprintf(stderr, "&forty_two = %p\n", testarray[0]);

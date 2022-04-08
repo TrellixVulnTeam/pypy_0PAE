@@ -1,5 +1,6 @@
 import py
 from rpython.rlib.objectmodel import not_rpython
+from rpython.compat import with_metaclass
 
 class Node(object):
     def view(self):
@@ -27,7 +28,7 @@ class Symbol(Node):
 
     def getsourcepos(self):
         return self.token.source_pos
-    
+
     def __repr__(self):
         return "Symbol(%r, %r)" % (self.symbol, self.additional_info)
 
@@ -126,7 +127,7 @@ def make_dispatch_function(__general_nonterminal_visit=None,
 class CreateDispatchDictionaryMetaclass(type):
     def __new__(cls, name_, bases, dct):
         dispatch_table = {}
-        for name, value in dct.iteritems():
+        for name, value in dct.items():
             if name.startswith("visit_"):
                 dispatch_table[name[len("visit_"):]] = value
         for special in ["general_symbol_visit",
@@ -137,5 +138,6 @@ class CreateDispatchDictionaryMetaclass(type):
         dct["dispatch"] = make_dispatch_function(**dispatch_table)
         return type.__new__(cls, name_, bases, dct)
 
+@with_metaclass(CreateDispatchDictionaryMetaclass)
 class RPythonVisitor(object):
-    __metaclass__ = CreateDispatchDictionaryMetaclass
+    pass

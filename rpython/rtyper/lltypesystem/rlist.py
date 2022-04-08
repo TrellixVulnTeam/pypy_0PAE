@@ -9,7 +9,7 @@ from rpython.rtyper.rlist import (AbstractBaseListRepr, AbstractListRepr,
     AbstractFixedSizeListRepr, AbstractListIteratorRepr, ll_setitem_nonneg,
     ADTIList, ADTIFixedList, dum_nocheck)
 from rpython.rtyper.rmodel import Repr, inputconst, externalvsinternal
-from rpython.tool.pairtype import pairtype, pair
+from rpython.tool.pairtype import pairmethod, pairtype, pair
 
 
 # ____________________________________________________________
@@ -38,7 +38,7 @@ def LIST_OF(ITEMTYPE, cache={}):
         return cache[ITEMTYPE]
     except KeyError:
         pass
-    
+
     from rpython.rtyper.lltypesystem.rstr import CharRepr
     assert ITEMTYPE is Char, 'only Char is supported for now'
     # XXX: maybe we should think of a better way to build the type?
@@ -95,7 +95,8 @@ class BaseListRepr(AbstractBaseListRepr):
 
 
 class __extend__(pairtype(BaseListRepr, BaseListRepr)):
-    def rtype_is_((r_lst1, r_lst2), hop):
+    @pairmethod
+    def rtype_is_(r_lst1, r_lst2, hop):
         if r_lst1.lowleveltype != r_lst2.lowleveltype:
             # obscure logic, the is can be true only if both are None
             v_lst1, v_lst2 = hop.inputargs(r_lst1, r_lst2)

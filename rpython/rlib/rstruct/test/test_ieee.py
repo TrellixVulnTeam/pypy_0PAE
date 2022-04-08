@@ -167,7 +167,7 @@ class TestFloatPacking:
     def test_random(self):
         # construct a Python float from random integer, using struct
         mantissa_mask = (1 << 53) - 1
-        for _ in xrange(10000):
+        for _ in range(10000):
             Q = random.randrange(2**64)
             x = struct.unpack('<d', struct.pack('<Q', Q))[0]
             # nans are tricky:  we can't hope to reproduce the bit
@@ -188,7 +188,7 @@ class TestFloatPacking:
             a = ieee.float_unpack(val_to_preserve, 8)
             assert math.isnan(a), 'i %d, maxmant %s' % (i, hex(val_to_preserve))
             b = ieee.float_pack(a, 8)
-            assert b == val_to_preserve, 'i %d, val %s b %s' % (i, hex(val_to_preserve), hex(b)) 
+            assert b == val_to_preserve, 'i %d, val %s b %s' % (i, hex(val_to_preserve), hex(b))
             b = ieee.float_pack(a, 2)
             assert b == 0xffff - i, 'i %d, b%s' % (i, hex(b))
 

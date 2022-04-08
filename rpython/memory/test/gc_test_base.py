@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import sys
 
@@ -85,7 +86,7 @@ class GCTest(object):
         for i in range(1, 15):
             res = self.interpret(append_to_list, [i, i - 1])
             assert res == i - 1 # crashes if constants are not considered roots
-            
+
     def test_string_concatenation(self):
         #curr = simulator.current_size
         def concat(j):
@@ -728,7 +729,7 @@ class GCTest(object):
             llop.gc__collect(lltype.Void)
             llop.gc__collect(lltype.Void)
             b.bla = persistent_a1.id + persistent_a2.id + persistent_a3.id + persistent_a4.id
-            print b.num_deleted_c
+            print(b.num_deleted_c)
             return b.num_deleted
         res = self.interpret(f, [4, 42])
         assert res == 12
@@ -736,7 +737,7 @@ class GCTest(object):
     def test_print_leak(self):
         def f(n):
             for i in range(n):
-                print i
+                print(i)
             return 42
         res = self.interpret(f, [10])
         assert res == 42
@@ -965,8 +966,8 @@ class GCTest(object):
             rgc.collect() # check that a prebuilt tagged pointer doesn't explode
             id_prebuilt2 = compute_unique_id(u.x)
             id_x2 = compute_unique_id(x)
-            print u.x, id_prebuilt1, id_prebuilt2
-            print x, id_x1, id_x2
+            print(u.x, id_prebuilt1, id_prebuilt2)
+            print(x, id_x1, id_x2)
             return ((id_x1 == id_x2) * 1 +
                     (id_prebuilt1 == id_prebuilt2) * 10 +
                     (id_x1 != id_prebuilt1) * 100)
@@ -1058,7 +1059,7 @@ class GCTest(object):
             assert rgc.get_gcflag_extra(a1) == False
             assert rgc.get_gcflag_extra(a2) == False
         self.interpret(fn, [])
-    
+
     def test_register_custom_trace_hook(self):
         S = lltype.GcStruct('S', ('x', lltype.Signed))
         called = []
@@ -1117,7 +1118,7 @@ class GCTest(object):
     def test_gettypeid(self):
         class A(object):
             pass
-        
+
         def fn():
             a = A()
             return rgc.get_typeid(a)

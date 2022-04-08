@@ -1,4 +1,4 @@
-from __future__ import with_statement
+from __future__ import with_statement, print_function
 import py.test
 import sys
 from collections import OrderedDict
@@ -21,7 +21,7 @@ from rpython.rlib import objectmodel
 from rpython.flowspace.flowcontext import FlowingError
 from rpython.flowspace.operation import op
 
-from rpython.translator.test import snippet
+from rpython.translator.test import snippet, snippet_py2
 
 def graphof(a, func):
     return tgraphof(a.translator, func)
@@ -600,7 +600,7 @@ class TestAnnotateTestCase:
     def test_simple_iter_next(self):
         def f(x):
             i = iter(range(x))
-            return i.next()
+            return next(i)
         a = self.RPythonAnnotator()
         s = a.build_types(f, [int])
         assert isinstance(s, annmodel.SomeInteger)
@@ -858,7 +858,7 @@ class TestAnnotateTestCase:
 
     def test_exception_deduction_with_raise3(self):
         a = self.RPythonAnnotator()
-        s = a.build_types(snippet.exception_deduction_with_raise3, [bool])
+        s = a.build_types(snippet_py2.exception_deduction_with_raise3, [bool])
         assert isinstance(s, annmodel.SomeInstance)
         assert s.classdef is a.bookkeeper.getuniqueclassdef(snippet.Exc)
 
@@ -997,7 +997,7 @@ class TestAnnotateTestCase:
         # check that the list produced by range() is not mutated or resized
         graph = graphof(a, snippet.harmonic)
         all_vars = set().union(*[block.getvariables() for block in graph.iterblocks()])
-        print all_vars
+        print(all_vars)
         for var in all_vars:
             s_value = var.annotation
             if isinstance(s_value, annmodel.SomeList):
@@ -1077,8 +1077,8 @@ class TestAnnotateTestCase:
         assert s == annmodel.SomeInteger(nonneg = True, unsigned = True)
 
 
-    def test_prebuilt_long_that_is_not_too_long(self):
-        small_constant = 12L
+    def test_prebuilt_int_that_is_not_too_long(self):
+        small_constant = 12
         def f():
             return small_constant
         a = self.RPythonAnnotator()
@@ -1087,7 +1087,7 @@ class TestAnnotateTestCase:
         assert s.nonneg
         assert not s.unsigned
         #
-        small_constant = -23L
+        small_constant = -23
         def f():
             return small_constant
         a = self.RPythonAnnotator()
@@ -2501,7 +2501,7 @@ class TestAnnotateTestCase:
             for x in []:                n += x
             for y in d:                 n += y
             for z in d.iterkeys():      n += z
-            for s in d.itervalues():    n += s
+            for s in d.values():    n += s
             for t, u in d.items():      n += t * u
             for t, u in d.iteritems():  n += t * u
             return n
@@ -4149,12 +4149,30 @@ class TestAnnotateTestCase:
                 x1 = x
             else:
                 x1 = None
-            print "hello" # this is to force the merge of blocks
+            print("hello")  # this is to force the merge of blocks
             return isinstance(x1, X)
 
         a = self.RPythonAnnotator()
         s = a.build_types(f, [annmodel.SomeInteger()])
         assert isinstance(s, annmodel.SomeBool)
+
+    def test_doing_bad_things_with_print(self):
+
+        def f():
+            pronto = print
+            return pronto("the quick brown fox")
+
+        a = self.RPythonAnnotator()
+        s = a.build_types(f, [])  # We worked out the pronto function was print
+        assert isinstance(s, annmodel.SomeNone)
+
+        def g():
+            print = int
+            return print(3.0)
+
+        a = self.RPythonAnnotator()
+        s = a.build_types(g, [])
+        assert isinstance(s, annmodel.SomeInteger)
 
     def test_object_init(self):
         class A(object):
@@ -4362,7 +4380,7 @@ class TestAnnotateTestCase:
                 x = None
             else:
                 x = [42]
-            return enumerate(x).next()
+            return next(enumerate(x))
         a = self.RPythonAnnotator()
         s = a.build_types(f, [int])
         assert isinstance(s, annmodel.SomeTuple)

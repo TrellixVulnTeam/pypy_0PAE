@@ -13,7 +13,7 @@
     http://codespeak.net/pypy/dist/pypy/doc/config/commandline.html
 """
 # Back-Propagation Neural Networks
-# 
+#
 # Written in Python.  See http://www.python.org/
 #
 # Neil Schemenauer <nascheme@enme.ucalgary.ca>
@@ -23,6 +23,7 @@
 #     Python implementation
 #   * print a doc about how to start the Translator
 
+from __future__ import print_function
 import sys
 import math
 import time
@@ -45,7 +46,7 @@ def makeMatrix(I, J, fill=0.0):
     return m
 
 class NN:
-    
+
     def __init__(self, ni, nh, no):
         # number of input, hidden, and output nodes
         self.ni = ni + 1 # +1 for bias node
@@ -56,7 +57,7 @@ class NN:
         self.ai = [1.0]*self.ni
         self.ah = [1.0]*self.nh
         self.ao = [1.0]*self.no
-        
+
         # create weights
         self.wi = makeMatrix(self.ni, self.nh)
         self.wo = makeMatrix(self.nh, self.no)
@@ -68,7 +69,7 @@ class NN:
             for k in range(self.no):
                 self.wo[j][k] = rand(-2.0, 2.0)
 
-        # last change in weights for momentum   
+        # last change in weights for momentum
         self.ci = makeMatrix(self.ni, self.nh)
         self.co = makeMatrix(self.nh, self.no)
 
@@ -142,17 +143,17 @@ class NN:
     def test(self, patterns):
         for p in patterns:
             if PRINT_IT:
-                print p[0], '->', self.update(p[0])
+                print(p[0], '->', self.update(p[0]))
 
     def weights(self):
         if PRINT_IT:
-            print 'Input weights:'
+            print('Input weights:')
             for i in range(self.ni):
-                print self.wi[i]
-            print
-            print 'Output weights:'
+                print(self.wi[i])
+            print()
+            print('Output weights:')
             for j in range(self.nh):
-                print self.wo[j]
+                print(self.wo[j])
 
     def train(self, patterns, iterations=2000, N=0.5, M=0.1):
         # N: learning rate
@@ -165,7 +166,7 @@ class NN:
                 self.update(inputs)
                 error = error + self.backPropagate(targets, N, M)
             if PRINT_IT and i % 100 == 0:
-                print 'error', error
+                print('error', error)
 
 
 def demo():
@@ -196,7 +197,7 @@ def entry_point(argv):
     for i in range(N):
         demo()
     t1 = time.time() - T
-    print "%d iterations, %s milliseconds per iteration" % (N, 1000.0*t1/N)
+    print("%d iterations, %s milliseconds per iteration" % (N, 1000.0*t1/N))
     return 0
 
 # _____ Define and setup target ___
@@ -208,4 +209,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         sys.argv.append('1')
     entry_point(sys.argv)
-    print __doc__
+    print(__doc__)

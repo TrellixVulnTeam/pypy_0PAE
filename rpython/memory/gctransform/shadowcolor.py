@@ -357,7 +357,8 @@ def move_pushes_earlier(graph, regalloc):
     # order); but also prefers smaller overall pieces, because it
     # might be possible to remove several small-scale pieces instead
     # of one big-scale one.
-    def heuristic((index, P, gcsaveroots)):
+    def heuristic(tup):
+        _, P, gcsaveroots = tup
         return float(len(P)) / len(gcsaveroots)
     Plist.sort(key=heuristic)
 

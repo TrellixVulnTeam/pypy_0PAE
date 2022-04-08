@@ -4,7 +4,7 @@ from rpython.rtyper.lltypesystem.lltype import Signed, Unsigned, Bool, Float
 from rpython.rtyper.rmodel import log
 from rpython.rtyper.rint import IntegerRepr
 from rpython.rtyper.rfloat import FloatRepr
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 
 
 class BoolRepr(IntegerRepr):
@@ -47,21 +47,24 @@ class __extend__(annmodel.SomeBool):
 # _________________________ Conversions _________________________
 
 class __extend__(pairtype(BoolRepr, FloatRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Bool and r_to.lowleveltype == Float:
             log.debug('explicit cast_bool_to_float')
             return llops.genop('cast_bool_to_float', [v], resulttype=Float)
         return NotImplemented
 
 class __extend__(pairtype(FloatRepr, BoolRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Float and r_to.lowleveltype == Bool:
             log.debug('explicit cast_float_to_bool')
             return llops.genop('float_is_true', [v], resulttype=Bool)
         return NotImplemented
 
 class __extend__(pairtype(BoolRepr, IntegerRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Bool and r_to.lowleveltype == Unsigned:
             log.debug('explicit cast_bool_to_uint')
             return llops.genop('cast_bool_to_uint', [v], resulttype=Unsigned)
@@ -74,7 +77,8 @@ class __extend__(pairtype(BoolRepr, IntegerRepr)):
         return NotImplemented
 
 class __extend__(pairtype(IntegerRepr, BoolRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Unsigned and r_to.lowleveltype == Bool:
             log.debug('explicit cast_uint_to_bool')
             return llops.genop('uint_is_true', [v], resulttype=Bool)

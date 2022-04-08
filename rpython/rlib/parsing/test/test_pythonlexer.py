@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rlib.parsing.regexparse import parse_regex, make_runner
 from rpython.rlib.parsing.lexer import Lexer, Token, SourcePos
@@ -94,12 +95,12 @@ CloseBracket = r'[\]\)\}]'
 #____________________________________________________________
 # all tokens
 
-tokens = ["Number", "String", "Name", "Ignore", "Indent", 
+tokens = ["Number", "String", "Name", "Ignore", "Indent",
           "OpenBracket", "CloseBracket", "Operator"]
 
 def make_lexer():
     return Lexer([parse_regex(globals()[r]) for r in tokens], tokens[:])
-    
+
 pythonlexer = make_lexer()
 
 def postprocess(tokens):
@@ -140,7 +141,7 @@ def postprocess(tokens):
                     elif c == '\f':
                         column = 0
                     pos = pos + 1
-                # split the token in two: one for the newline and one for the 
+                # split the token in two: one for the newline and one for the
                 output_tokens.append(Token("Newline", s[:start], token.source_pos))
                 if column > indentation_levels[-1]: # count indents or dedents
                     indentation_levels.append(column)
@@ -217,7 +218,7 @@ def test_long():
             ("1 + \\\n 2", 5)]:
         tokens = pythonlexer.tokenize(s)
         assert len(tokens) == numtoken
-        print tokens
+        print(tokens)
 
 def test_complex_quoting():
     s = '''"""u'abc'""",
@@ -235,7 +236,7 @@ def test_self():
         fname = fname[:-1]
     s = py.path.local(fname).read()
     tokens = pythonlexer.tokenize(s)
-    print tokens
+    print(tokens)
 
 def test_indentation():
     s = """a
@@ -268,9 +269,9 @@ def dont_test_self_full():
     import tokenize, token
     s = py.path.local(__file__).read()
     tokens = pythonlex(s)
-    print [t.name for t in tokens][:20]
+    print([t.name for t in tokens][:20])
     tokens2 = list(tokenize.generate_tokens(iter(s.splitlines(True)).next))
-    print [token.tok_name[t[0]] for t in tokens2][:20]
+    print([token.tok_name[t[0]] for t in tokens2][:20])
     for i, (t1, t2) in enumerate(zip(tokens, tokens2)):
         n1 = t1.name.lower()
         n2 = token.tok_name[t2[0]].lower()

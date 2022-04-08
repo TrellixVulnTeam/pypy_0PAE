@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py, sys
 from rpython.rtyper.lltypesystem.llmemory import *
 from rpython.translator.c.test.test_genc import compile
@@ -90,7 +91,7 @@ def test_pointer_arithmetic():
     def f(offset, char):
         char = chr(char)
         addr = raw_malloc(10000)
-        same_offset = (addr + 2 * offset - offset) - addr 
+        same_offset = (addr + 2 * offset - offset) - addr
         addr.char[offset] = char
         result = (addr + same_offset).char[0]
         raw_free(addr)
@@ -211,7 +212,7 @@ def test_cast_adr_to_int():
             adr2 = adr
         else:
             adr2 = NULL
-        print "hello world"     # prevent constant-folding
+        print("hello world")     # prevent constant-folding
         j = cast_adr_to_int(adr2)
         return i - j
     fc = compile(f, [int])
@@ -228,7 +229,7 @@ def test_cast_int_to_adr():
             i = integer
         else:
             i = 123   # nonsense, but never used
-        print "hello world"     # prevent constant-folding
+        print("hello world")     # prevent constant-folding
         adr = cast_int_to_adr(i)
         s = cast_adr_to_ptr(adr, lltype.Ptr(S))
         return s.x

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.tool.jitlogparser.parser import (SimpleParser, TraceForOpcode,
                                               Function, adjust_bridges,
                                               import_log, split_trace, Op,
@@ -368,7 +369,7 @@ def test_parse_2_levels_up():
     debug_merge_point(0, 0, 'one')
     debug_merge_point(1, 0, 'two')
     debug_merge_point(2, 0, 'three')
-    debug_merge_point(0, 0, 'one')    
+    debug_merge_point(0, 0, 'one')
     """)
     f = Function.from_operations(loop.operations, LoopStorage())
     assert len(f.chunks) == 3
@@ -378,7 +379,7 @@ def test_parse_from_inside():
     []
     debug_merge_point(1, 0, 'two')
     debug_merge_point(2, 0, 'three')
-    debug_merge_point(0, 0, 'one')    
+    debug_merge_point(0, 0, 'one')
     """)
     f = Function.from_operations(loop.operations, LoopStorage())
     assert len(f.chunks) == 2
@@ -396,12 +397,12 @@ def test_embedded_lineno():
     #
     sourcefile = str(udir.join('test_embedded_lineno.src'))
     with open(sourcefile, 'w') as f:
-        print >> f, "A#1"
-        print >> f, "B#2"
-        print >> f, "C#3"
-        print >> f, "D#4"
-        print >> f, "E#5"
-        print >> f, "F#6"
+        print("A#1", file=f)
+        print("B#2", file=f)
+        print("C#3", file=f)
+        print("D#4", file=f)
+        print("E#5", file=f)
+        print("F#6", file=f)
     loop = parse("""
     []
     debug_merge_point(0, 0, 'myfunc;%(filename)s:2-2~one')

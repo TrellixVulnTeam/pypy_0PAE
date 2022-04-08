@@ -5,7 +5,7 @@ from rpython.rtyper.lltypesystem.lltype import Void, Bool, Ptr, Char
 from rpython.rtyper.lltypesystem.llmemory import Address
 from rpython.rtyper.rpbc import SmallFunctionSetPBCRepr
 from rpython.rtyper.annlowlevel import llstr
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 
 class NoneRepr(Repr):
     lowleveltype = Void
@@ -45,20 +45,24 @@ def ll_none_hash(_):
 
 class __extend__(pairtype(Repr, NoneRepr)):
 
-    def convert_from_to((r_from, _), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, _, v, llops):
         return inputconst(Void, None)
 
-    def rtype_is_((robj1, rnone2), hop):
+    @pairmethod
+    def rtype_is_(robj1, rnone2, hop):
         if hop.s_result.is_constant():
             return hop.inputconst(Bool, hop.s_result.const)
         return rtype_is_None(robj1, rnone2, hop)
 
 class __extend__(pairtype(NoneRepr, Repr)):
 
-    def convert_from_to((_, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(_, r_to, v, llops):
         return inputconst(r_to, None)
 
-    def rtype_is_((rnone1, robj2), hop):
+    @pairmethod
+    def rtype_is_(rnone1, robj2, hop):
         if hop.s_result.is_constant():
             return hop.inputconst(Bool, hop.s_result.const)
         return rtype_is_None(robj2, rnone1, hop, pos=1)

@@ -58,7 +58,7 @@ if hasattr(_c, 'poll'):
         pollfds = lltype.malloc(_c.pollfdarray, numfd, flavor='raw')
         try:
             i = 0
-            for fd, events in fddict.iteritems():
+            for fd, events in fddict.items():
                 rffi.setintfield(pollfds[i], 'c_fd', fd)
                 rffi.setintfield(pollfds[i], 'c_events', events)
                 i += 1
@@ -163,7 +163,7 @@ if hasattr(_c, 'WSAEventSelect'):
         try:
             eventdict = {}
 
-            for fd, events in fddict.iteritems():
+            for fd, events in fddict.items():
                 # select desired events
                 wsaEvents = 0
                 if events & _c.POLLIN:
@@ -209,7 +209,7 @@ if hasattr(_c, 'WSAEventSelect'):
 
             retval = []
             info = rffi.make(_c.WSANETWORKEVENTS)
-            for fd, event in eventdict.iteritems():
+            for fd, event in eventdict.items():
                 if _c.WSAEnumNetworkEvents(fd, event, info) < 0:
                     continue
                 revents = 0
@@ -238,7 +238,7 @@ if hasattr(_c, 'WSAEventSelect'):
             lltype.free(info, flavor='raw')
 
         finally:
-            for fd, event in eventdict.iteritems():
+            for fd, event in eventdict.items():
                 _c.WSAEventSelect(fd, event, 0)
                 _c.WSACloseEvent(event)
             lltype.free(socketevents, flavor='raw')

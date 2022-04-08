@@ -184,7 +184,8 @@ def stack_sp(argnum):
 # ____________________________________________________________
 # Emit a mod/rm referencing a memory location [reg1+offset]
 
-def encode_mem_reg_plus_const(mc, (reg, offset), _, orbyte):
+def encode_mem_reg_plus_const(mc, reg_offset_pair, _, orbyte):
+    reg, offset = reg_offset_pair
     assert reg != R.esp and reg != R.ebp
     #
     reg1 = reg_number_3bits(mc, reg)
@@ -211,7 +212,8 @@ def encode_mem_reg_plus_const(mc, (reg, offset), _, orbyte):
         mc.writeimm32(offset)
     return 0
 
-def rex_mem_reg_plus_const(mc, (reg, offset), _):
+def rex_mem_reg_plus_const(mc, reg_offset_pair, _):
+    reg, offset = reg_offset_pair
     if reg >= 8:
         return REX_B
     return 0
@@ -222,9 +224,8 @@ def mem_reg_plus_const(argnum):
 # ____________________________________________________________
 # Emit a mod/rm referencing an array memory location [reg1+reg2*scale+offset]
 
-def encode_mem_reg_plus_scaled_reg_plus_const(mc,
-                                              (reg1, reg2, scaleshift, offset),
-                                              _, orbyte):
+def encode_mem_reg_plus_scaled_reg_plus_const(mc, mem_loc, _, orbyte):
+    reg1, reg2, scaleshift, offset = mem_loc
     # emit "reg1 + (reg2 << scaleshift) + offset"
     assert reg1 != R.ebp and reg2 != R.esp
     assert 0 <= scaleshift < 4
@@ -264,9 +265,8 @@ def encode_mem_reg_plus_scaled_reg_plus_const(mc,
         mc.writeimm32(offset)
     return 0
 
-def rex_mem_reg_plus_scaled_reg_plus_const(mc,
-                                           (reg1, reg2, scaleshift, offset),
-                                           _):
+def rex_mem_reg_plus_scaled_reg_plus_const(mc, mem_loc, _):
+    reg1, reg2, scaleshift, offset = mem_loc
     rex = 0
     if reg1 >= 8: rex |= REX_B
     if reg2 >= 8: rex |= REX_X
@@ -297,7 +297,7 @@ def abs_(argnum):
     return encode_abs, argnum, None, None
 
 # ____________________________________________________________
-# ***X86_64 only*** 
+# ***X86_64 only***
 # Emit a mod/rm referencing an address "RIP + immediate_offset".
 
 @specialize.arg(2)
@@ -763,7 +763,7 @@ class AbstractX86CodeBuilder(object):
     MOVSS_xx = xmminsn('\xF3', rex_nw, '\x0F\x10', register(1,8), register(2), '\xC0')
 
     PSRAD_xi = xmminsn('\x66', rex_nw, '\x0F\x72', register(1), '\xE0', immediate(2, 'b'))
-    PSRLDQ_xi = xmminsn('\x66', rex_nw, '\x0F\x73', register(1), 
+    PSRLDQ_xi = xmminsn('\x66', rex_nw, '\x0F\x73', register(1),
                         orbyte(0x3 << 3), '\xC0', immediate(2, 'b'))
     UNPCKLPD_xx = xmminsn('\x66', rex_nw, '\x0F\x14', register(1, 8), register(2), '\xC0')
     UNPCKHPD_xx = xmminsn('\x66', rex_nw, '\x0F\x15', register(1, 8), register(2), '\xC0')
@@ -791,7 +791,7 @@ class AbstractX86CodeBuilder(object):
     PEXTRW_rxi = xmminsn('\x66', rex_nw, '\x0F\xC5', register(1,8), register(2), '\xC0', immediate(3, 'b'))
     PEXTRB_rxi = xmminsn('\x66', rex_nw, '\x0F\x3A\x14', register(1), register(2,8), '\xC0', immediate(3, 'b'))
     EXTRACTPS_rxi = xmminsn('\x66', rex_nw, '\x0F\x3A\x17', register(1), register(2,8), '\xC0', immediate(3, 'b'))
-    
+
     PINSRQ_xri = xmminsn('\x66', rex_w, '\x0F\x3A\x22', register(1,8), register(2), '\xC0', immediate(3, 'b'))
     PINSRD_xri = xmminsn('\x66', rex_nw, '\x0F\x3A\x22', register(1,8), register(2), '\xC0', immediate(3, 'b'))
     PINSRW_xri = xmminsn('\x66', rex_nw, '\x0F\xC4', register(1,8), register(2), '\xC0', immediate(3, 'b'))

@@ -1,9 +1,11 @@
+from __future__ import print_function
 import math
 import sys
 
 import py
 import weakref
 
+from rpython.compat import long
 from rpython.rlib import rgc
 from rpython.jit.codewriter.policy import StopAtXPolicy
 from rpython.jit.metainterp import history
@@ -1079,7 +1081,7 @@ class BasicTests:
             while n > 0:
                 myjitdriver.can_enter_jit(n=n)
                 myjitdriver.jit_merge_point(n=n)
-                print n
+                print(n)
                 n -= 1
             return n
         res = self.meta_interp(f, [7])
@@ -2220,7 +2222,7 @@ class BasicTests:
         myjitdriver = JitDriver(greens = ['g'], reds = ['x', 'l'])
         @dont_look_inside
         def residual():
-            print "hi there"
+            print("hi there")
         @unroll_safe
         def loop(g):
             y = 0
@@ -2880,7 +2882,7 @@ class BasicTests:
             i = 0
             while i < n:
                 myjitdriver.jit_merge_point(n=n, i=i)
-                print i
+                print(i)
                 i += 1
             return i
         #
@@ -2913,7 +2915,7 @@ class BasicTests:
             i = 0
             while i < n:
                 myjitdriver.jit_merge_point(n=n, i=i)
-                print i
+                print(i)
                 i += 1
             return i
         #
@@ -3554,7 +3556,7 @@ class BaseLLtypeTests(BasicTests):
         @look_inside_iff(lambda arg, n: isvirtual(arg))
         def f(arg, n):
             if n == 100:
-                for i in xrange(n):
+                for i in range(n):
                     n += i
             return arg.x
         class A(object):
@@ -3997,7 +3999,7 @@ class BaseLLtypeTests(BasicTests):
             yield n+3
         def f(n):
             gen = g(n)
-            return gen.next() * gen.next() * gen.next()
+            return next(gen) * next(gen) * next(gen)
         res = self.interp_operations(f, [10])
         assert res == 11 * 12 * 13
         self.check_operations_history(int_add=3, int_mul=2)
@@ -4152,7 +4154,7 @@ class TestLLtype(BaseLLtypeTests, LLJitMixin):
             return A()
         @dont_look_inside
         def escape():
-            print "hi!"
+            print("hi!")
         def f(n):
             a = g()
             a.x = n

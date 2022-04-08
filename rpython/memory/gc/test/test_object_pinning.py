@@ -1,7 +1,9 @@
+from __future__ import print_function
 import py
 from rpython.rtyper.lltypesystem import lltype, llmemory, llarena
 from rpython.memory.gc.incminimark import IncrementalMiniMarkGC, WORD
 from rpython.memory.gc.incminimark import GCFLAG_VISITED
+from rpython.compat import xrange
 from test_direct import BaseDirectGCTest
 
 T = lltype.GcForwardReference()
@@ -67,7 +69,7 @@ class PinningGCTest(BaseDirectGCTest):
         # stackroots and remove from stackroots.
         import random
 
-        for i in xrange(10**3):
+        for i in range(10**3):
             obj = self.malloc(T)
             obj.someInt = 100
             #
@@ -115,7 +117,7 @@ class TestIncminimark(PinningGCTest):
         assert not self.gc.pin(old_adr)
         assert self.gc.pinned_objects_in_nursery == 0
 
-    
+
     def pin_pin_pinned_object_count(self, collect_func):
         # scenario: pin two objects that are referenced from stackroots. Check
         # if the pinned objects count is correct, even after an other collection
@@ -176,7 +178,7 @@ class TestIncminimark(PinningGCTest):
         ptr.someInt = 100
         self.stackroots.append(ptr)
         assert self.stackroots[0] == ptr # validate our assumption
-        
+
         adr = llmemory.cast_ptr_to_adr(ptr)
         assert self.gc.is_in_nursery(adr) # to be sure
         assert self.gc.pin(adr)
@@ -235,7 +237,7 @@ class TestIncminimark(PinningGCTest):
             # break condition
             done = self.gc.gc_state == self.STATE_SCANNING
 
-    
+
     def pin_unpin_moved_stackroot(self, collect_func):
         # scenario: test if the pinned object is moved after being unpinned.
         # the second part of the scenario is the tested one. The first part
@@ -272,7 +274,7 @@ class TestIncminimark(PinningGCTest):
     def test_pin_unpin_moved_stackroot_major_collection(self):
         self.pin_unpin_moved_stackroot(self.gc.collect)
 
-    
+
     def pin_referenced_from_old(self, collect_func):
         # scenario: an old object points to a pinned one. Check if the pinned
         # object is correctly kept in the nursery and not moved.
@@ -301,7 +303,7 @@ class TestIncminimark(PinningGCTest):
         assert old_ptr.next.someInt == pinned_ptr.someInt == 100
         assert llmemory.cast_ptr_to_adr(old_ptr.next) == pinned_adr
         assert self.gc.is_in_nursery(pinned_adr)
-        
+
     def test_pin_referenced_from_old_minor_collection(self):
         self.pin_referenced_from_old(self.gc.minor_collection)
 
@@ -355,7 +357,7 @@ class TestIncminimark(PinningGCTest):
             # break condition
             done = self.gc.gc_state == self.STATE_SCANNING
 
-    
+
     def pin_referenced_from_old_remove_ref(self, collect_func):
         # scenario: an old object points to a pinned one. We remove the
         # reference from the old one. So nothing points to the pinned object.
@@ -507,7 +509,7 @@ class TestIncminimark(PinningGCTest):
         self.consider_constant(prebuilt_ptr)
         prebuilt_adr = llmemory.cast_ptr_to_adr(prebuilt_ptr)
         collect_func()
-        #        
+        #
         pinned_ptr = self.malloc(T)
         pinned_ptr.someInt = 100
         self.write(prebuilt_ptr, 'next', pinned_ptr)
@@ -542,15 +544,15 @@ class TestIncminimark(PinningGCTest):
         old1_ptr = self.malloc(S)
         old1_ptr.someInt = 900
         self.stackroots.append(old1_ptr)
-        
+
         old2_ptr = self.malloc(S)
         old2_ptr.someInt = 800
         self.stackroots.append(old2_ptr)
-        
+
         pinned_ptr = self.malloc(T)
         pinned_ptr.someInt = 100
         assert self.gc.pin(llmemory.cast_ptr_to_adr(pinned_ptr))
-        
+
         self.write(old1_ptr, 'next', pinned_ptr)
         self.write(old1_ptr, 'data', pinned_ptr)
         self.write(old2_ptr, 'next', pinned_ptr)
@@ -649,7 +651,7 @@ class TestIncminimark(PinningGCTest):
         ptr1.someInt = 101
         self.stackroots.append(ptr1)
         assert self.gc.pin(adr1)
-        
+
         ptr2 = self.malloc(T)
         adr2 = llmemory.cast_ptr_to_adr(ptr2)
         ptr2.someInt = 102
@@ -686,7 +688,7 @@ class TestIncminimark(PinningGCTest):
         ptr1.someInt = 101
         self.stackroots.append(ptr1)
         assert self.gc.pin(adr1)
-        
+
         ptr2 = self.malloc(T)
         adr2 = llmemory.cast_ptr_to_adr(ptr2)
         ptr2.someInt = 102
@@ -725,7 +727,7 @@ class TestIncminimark(PinningGCTest):
         ptr1.someInt = 101
         self.stackroots.append(ptr1)
         assert self.gc.pin(adr1)
-        
+
         ptr2 = self.malloc(T)
         adr2 = llmemory.cast_ptr_to_adr(ptr2)
         ptr2.someInt = 102
@@ -766,7 +768,7 @@ class TestIncminimark(PinningGCTest):
         ptr1.someInt = 101
         self.stackroots.append(ptr1)
         assert self.gc.pin(adr1)
-        
+
         ptr2 = self.malloc(T)
         adr2 = llmemory.cast_ptr_to_adr(ptr2)
         ptr2.someInt = 102
@@ -800,7 +802,7 @@ class TestIncminimark(PinningGCTest):
         assert self.gc.nursery_free == self.gc.nursery
         assert self.gc.nursery_free < self.gc.nursery_top
         assert self.gc.nursery_top < adr3
-        
+
 
     def test_pin_nursery_top_scenario5(self):
         ptr1 = self.malloc(T)
@@ -808,7 +810,7 @@ class TestIncminimark(PinningGCTest):
         ptr1.someInt = 101
         self.stackroots.append(ptr1)
         assert self.gc.pin(adr1)
-        
+
         ptr2 = self.malloc(T)
         adr2 = llmemory.cast_ptr_to_adr(ptr2)
         ptr2.someInt = 102

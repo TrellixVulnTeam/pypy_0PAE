@@ -9,6 +9,7 @@
 *.pyo
 *~
 __pycache__/
+venv/
 
 bin/pypy-c
 include/*.h
@@ -30,3 +31,5 @@ release/
 !pypy/tool/release/
 rpython/_cache/
 .cache/
+.hypothesis/
+.vscode/

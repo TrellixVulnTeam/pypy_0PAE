@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import operator
 from rpython.jit.tl.tlopcode import *
@@ -102,14 +103,14 @@ class TestTL(test_boehm.AbstractGCTestClass):
 
     def test_rot(self):
 
-        code = [PUSH,1, PUSH,2, PUSH,3, ROLL, 3] 
+        code = [PUSH,1, PUSH,2, PUSH,3, ROLL, 3]
         assert self.interp(list2bytecode(code)) == 1
         assert self.interp(list2bytecode(code + [POP])) == 3
         assert self.interp(list2bytecode(code + [POP, POP])) == 2
 
         py.test.raises(IndexError, self.interp, list2bytecode([PUSH,1, PUSH,2, PUSH,3, ROLL,4]))
 
-        code = [PUSH,1, PUSH,2, PUSH,3, ROLL, -3] 
+        code = [PUSH,1, PUSH,2, PUSH,3, ROLL, -3]
         assert self.interp(list2bytecode(code)) == 2
         assert self.interp(list2bytecode(code + [POP])) == 1
         assert self.interp(list2bytecode(code + [POP, POP])) == 3
@@ -266,4 +267,4 @@ FACTORIAL_SOURCE = '''
 
 if __name__ == '__main__':
     code = compile(FACTORIAL_SOURCE)
-    print ','.join([str(ord(c)) for c in code])
+    print(','.join([str(ord(c)) for c in code]))

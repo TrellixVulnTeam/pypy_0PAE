@@ -91,7 +91,7 @@ class IntOpAssembler(object):
         mc.LPGR(l1, l1)
         mc.MLGR(lr, l1)
         mc.LGHI(r.SCRATCH, l.imm(-1))
-        # 0xff -> shift 0 -> 0xff set MSB on pos 0 to zero -> 7f 
+        # 0xff -> shift 0 -> 0xff set MSB on pos 0 to zero -> 7f
         mc.RISBG(r.SCRATCH, r.SCRATCH, l.imm(1), l.imm(0x80 | 63), l.imm(0))
         jmp_lq_overflow = mc.get_relative_pos()
         mc.reserve_cond_jump() # CLGRJ lq > 0x7fff ... ff -> (label_overflow)
@@ -386,7 +386,7 @@ class CallOpAssembler(object):
 
         # save away r2, r3, r4, r5, r11 into the jitframe
         should_be_saved = [
-            reg for reg in self._regalloc.rm.reg_bindings.itervalues()
+            reg for reg in self._regalloc.rm.reg_bindings.values()
                 if reg in self._COND_CALL_SAVE_REGS]
         self._push_core_regs_to_jitframe(self.mc, should_be_saved)
 

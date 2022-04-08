@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import sys
 import struct
@@ -15,7 +16,7 @@ SYSTEM = platform.system()
 
 def detect_vsx_linux():
     try:
-        fd = os.open("/proc/self/auxv", os.O_RDONLY, 0644)
+        fd = os.open("/proc/self/auxv", os.O_RDONLY, 0o644)
         try:
             while True:
                 buf = os.read(fd, 8)
@@ -41,6 +42,6 @@ def detect_vsx():
     return False
 
 if __name__ == '__main__':
-    print 'The following extensions are supported:'
+    print('The following extensions are supported:')
     if detect_vsx():
-        print '  - AltiVec'
+        print('  - AltiVec')

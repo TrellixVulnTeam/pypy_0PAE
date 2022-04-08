@@ -298,19 +298,19 @@ def effectinfo_from_writeanalyze(effects, cpu,
         write_descrs_arrays = []
         write_descrs_interiorfields = []
 
-        def add_struct(descrs_fields, (_, T, fieldname)):
+        def add_struct(descrs_fields, _, T, fieldname):
             T = T.TO
             if consider_struct(T, fieldname):
                 descr = cpu.fielddescrof(T, fieldname)
                 descrs_fields.append(descr)
 
-        def add_array(descrs_arrays, (_, T)):
+        def add_array(descrs_arrays, _, T):
             ARRAY = T.TO
             if consider_array(ARRAY):
                 descr = cpu.arraydescrof(ARRAY)
                 descrs_arrays.append(descr)
 
-        def add_interiorfield(descrs_interiorfields, (_, T, fieldname)):
+        def add_interiorfield(descrs_interiorfields, _, T, fieldname):
             T = T.TO
             if not isinstance(T, lltype.Array):
                 return # let's not consider structs for now
@@ -341,23 +341,23 @@ def effectinfo_from_writeanalyze(effects, cpu,
 
         for tup in effects:
             if tup[0] == "struct":
-                add_struct(write_descrs_fields, tup)
+                add_struct(write_descrs_fields, *tup)
             elif tup[0] == "readstruct":
                 tupw = ("struct",) + tup[1:]
                 if tupw not in effects:
-                    add_struct(readonly_descrs_fields, tup)
+                    add_struct(readonly_descrs_fields, *tup)
             elif tup[0] == "interiorfield":
-                add_interiorfield(write_descrs_interiorfields, tup)
+                add_interiorfield(write_descrs_interiorfields, *tup)
             elif tup[0] == "readinteriorfield":
                 tupw = ('interiorfield',) + tup[1:]
                 if tupw not in effects:
-                    add_interiorfield(readonly_descrs_interiorfields, tup)
+                    add_interiorfield(readonly_descrs_interiorfields, *tup)
             elif tup[0] == "array":
-                add_array(write_descrs_arrays, tup)
+                add_array(write_descrs_arrays, *tup)
             elif tup[0] == "readarray":
                 tupw = ("array",) + tup[1:]
                 if tupw not in effects:
-                    add_array(readonly_descrs_arrays, tup)
+                    add_array(readonly_descrs_arrays, *tup)
             else:
                 assert 0
     #
@@ -516,7 +516,8 @@ def compute_bitstrings(all_descrs):
         # numbering the descrs that are seen in many EffectInfos.  If instead,
         # by lack of chance, such a descr had a high number, then all these
         # EffectInfos' bitstrings would need to store the same high number.
-        def size_of_both_sets((d, r, w)):
+        def size_of_both_sets(tup):
+            _, r, w = tup
             return len(r) + len(w)
         all_sets.sort(key=size_of_both_sets, reverse=True)
 

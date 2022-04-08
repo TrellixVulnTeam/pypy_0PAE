@@ -1,3 +1,4 @@
+from __future__ import print_function
 import platform as host_platform
 import py
 import sys
@@ -104,7 +105,7 @@ def configure_libbacktrace_linux():
 def setup():
     if not IS_SUPPORTED:
         raise VMProfPlatformUnsupported
-    
+
     if sys.platform.startswith('linux'):
         configure_libbacktrace_linux()
 
@@ -154,7 +155,7 @@ def setup():
 
 class CInterface(object):
     def __init__(self, namespace):
-        for k, v in namespace.iteritems():
+        for k, v in namespace.items():
             setattr(self, k, v)
 
     def _freeze_(self):

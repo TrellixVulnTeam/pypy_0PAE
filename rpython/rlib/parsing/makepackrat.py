@@ -1,9 +1,10 @@
-from __future__ import with_statement
+from __future__ import with_statement, print_function
 import py
 import sys
 from rpython.rlib.parsing.tree import Nonterminal, Symbol, RPythonVisitor
 from rpython.rlib.parsing.codebuilder import Codebuilder
 from rpython.rlib.objectmodel import we_are_translated
+from rpython.compat import with_metaclass
 
 class BacktrackException(Exception):
     def __init__(self, error=None):
@@ -405,7 +406,7 @@ class ParserBuilder(RPythonVisitor, Codebuilder):
         self.end_block("class")
 
     def emit_regex_code(self):
-        for regex, matcher in self.matchers.iteritems():
+        for regex, matcher in self.matchers.items():
             with  self.block(
                     "def _regex%s(self):" % (abs(hash(regex)), )):
                 c = self.choice_point()
@@ -431,7 +432,7 @@ class ParserBuilder(RPythonVisitor, Codebuilder):
                 self.emit("self.last_matched_state = -1")
                 self.emit("self.last_matched_index = -1")
                 self.emit("self.state = -1")
-            for regex, matcher in self.matchers.iteritems():
+            for regex, matcher in self.matchers.items():
                 matcher = str(matcher).replace(
                     "def recognize(runner, i)",
                     "def recognize_%s(runner, i)" % (abs(hash(regex)), ))
@@ -454,9 +455,9 @@ class ParserBuilder(RPythonVisitor, Codebuilder):
         self.created_error = False
         allother = self.store_code_away()
         self.dispatch(t.children[-1])
-        subsequent = self.restore_code(allother)
+        subsequent = self.restore_code(*allother)
         self.memoize_header(name, otherargs)
-        self.add_code(subsequent)
+        self.add_code(*subsequent)
         self.memoize_footer(name, otherargs)
         self.end_block("def")
 
@@ -633,7 +634,7 @@ class MetaPackratParser(type):
         try:
             t = p.file()
         except BacktrackException as exc:
-            print exc.error.nice_error_message("<docstring>", source)
+            print(exc.error.nice_error_message("<docstring>", source))
             lineno, _ = exc.error.get_line_column(source)
             errorline = source.split("\n")[lineno]
             try:
@@ -641,9 +642,9 @@ class MetaPackratParser(type):
                 source = inspect.getsource(code)
                 lineno_in_orig = source.split("\n").index(errorline)
                 if lineno_in_orig >= 0:
-                    print "probable error position:"
-                    print "file:", code.co_filename
-                    print "line:", lineno_in_orig + code.co_firstlineno + 1
+                    print("probable error position:")
+                    print("file:", code.co_filename)
+                    print("line:", lineno_in_orig + code.co_firstlineno + 1)
             except (IOError, ValueError):
                 pass
             raise exc
@@ -661,7 +662,7 @@ class MetaPackratParser(type):
         if 'Status' not in frame.f_globals:
             raise Exception("must import Status")
         result = type.__new__(cls, name_, bases, dct)
-        for key, value in pcls.__dict__.iteritems():
+        for key, value in pcls.__dict__.items():
             if isinstance(value, type):
                 value.__module__ = result.__module__ #XXX help the annotator
             if isinstance(value, type(lambda: None)):
@@ -674,8 +675,8 @@ class MetaPackratParser(type):
         result._code = visitor.get_code()
         return result
 
+@with_metaclass(MetaPackratParser)
 class PackratParser(object):
-    __metaclass__ = MetaPackratParser
 
     _ErrorInformation = ErrorInformation
     _BacktrackException = BacktrackException
@@ -739,10 +740,10 @@ class PyPackratSyntaxParser(PackratParser):
 forbidden = dict.fromkeys(("__weakref__ __doc__ "
                            "__dict__ __module__").split())
 initthere = "__init__" in PyPackratSyntaxParser.__dict__
-for key, value in Parser.__dict__.iteritems():
+for key, value in Parser.__dict__.items():
     if key not in PyPackratSyntaxParser.__dict__ and key not in forbidden:
         setattr(PyPackratSyntaxParser, key, value)
 PyPackratSyntaxParser.init_parser = Parser.__init__.im_func
 """ % (code, )
-    print content
+    print(content)
     f.write(content)

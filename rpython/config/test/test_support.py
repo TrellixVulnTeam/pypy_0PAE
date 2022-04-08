@@ -1,5 +1,7 @@
-
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 from rpython.config import support
 import os, sys, py
 

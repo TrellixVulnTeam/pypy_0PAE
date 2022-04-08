@@ -1,5 +1,7 @@
+from __future__ import print_function
 import optparse
 from rpython.tool.pairtype import extendabletype
+from rpython.compat import with_metaclass
 
 SUPPRESS_USAGE = optparse.SUPPRESS_USAGE
 
@@ -36,7 +38,7 @@ class Config(object):
         self.override(overrides)
 
     def override(self, overrides):
-        for name, value in overrides.iteritems():
+        for name, value in overrides.items():
             homeconfig, name = self._cfgimpl_get_home_by_path(name)
             homeconfig.setoption(name, value, 'default')
 
@@ -126,7 +128,7 @@ class Config(object):
 
     def set(self, **kwargs):
         all_paths = [p.split(".") for p in self.getpaths()]
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             key_p = key.split('.')
             candidates = [p for p in all_paths if p[-len(key_p):] == key_p]
             if len(candidates) == 1:
@@ -208,8 +210,8 @@ class Config(object):
 DEFAULT_OPTION_NAME = object()
 
 
+@with_metaclass(extendabletype)
 class Option(object):
-    __metaclass__ = extendabletype
 
     def __init__(self, name, doc, cmdline=DEFAULT_OPTION_NAME):
         self._name = name
@@ -339,7 +341,7 @@ class BoolOption(Option):
             no_argnames = ["--" + _getnegation(argname.lstrip("-"))
                                for argname in argnames]
         callback = BoolConfigUpdate(config, self, False)
-        parser.add_option(help="unset option set by %s %%default" % (argname, ),
+        parser.add_option(help="unset option set by %s %%default" % (argnames[-1], ),
                           action='callback',
                           callback=callback, *no_argnames)
 
@@ -423,9 +425,8 @@ class ArbitraryOption(Option):
         return self.default
 
 
+@with_metaclass(extendabletype)
 class OptionDescription(object):
-    __metaclass__ = extendabletype
-
     cmdline = None
 
     def __init__(self, name, doc, children):
@@ -543,7 +544,7 @@ class ConfigUpdate(object):
             # more information...  hack.
             import sys
             for warning in self.config.get_warnings():
-                print >> sys.stderr, warning
+                print(warning, file=sys.stderr)
             raise optparse.OptionValueError(e.args[0])
 
     def help_default(self):
@@ -630,4 +631,3 @@ def make_dict(config):
     paths = config.getpaths()
     options = dict([(path, getattr(config, path)) for path in paths])
     return options
-

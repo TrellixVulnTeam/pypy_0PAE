@@ -58,7 +58,7 @@ class CompiledPattern(object):
         if not consts.V37:      # 'flags' is ignored in >=3.7 mode
             self.flags = flags
         # check we don't get the old value of MAXREPEAT
-        # during the untranslated tests. 
+        # during the untranslated tests.
         # On python3, MAXCODE can appear in patterns. It will be 65535
         # when CODESIZE is 2
         if not we_are_translated() and rsre_char.CODESIZE != 2:

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import weakref, os
 from rpython.rlib.objectmodel import we_are_translated, specialize
 from rpython.rtyper.lltypesystem.lloperation import llop
@@ -137,7 +138,7 @@ def vector_repr(self, num):
         return 'v' + str(num)
     if hasattr(self, '_vec_debug_info'):
         vecinfo = self._vec_debug_info
-        count = vecinfo.count 
+        count = vecinfo.count
         datatype = vecinfo.datatype
         bytesize = vecinfo.bytesize
     elif self.vector == -2:
@@ -322,7 +323,7 @@ class AbstractResOp(AbstractResOpOrInputArg):
         "shallow copy: the returned operation is meant to be used in place of self"
         # XXX specialize
         from rpython.jit.metainterp.history import DONT_CHANGE
-        
+
         if args is None:
             args = self.getarglist_copy()
         if descr is None:
@@ -1626,7 +1627,7 @@ def setup(debug_print=False):
                 opwithdescr.append(withdescr)
                 optypes.append(r)
                 if debug_print:
-                    print '%30s = %d' % (cls_name, i)
+                    print('%30s = %d' % (cls_name, i))
                 i += 1
         else:
             setattr(rop, name, i)
@@ -1635,7 +1636,7 @@ def setup(debug_print=False):
             opwithdescr.append(False)
             optypes.append(' ')
             if debug_print:
-                print '%30s = %d' % (name, i)
+                print('%30s = %d' % (name, i))
             i += 1
     # for optimizeopt/pure.py's getrecentops()
     assert (rop.INT_ADD_OVF - rop._OVF_FIRST ==

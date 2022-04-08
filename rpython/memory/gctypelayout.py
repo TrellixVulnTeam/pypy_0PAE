@@ -232,7 +232,7 @@ def get_memory_pressure_ofs(TYPE):
             return llmemory.offsetof(T, 'special_memory_pressure')
         if 'super' not in T._flds:
             assert False, "get_ and has_memory_pressure disagree"
-        T = T._flds['super']    
+        T = T._flds['super']
 
 def encode_type_shape(builder, info, TYPE, index):
     """Encode the shape of the TYPE into the TYPE_INFO structure 'info'."""
@@ -531,7 +531,7 @@ def gc_pointers_inside(v, adr, mutable_only=False):
                 return
             if 'immutable_fields' in t._hints:
                 skip = t._hints['immutable_fields'].all_immutable_fields()
-        for n, t2 in t._flds.iteritems():
+        for n, t2 in t._flds.items():
             if isinstance(t2, lltype.Ptr) and t2.TO._gckind == 'gc':
                 if n not in skip:
                     yield adr + llmemory.offsetof(t, n)

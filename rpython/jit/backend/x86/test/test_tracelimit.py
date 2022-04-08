@@ -1,5 +1,5 @@
 
-from rpython.jit.metainterp.test.test_tracelimit import TraceLimitTests
+from rpython.jit.metainterp.test.test_limit import TraceLimitTests
 from rpython.jit.backend.x86.test.test_basic import Jit386Mixin
 
 class TestTraceLimit(Jit386Mixin, TraceLimitTests):

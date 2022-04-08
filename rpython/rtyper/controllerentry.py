@@ -1,13 +1,14 @@
 from rpython.flowspace.model import Constant
 from rpython.flowspace.operation import op
 from rpython.annotator import model as annmodel
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 from rpython.annotator.bookkeeper import getbookkeeper
 from rpython.rlib.objectmodel import specialize
 from rpython.rtyper.rmodel import Repr
 from rpython.rtyper.extregistry import ExtRegistryEntry
 from rpython.rtyper.annlowlevel import cachedtype
 from rpython.rtyper.error import TyperError
+from rpython.compat import with_metaclass
 
 
 class ControllerEntry(ExtRegistryEntry):
@@ -58,8 +59,8 @@ class ControllerEntryForPrebuilt(ExtRegistryEntry):
         return self._controller_()
 
 
+@with_metaclass(cachedtype)
 class Controller(object):
-    __metaclass__ = cachedtype
     can_be_None = False
 
     def _freeze_(self):
@@ -189,19 +190,23 @@ class SomeControlledInstance(annmodel.SomeObject):
 
 class __extend__(pairtype(SomeControlledInstance, annmodel.SomeObject)):
 
-    def getitem((s_cin, s_key)):
+    @pairmethod
+    def getitem(s_cin, s_key):
         return delegate(s_cin.controller.getitem, s_cin.s_real_obj, s_key)
 
-    def setitem((s_cin, s_key), s_value):
+    @pairmethod
+    def setitem(s_cin, s_key, s_value):
         delegate(s_cin.controller.setitem, s_cin.s_real_obj, s_key, s_value)
 
-    def delitem((s_cin, s_key)):
+    @pairmethod
+    def delitem(s_cin, s_key):
         delegate(s_cin.controller.delitem, s_cin.s_real_obj, s_key)
 
 
 class __extend__(pairtype(SomeControlledInstance, SomeControlledInstance)):
 
-    def union((s_cin1, s_cin2)):
+    @pairmethod
+    def union(s_cin1, s_cin2):
         if s_cin1.controller is not s_cin2.controller:
             raise annmodel.UnionError("different controller!")
         return SomeControlledInstance(annmodel.unionof(s_cin1.s_real_obj,
@@ -241,13 +246,16 @@ class ControlledInstanceRepr(Repr):
 
 class __extend__(pairtype(ControlledInstanceRepr, Repr)):
 
-    def rtype_getitem((r_controlled, r_key), hop):
+    @pairmethod
+    def rtype_getitem(r_controlled, r_key, hop):
         return rtypedelegate(r_controlled.controller.getitem, hop)
 
-    def rtype_setitem((r_controlled, r_key), hop):
+    @pairmethod
+    def rtype_setitem(r_controlled, r_key, hop):
         return rtypedelegate(r_controlled.controller.setitem, hop)
 
-    def rtype_delitem((r_controlled, r_key), hop):
+    @pairmethod
+    def rtype_delitem(r_controlled, r_key, hop):
         return rtypedelegate(r_controlled.controller.delitem, hop)
 
 

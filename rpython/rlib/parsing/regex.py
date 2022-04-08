@@ -10,10 +10,10 @@ class RegularExpression(object):
 
     def make_automaton(self):
         raise NotImplementedError("abstract base class")
-        
+
     def __add__(self, other):
         return AddExpression(self, other)
-    
+
     def __or__(self, other):
         return OrExpression(self, other)
 
@@ -95,7 +95,7 @@ class AddExpression(RegularExpression):
 
     def __repr__(self):
         return "AddExpression(%r, %r)" % (self.rega, self.regb)
- 
+
 class ExpressionTag(RegularExpression):
     def __init__(self, reg, tag):
         self.reg = reg
@@ -210,8 +210,8 @@ class LexingOrExpression(RegularExpression):
                     result_nfa.add_transition(start_state, newstate)
                 if final:
                     result_nfa.add_transition(newstate, final_state)
-            for state, subtransitions in nfa.transitions.iteritems():
-                for input, states in subtransitions.iteritems():
+            for state, subtransitions in nfa.transitions.items():
+                for input, states in subtransitions.items():
                     newstate = state_map[state]
                     newstates = [state_map[s] for s in states]
                     for newtargetstate in newstates:

@@ -10,6 +10,7 @@
 #
 
 """Internal support module for sre (copied from CPython)"""
+from __future__ import print_function
 
 # update when constants are added or removed
 
@@ -197,8 +198,7 @@ SRE_INFO_CHARSET = 4 # pattern starts with character from given set
 
 if __name__ == "__main__":
     def dump(f, d, prefix):
-        items = d.items()
-        items.sort(key=lambda a: a[1])
+        items = sorted(d.items(), key=lambda a: a[1])
         for k, v in items:
             f.write("#define %s_%s %s\n" % (prefix, k.upper(), v))
     f = open("sre_constants.h", "w")
@@ -237,4 +237,4 @@ if __name__ == "__main__":
     f.write("#define SRE_INFO_CHARSET %d\n" % SRE_INFO_CHARSET)
 
     f.close()
-    print "done"
+    print("done")

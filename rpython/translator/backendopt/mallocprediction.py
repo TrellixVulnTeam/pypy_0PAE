@@ -127,7 +127,7 @@ def find_malloc_removal_candidates(t, graphs):
                 if graph in targetset:
                     caller_candidates[graph] = True
     callgraph = []
-    for called_graph, callers in seen.iteritems():
+    for called_graph, callers in seen.items():
         for caller in callers:
             if caller in targetset and called_graph in targetset:
                 callgraph.append((caller, called_graph))

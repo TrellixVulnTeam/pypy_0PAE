@@ -208,7 +208,7 @@ class GenerationGC(SemiSpaceGC):
             # due to inlining).
             maxlength_for_minimal_nursery = (self.min_nursery_size // 4 //
                                              raw_malloc_usage(itemsize))
-            
+
             # The actual maximum length for our nursery depends on how
             # many times our nursery is bigger than the minimal size.
             # The computation is done in this roundabout way so that

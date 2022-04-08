@@ -8,6 +8,7 @@ Try:
     ./viewcode.py log               # also includes a pygame viewer
 """
 
+from __future__ import print_function
 import new
 import operator
 import os
@@ -16,6 +17,8 @@ import re
 import sys
 import subprocess
 from bisect import bisect_left
+
+from rpython.compat import long
 
 # ____________________________________________________________
 # Some support code from Psyco.  There is more over there,
@@ -88,7 +91,7 @@ def format_code_dump_with_labels(originaddr, lines, label_list):
         label_list = []
     originaddr = r_uint(originaddr)
     itlines = iter(lines)
-    yield itlines.next() # don't process the first line
+    yield next(itlines) # don't process the first line
     for lbl_start, lbl_name in label_list:
         for line in itlines:
             addr, _ = line.split(':', 1)
@@ -111,7 +114,7 @@ def load_symbols(filename):
     symbollister = 'nm %s'
     re_symbolentry = re.compile(r'([0-9a-fA-F]+)\s\w\s(.*)')
     #
-    print 'loading symbols from %s...' % (filename,)
+    print('loading symbols from %s...' % (filename,))
     symbols = {}
     p = subprocess.Popen(symbollister % filename, shell=True,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -126,7 +129,7 @@ def load_symbols(filename):
             if name.startswith('pypy_g_'):
                 name = '\xb7' + name[7:]
             symbols[addr] = name
-    print '%d symbols found' % (len(symbols),)
+    print('%d symbols found' % (len(symbols),))
     return symbols
 
 re_addr = re.compile(r'[\s,$]0x([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]+)')
@@ -281,7 +284,7 @@ class World(object):
                     try:
                         self.symbols.update(load_symbols(filename))
                     except Exception as e:
-                        print e
+                        print(e)
                     self.executable_name = filename
 
     def find_cross_references(self):
@@ -324,7 +327,7 @@ class World(object):
         for r in self.ranges:
             disassembled = r.disassemble()
             if showtext:
-                print disassembled
+                print(disassembled)
             if showgraph:
                 text, width = tab2columns(disassembled)
                 text = '0x%x\n\n%s' % (r.addr, text)
@@ -345,7 +348,7 @@ class World(object):
         self.ranges.sort()
         for r in self.ranges:
             disassembled = r.disassemble()
-            print disassembled
+            print(disassembled)
             del r.text
 
 
@@ -456,10 +459,13 @@ if __name__ == '__main__':
     else:
         showgraph = True
     if len(sys.argv) != 2:
-        print >> sys.stderr, __doc__
+        print(__doc__, file=sys.stderr)
         sys.exit(2)
     #
-    import cStringIO
+    try:
+        import cStringIO
+    except ImportError:
+        import io as cStringIO
     from rpython.tool import logparser
     log1 = logparser.parse_log_file(sys.argv[1])
     text1 = logparser.extract_category(log1, catprefix='jit-backend-dump')
@@ -478,4 +484,3 @@ if __name__ == '__main__':
 else:
     from rpython.tool.udir import udir
     tmpfile = str(udir.join('dump.tmp'))
-    

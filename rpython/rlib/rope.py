@@ -4,6 +4,7 @@ import math
 
 from rpython.rlib.rarithmetic import intmask, ovfcheck
 from rpython.rlib.rarithmetic import r_uint, LONG_BIT
+from rpython.compat import xrange
 
 LOG2 = math.log(2)
 NBITS = int(math.log(sys.maxint) / LOG2) + 2
@@ -13,7 +14,7 @@ NEW_NODE_WHEN_LENGTH = 32
 CONVERT_WHEN_SMALLER = 8
 MAX_DEPTH = 32 # maybe should be smaller
 CONCATENATE_WHEN_MULTIPLYING = 128
-HIGHEST_BIT_SET = intmask(1L << (NBITS - 1))
+HIGHEST_BIT_SET = intmask(1 << (NBITS - 1))
 
 def find_fib_index(l):
     if l == 0:
@@ -917,7 +918,7 @@ def fringe(node):
     iter = FringeIterator(node)
     while 1:
         try:
-            result.append(iter.next())
+            result.append(next(iter))
         except StopIteration:
             return result
 
@@ -949,14 +950,14 @@ class ItemIterator(object):
 
     def _advance_to(self, index):
         self.index = self.iter._seekforward(index)
-        self.node = self.iter.next()
+        self.node = next(self.iter)
         self.nodelength = self.node.length()
 
     def getnode(self):
         node = self.node
         if node is None:
             while 1:
-                node = self.node = self.iter.next()
+                node = self.node = next(self.iter)
                 nodelength = self.nodelength = node.length()
                 if nodelength != 0:
                     self.index = 0
@@ -1005,7 +1006,7 @@ class ReverseItemIterator(object):
         index = self.index
         if node is None:
             while 1:
-                node = self.node = self.iter.next()
+                node = self.node = next(self.iter)
                 index = self.index = node.length() - 1
                 if index != -1:
                     return node
@@ -1281,7 +1282,7 @@ def split(node, sub, maxsplit=-1):
     iter = FindIterator(node, sub)
     while maxsplit != 0:
         try:
-            foundidx = iter.next()
+            foundidx = next(iter)
         except StopIteration:
             break
         substrings.append(getslice_one(node, startidx, foundidx))

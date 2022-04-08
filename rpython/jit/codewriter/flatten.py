@@ -46,6 +46,7 @@ class ListOfKind(object):
         return iter(self.content)
     def __nonzero__(self):
         return bool(self.content)
+    __bool__ = __nonzero__
     def __eq__(self, other):
         return (isinstance(other, ListOfKind) and
                 self.kind == other.kind and self.content == other.content)
@@ -309,7 +310,7 @@ class GraphFlattener(object):
                for i, v in enumerate(link.args)
                if v.concretetype is not lltype.Void and
                   v not in (link.last_exception, link.last_exc_value)]
-        lst.sort(key=lambda(v, w): w.index)
+        lst.sort(key=lambda pair: pair[1].index)
         for v, w in lst:
             if v == w:
                 continue

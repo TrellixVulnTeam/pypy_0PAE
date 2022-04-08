@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import gc
 import types
 
+import rpython.compat as compat
 from rpython.rlib import jit
 from rpython.rlib.objectmodel import we_are_translated, enforceargs, specialize
 from rpython.rlib.objectmodel import CDefinedIntSymbolic, not_rpython
@@ -98,7 +99,7 @@ def pin(obj):
     """
     _pinned_objects.append(obj)
     return True
-        
+
 
 class PinEntry(ExtRegistryEntry):
     _about_ = pin
@@ -238,7 +239,7 @@ def can_move(p):
 
 class SplitAddrSpaceEntry(ExtRegistryEntry):
     _about_ = must_split_gc_address_space
- 
+
     def compute_result_annotation(self):
         config = self.bookkeeper.annotator.translator.config
         result = config.translation.split_gc_address_space
@@ -332,7 +333,7 @@ class CopyStructEntry(ExtRegistryEntry):
                                                      lltype.Signed)
         hop.exception_cannot_occur()
         TP = v_source.concretetype.TO.OF
-        for name, TP in TP._flds.iteritems():
+        for name, TP in TP._flds.items():
             c_name = hop.inputconst(lltype.Void, name)
             v_fld = hop.genop('getinteriorfield', [v_source, v_si, c_name],
                               resulttype=TP)
@@ -353,7 +354,7 @@ def _contains_gcptr(TP):
         if isinstance(TP, lltype.Ptr) and TP.TO._gckind == 'gc':
             return True
         return False
-    for TP in TP._flds.itervalues():
+    for TP in TP._flds.values():
         if _contains_gcptr(TP):
             return True
     return False
@@ -540,13 +541,13 @@ def no_collect(func):
 
 def must_be_light_finalizer(func):
     """Mark a __del__ method as being a destructor, calling only a limited
-    set of operations.  See pypy/doc/discussion/finalizer-order.rst.  
+    set of operations.  See pypy/doc/discussion/finalizer-order.rst.
 
     If you use the same decorator on a class, this class and all its
     subclasses are only allowed to have __del__ methods which are
     similarly decorated (or no __del__ at all).  It prevents a class
     hierarchy from having destructors in some parent classes, which are
-    overridden in subclasses with (non-light, old-style) finalizers.  
+    overridden in subclasses with (non-light, old-style) finalizers.
     (This case is the original motivation for FinalizerQueue.)
     """
     func._must_be_light_finalizer_ = True
@@ -779,7 +780,7 @@ def get_rpy_referents(gcref):
     return [_GcRef(x) for x in d if _keep_object(x)]
 
 def _keep_object(x):
-    if isinstance(x, type) or type(x) is types.ClassType:
+    if isinstance(x, type) or type(x) is compat.ClassType:
         return False      # don't keep any type
     if isinstance(x, (list, dict, str)):
         return True       # keep lists and dicts and strings
@@ -1251,7 +1252,7 @@ def clear_gcflag_extra(fromlist):
             pending.extend(get_rpy_referents(gcref))
 
 all_typeids = {}
-        
+
 def get_typeid(obj):
     raise Exception("does not work untranslated")
 

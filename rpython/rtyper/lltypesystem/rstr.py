@@ -100,7 +100,7 @@ def _new_copy_contents_fun(SRC_TP, DST_TP, CHAR_TP, name):
                 dst.chars[dststart + i] = src.chars[srcstart + i]
                 i += 1
             return
-        #  
+        #
         #
         # from here, no GC operations can happen
         asrc = _get_raw_buf(SRC_TP, src, srcstart)
@@ -1122,7 +1122,7 @@ class LLHelpers(AbstractLLHelpers):
         for i, thing in enumerate(things):
             if isinstance(thing, tuple):
                 code = thing[0]
-                vitem, r_arg = argsiter.next()
+                vitem, r_arg = next(argsiter)
                 if not hasattr(r_arg, 'll_str'):
                     raise TyperError("ll_str unsupported for: %r" % r_arg)
                 if code == 's':

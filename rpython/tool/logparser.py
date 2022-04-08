@@ -7,6 +7,7 @@ Actions:
     draw-time      draw a timeline image of the log (format PNG by default)
     print-summary  print a summary of the log
 """
+from __future__ import print_function
 import sys, re
 from rpython.rlib.debug import DebugLog
 from rpython.tool import progressbar
@@ -73,7 +74,7 @@ def parse_log(lines, verbose=False):
         try:
             record(match.group(2), time=int(match.group(1), 16))
         except:
-            print "Line", i
+            print("Line", i)
             raise
     if verbose:
         sys.stderr.write('loaded\n')
@@ -102,19 +103,19 @@ def extract_category(log, catprefix='', toplevel=False):
 def print_log(log):
     for entry in log:
         if entry[0] == 'debug_print':
-            print entry[1]
+            print(entry[1])
         else:
-            print "{%s" % entry[0]
+            print("{%s" % entry[0])
             if len(entry)>3:
                 print_log(entry[3])
-            print "%s}" % entry[0]
+            print("%s}" % entry[0])
 
 def kill_category(log, catprefix=''):
     newlog = []
     for entry in log:
         if not entry[0].startswith(catprefix):
             if len(entry) > 3:
-                newlog.append(entry[:3] + 
+                newlog.append(entry[:3] +
                               (kill_category(entry[3], catprefix),))
             else:
                 newlog.append(entry)
@@ -191,10 +192,10 @@ def getcolor(category):
         category = category[:-1]
     return COLORS[category]
 
-def getlightercolor((r, g, b)):
+def getlightercolor(r, g, b):
     return ((r*2+255)//3, (g*2+255)//3, (b*2+255)//3)
 
-def getdarkercolor((r, g, b)):
+def getdarkercolor(r, g, b):
     return (r*2//3, g*2//3, b*2//3)
 
 def getlabel(text, _cache={}):
@@ -216,18 +217,18 @@ def getlabel(text, _cache={}):
     _cache[text] = sx, sy, texthoriz, textvert
     return _cache[text]
 
-def bevelrect(draw, (x1, y1, x2, y2), color):
+def bevelrect(draw, x1, y1, x2, y2, color):
     if x2 <= x1:
         x2 = x1 + 1   # minimal width
     elif x2 >= x1 + 4:
-        draw.line((x1, y1+1, x1, y2-1), fill=getlightercolor(color))
+        draw.line((x1, y1+1, x1, y2-1), fill=getlightercolor(*color))
         x1 += 1
         x2 -= 1
-        draw.line((x2, y1+1, x2, y2-1), fill=getdarkercolor(color))
-    draw.line((x1, y1, x2-1, y1), fill=getlightercolor(color))
+        draw.line((x2, y1+1, x2, y2-1), fill=getdarkercolor(*color))
+    draw.line((x1, y1, x2-1, y1), fill=getlightercolor(*color))
     y1 += 1
     y2 -= 1
-    draw.line((x1, y2, x2-1, y2), fill=getdarkercolor(color))
+    draw.line((x1, y2, x2-1, y2), fill=getdarkercolor(*color))
     draw.rectangle((x1, y1, x2-1, y2-1), fill=color)
 
 # ----------
@@ -254,7 +255,7 @@ def get_timeline_image(log, width, height):
             color = getcolor(category1)
             if firstx1 is None:
                 firstx1 = x1
-            bevelrect(draw, (x1, y1, x2, y2), color)
+            bevelrect(draw, x1, y1, x2, y2, color)
             subcats = getsubcategories(subcats)
             if subcats:
                 x2 = recdraw(subcats, subheight * 0.94) - 1
@@ -289,7 +290,7 @@ def render_histogram(times, time0, labels, width, barheight):
         image = Image.new("RGBA", (width, barheight), (255, 255, 255, 0))
         draw = ImageDraw.Draw(image)
         x2 = int(fraction * width)
-        bevelrect(draw, (0, 0, x2, barheight), color)
+        bevelrect(draw, 0, 0, x2, barheight, color)
         # draw the labels "x%" and "key"
         percent = "%.1f%%" % (100.0 * fraction,)
         s1x, s1y, textpercent, vtextpercent = getlabel(percent)
@@ -406,13 +407,13 @@ def print_summary(log, out):
     else:
         outfile = open(out, "w")
     l = totaltimes.items()
-    l.sort(cmp=lambda a, b: cmp(b[1], a[1]))
+    l.sort(key=lambda a: a[1], reverse=True)
     total = sum([b for a, b in l])
     for a, b in l:
         if a is None:
             a = 'normal-execution'
         s = " " * (50 - len(a))
-        print >>outfile, a, s, "%.2f" % (b*100./total) + "%"
+        print(a, s, "%.2f" % (b*100./total) + "%", file=outfile)
     if out != '-':
         outfile.close()
 
@@ -430,13 +431,13 @@ ACTIONS = {
 if __name__ == '__main__':
     import getopt
     if len(sys.argv) < 3:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
     action = sys.argv[1]
     func, longopts = ACTIONS[action]
     options, args = getopt.gnu_getopt(sys.argv[2:], '', longopts)
     if len(args) != 2:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
 
     kwds = {}

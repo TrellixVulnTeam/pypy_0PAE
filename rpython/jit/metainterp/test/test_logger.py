@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 from StringIO import StringIO
 from rpython.rlib import debug
@@ -15,9 +16,7 @@ def capturing(func, *args, **kwds):
     log_stream = StringIO()
     class MyDebugLog:
         def debug_print(self, *args):
-            for arg in args:
-                print >> log_stream, arg,
-            print >> log_stream
+            print(*args, file=log_stream)
 
         def debug_start(self, *args):
             pass
@@ -266,7 +265,7 @@ i4 = int_mul(i2, 2)
         ops2 = loop2.operations
 
         # Add forwarding
-        for i in xrange(3):
+        for i in range(3):
             ops[i].set_forwarded(ops2[i])
 
         # So the offsets are keyed by ops2 instances

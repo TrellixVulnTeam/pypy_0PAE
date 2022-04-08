@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py, sys, struct, math
 from rpython.rtyper.tool import rffi_platform
 from rpython.rtyper.lltypesystem import lltype
@@ -27,7 +28,7 @@ def test_dirent():
            };
                                        """,
                                        [("d_reclen", rffi.USHORT)])
-    
+
     assert isinstance(dirent, lltype.Struct)
     # check that we have the desired field
     assert dirent.c_d_reclen is rffi.USHORT
@@ -326,7 +327,7 @@ def test_sizeof():
 
 def test_memory_alignment():
     a = rffi_platform.memory_alignment()
-    print a
+    print(a)
     assert a % struct.calcsize("P") == 0
 
 def test_external_lib():

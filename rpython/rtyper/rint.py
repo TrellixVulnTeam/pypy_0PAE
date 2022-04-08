@@ -11,7 +11,7 @@ from rpython.rtyper.lltypesystem.lltype import (Signed, Unsigned, Bool, Float,
     cast_primitive, typeOf, SignedLongLongLong, UnsignedLongLongLong)
 from rpython.rtyper.rfloat import FloatRepr
 from rpython.rtyper.rmodel import inputconst, log
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 from rpython.rtyper.lltypesystem.lloperation import llop
 
 
@@ -192,7 +192,8 @@ unsignedlonglonglong_repr = getintegerrepr(UnsignedLongLongLong, 'ulllong_')
 
 class __extend__(pairtype(IntegerRepr, IntegerRepr)):
 
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Signed and r_to.lowleveltype == Unsigned:
             log.debug('explicit cast_int_to_uint')
             return llops.genop('cast_int_to_uint', [v], resulttype=Unsigned)
@@ -636,7 +637,8 @@ def ll_check_unichr(n):
 # _________________________ Conversions _________________________
 
 class __extend__(pairtype(IntegerRepr, FloatRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Unsigned and r_to.lowleveltype == Float:
             log.debug('explicit cast_uint_to_float')
             return llops.genop('cast_uint_to_float', [v], resulttype=Float)
@@ -652,7 +654,8 @@ class __extend__(pairtype(IntegerRepr, FloatRepr)):
         return NotImplemented
 
 class __extend__(pairtype(FloatRepr, IntegerRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         if r_from.lowleveltype == Float and r_to.lowleveltype == Unsigned:
             log.debug('explicit cast_float_to_uint')
             return llops.genop('cast_float_to_uint', [v], resulttype=Unsigned)

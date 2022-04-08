@@ -1,3 +1,4 @@
+from __future__ import print_function
 """
 A simple standalone target.
 
@@ -8,7 +9,7 @@ actually implementing argv of the executable.
 """
 
 def debug(msg):
-    print "debug:", msg
+    print("debug:", msg)
 
 # __________  Entry point  __________
 

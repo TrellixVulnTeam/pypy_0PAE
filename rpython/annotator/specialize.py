@@ -10,6 +10,7 @@ from rpython.annotator import model as annmodel
 from rpython.flowspace.argument import Signature
 from rpython.annotator.model import SomePBC, SomeImpossibleValue, SomeBool
 from rpython.annotator.model import unionof
+from rpython.compat import execute, iteritems
 
 def flatten_star_args(funcdesc, args_s):
     argnames, vararg, kwarg = funcdesc.signature
@@ -131,7 +132,7 @@ class MemoTable(object):
             return
         assert self.graph is None, "MemoTable already finished"
         # list of which argument positions can take more than one value
-        example_args, example_value = self.table.iteritems().next()
+        example_args, example_value = next(iteritems(self.table))
         nbargs = len(example_args)
         # list of sets of possible argument values -- one set per argument index
         sets = [set() for i in range(nbargs)]
@@ -148,7 +149,7 @@ class MemoTable(object):
             header = "def f(%s):" % (', '.join(argnames[firstarg:],))
             source = py.code.Source(stmt)
             source = source.putaround(header)
-            exec source.compile() in miniglobals
+            execute(source.compile(), miniglobals)
             f = miniglobals['f']
             return func_with_new_name(f, 'memo_%s_%d' % (name, firstarg))
 
@@ -299,7 +300,7 @@ def memo(funcdesc, args_s):
         bookkeeper.all_specializations[funcdesc] = memotables
 
     # merge the MemoTables for the individual argument combinations
-    firstvalues = possiblevalues.next()
+    firstvalues = next(possiblevalues)
     _, _, memotable = memotables.find(firstvalues)
     for values in possiblevalues:
         _, _, memotable = memotables.union(firstvalues, values)

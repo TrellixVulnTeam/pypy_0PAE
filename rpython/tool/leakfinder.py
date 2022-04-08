@@ -1,11 +1,12 @@
-import sys, gc
-try:
-    import cStringIO
-except ImportError as e:
-    if sys.version_info.major > 2:
-        raise RuntimeError('use python 2 to run tests')
-    raise
+import gc
+import io
+import os
+import sys
 import traceback
+
+if not os.getenv("RPYTHON_PY3_TESTS") and sys.version_info.major > 2:
+    raise RuntimeError('use python 2 to run tests')
+
 
 # Track allocations to detect memory leaks.
 # So far, this is used for lltype.malloc(flavor='raw').
@@ -62,7 +63,7 @@ def stop_tracking_allocations(check, prev=None, do_collection=gc.collect):
 def remember_malloc(obj, framedepth=1):
     if TRACK_ALLOCATIONS:
         frame = sys._getframe(framedepth)
-        sio = cStringIO.StringIO()
+        sio = io.StringIO()
         traceback.print_stack(frame, limit=10, file=sio)
         tb = sio.getvalue()
         ALLOCATED[obj] = tb

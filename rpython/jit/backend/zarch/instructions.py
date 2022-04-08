@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 branch_mnemonic_codes = {
     'BRASL':   ('ril',   ['\xC0','\x05']),
@@ -345,6 +346,6 @@ all_mnemonic_codes.update(vector_mnemonic_codes)
 
 
 if __name__ == "__main__":
-    print("%d instructions:" % len(all_mnemonic_codes))
+    print(("%d instructions:" % len(all_mnemonic_codes)))
     for name, (typeinstr, _) in all_mnemonic_codes.items():
-        print(" %s\t(type: %s)" % (name, typeinstr))
+        print((" %s\t(type: %s)" % (name, typeinstr)))

@@ -2,11 +2,12 @@
 A quick hack to capture stdout/stderr.
 """
 
+from __future__ import print_function
 import os, sys
 
 
 class Capture:
-    
+
     def __init__(self, mixed_out_err = False):
         "Start capture of the Unix-level stdout and stderr."
         if (sys.platform == 'win32' or # os.tmpfile fails, cpython issue #2232
@@ -41,7 +42,10 @@ class Capture:
     def done(self):
         "End capture and return the captured text (stdoutfile, stderrfile)."
         if self.dummy:
-            import cStringIO
+            try:
+                import cStringIO
+            except ImportError:
+                import io as cStringIO
             return cStringIO.StringIO(), cStringIO.StringIO()
         else:
             os.dup2(self.localoutfd, 1)
@@ -70,5 +74,5 @@ if __name__ == '__main__':
         os.system('echo hello')
     finally:
         fout, ferr = c.done()
-    print 'Output:', `fout.read()`
-    print 'Error:', `ferr.read()`
+    print('Output:', repr(fout.read()))
+    print('Error:', repr(ferr.read()))

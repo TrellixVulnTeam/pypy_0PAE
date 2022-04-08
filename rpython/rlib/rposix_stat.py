@@ -10,7 +10,7 @@ from rpython.flowspace.model import Constant
 from rpython.flowspace.operation import op
 from rpython.annotator import model as annmodel
 from rpython.rtyper import extregistry
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 from rpython.rtyper.tool import rffi_platform as platform
 from rpython.rtyper.llannotation import lltype_to_annotation
 from rpython.rtyper.rmodel import Repr
@@ -200,7 +200,8 @@ class SomeStatResult(annmodel.SomeObject):
 
 
 class __extend__(pairtype(SomeStatResult, annmodel.SomeInteger)):
-    def getitem((s_sta, s_int)):
+    @pairmethod
+    def getitem(s_sta, s_int):
         assert s_int.is_constant(), "os.stat()[index]: index must be constant"
         index = s_int.const
         assert -3 <= index < N_INDEXABLE_FIELDS, "os.stat()[index] out of range"
@@ -265,7 +266,8 @@ def _ll_get_st_ctime(tup):
 
 
 class __extend__(pairtype(StatResultRepr, IntegerRepr)):
-    def rtype_getitem((r_sta, r_int), hop):
+    @pairmethod
+    def rtype_getitem(r_sta, r_int, hop):
         s_int = hop.args_s[1]
         index = s_int.const
         if index < 0:
@@ -335,7 +337,8 @@ class SomeStatvfsResult(annmodel.SomeObject):
 
 
 class __extend__(pairtype(SomeStatvfsResult, annmodel.SomeInteger)):
-    def getitem((s_stat, s_int)):
+    @pairmethod
+    def getitem(s_stat, s_int):
         assert s_int.is_constant()
         name, TYPE = STATVFS_FIELDS[s_int.const]
         return lltype_to_annotation(TYPE)
@@ -379,7 +382,8 @@ class StatvfsResultRepr(Repr):
 
 
 class __extend__(pairtype(StatvfsResultRepr, IntegerRepr)):
-    def rtype_getitem((r_sta, r_int), hop):
+    @pairmethod
+    def rtype_getitem(r_sta, r_int, hop):
         s_int = hop.args_s[1]
         index = s_int.const
         return r_sta.redispatch_getfield(hop, index)
@@ -388,7 +392,7 @@ def make_statvfs_result(tup):
     args = tuple(
         lltype.cast_primitive(TYPE, value) for value, (name, TYPE) in
             zip(tup, STATVFS_FIELDS))
-    # only used untranslated 
+    # only used untranslated
     return statvfs_result(*args)
 
 class MakeStatvfsResultEntry(extregistry.ExtRegistryEntry):
@@ -746,7 +750,7 @@ if _WIN32:
             errcode = rwin32.GetLastError_saved()
             if (errcode == traits.ERROR_ACCESS_DENIED or
                 errcode == traits.ERROR_SHARING_VIOLATION):
-                # Try reading the parent directory 
+                # Try reading the parent directory
                 if win32_attributes_from_dir(traits, path, fileInfo, tagInfo) == 0:
                     raise WindowsError(rwin32.GetLastError_saved(),
                                        "win32_attributes_from_dir failed")
@@ -780,7 +784,7 @@ if _WIN32:
                                        "win32_xstat failed")
             else:
                 raise WindowsError(errcode, "os_stat failed")
-        
+
         if hFile != rwin32.INVALID_HANDLE_VALUE:
             # Handle types other than files on disk.
             fileType = traits.GetFileType(hFile)
@@ -846,7 +850,7 @@ if _WIN32:
         if res == 0:
             raise WindowsError(errcode, "GetFileInformationByHandle failed")
         result = win32_by_handle_info_to_stat(traits, fileInfo, tagInfo.c_ReparseTag)
-        
+
         # TBD: adjust the file execute permissions by finding the file extension
         # if fileExtension in ('exe', 'bat', 'cmd', 'com'):
         #    result.st_mode |= 0x0111
@@ -857,13 +861,13 @@ if _WIN32:
         m = 0
         attributes = widen(attributes)
         if attributes & win32traits.FILE_ATTRIBUTE_DIRECTORY:
-            m |= win32traits._S_IFDIR | 0111 # IFEXEC for user,group,other
+            m |= win32traits._S_IFDIR | 0o111 # IFEXEC for user,group,other
         else:
             m |= win32traits._S_IFREG
         if attributes & win32traits.FILE_ATTRIBUTE_READONLY:
-            m |= 0444
+            m |= 0o444
         else:
-            m |= 0666
+            m |= 0o666
         return m
 
     @specialize.arg(0)

@@ -8,7 +8,7 @@ from rpython.rtyper.error import TyperError
 from rpython.rtyper.lltypesystem import lltype, llmemory, rstr
 from rpython.rtyper import rclass
 from rpython.rtyper.rmodel import Repr
-from rpython.tool.pairtype import pairtype
+from rpython.tool.pairtype import pairmethod, pairtype
 
 
 BUILTIN_TYPER = {}
@@ -142,7 +142,8 @@ class BuiltinMethodRepr(Repr):
         return bltintyper(hop2)
 
 class __extend__(pairtype(BuiltinMethodRepr, BuiltinMethodRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         # convert between two MethodReprs only if they are about the same
         # methodname.  (Useful for the case r_from.s_self == r_to.s_self but
         # r_from is not r_to.)  See test_rbuiltin.test_method_repr.
@@ -340,7 +341,10 @@ def rtype_hlinvoke(hop):
     return hop.dispatch()
 
 typer_for(range)(rrange.rtype_builtin_range)
-typer_for(xrange)(rrange.rtype_builtin_xrange)
+try:
+    typer_for(xrange)(rrange.rtype_builtin_xrange)
+except NameError:
+    pass  # xrange is not valid rpython3
 typer_for(enumerate)(rrange.rtype_builtin_enumerate)
 
 

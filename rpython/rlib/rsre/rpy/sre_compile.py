@@ -14,13 +14,14 @@
 import sys
 from . import _sre, sre_parse
 from .sre_constants import *
+from rpython.compat import xrange
 
 assert _sre.MAGIC == MAGIC, "SRE module mismatch"
 
 if _sre.CODESIZE == 2:
     MAXCODE = 65535
 else:
-    MAXCODE = 0xFFFFFFFFL
+    MAXCODE = 0xFFFFFFFF
 
 _LITERAL_CODES = set([LITERAL, NOT_LITERAL])
 _REPEATING_CODES = set([REPEAT, MIN_REPEAT, MAX_REPEAT])

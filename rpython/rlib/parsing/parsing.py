@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rlib.parsing.lexer import SourcePos
 from rpython.rlib.parsing.tree import Node, Symbol, Nonterminal
@@ -36,7 +37,7 @@ class LazyInputStream(object):
         assert index >= 0
         while len(self.data) <= index:
             try:
-                self.data.append(self.iterator.next())
+                self.data.append(next(self.iterator))
             except StopIteration:
                 raise IndexError("index out of range")
         return self.data[index]
@@ -147,7 +148,7 @@ class LazyParseTable(object):
             except IndexError:
                 error = ErrorInformation(i)
         return None, 0, error
-    
+
     def terminal_equality(self, symbol, input):
         return symbol == input.name
 
@@ -194,7 +195,7 @@ class PackratParser(object):
         changed = True
         while changed:
             changed = False
-            for nonterminal, follow in follows.iteritems():
+            for nonterminal, follow in follows.items():
                 for nt in follow:
                     subfollow = follows[nt]
                     update = subfollow - follow
@@ -202,9 +203,9 @@ class PackratParser(object):
                         changed = True
                         follow.update(update)
                         break
-        for nonterminal, follow in follows.iteritems():
+        for nonterminal, follow in follows.items():
             if nonterminal in follow:
-                print "nonterminal %s is in its own follow %s" % (nonterminal, follow)
+                print("nonterminal %s is in its own follow %s" % (nonterminal, follow))
                 return True
         return False
 
@@ -328,7 +329,7 @@ class ParserCompiler(object):
         self.nonterminal_to_rule = {} # dummy
         self.startsymbol = "" # dummy
         self.parsetablefactory = None # dummy"""]
-        for symbol, number in self.symbol_to_number.iteritems():
+        for symbol, number in self.symbol_to_number.items():
             if self.parser.is_nonterminal(symbol):
                 name = "matched_nonterminals%s" % number
             else:

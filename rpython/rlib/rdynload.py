@@ -107,7 +107,7 @@ if not _WIN32:
             # uncommon case: may happen if 'name' is a linker script
             # (which the C-level dlopen() can't handle) and we are
             # directly running on pypy (whose implementation of ctypes
-            # or cffi will resolve linker scripts).  In that case, 
+            # or cffi will resolve linker scripts).  In that case,
             # unsure what we can do.
             return ("opening %r with ctypes.CDLL() works, "
                     "but not with c_dlopen()??" % (name,))
@@ -124,7 +124,7 @@ if not _WIN32:
         actual = ""
         last_five = "     "
         state = 0
-        ldscript = os.open(fullpath, os.O_RDONLY, 0777)
+        ldscript = os.open(fullpath, os.O_RDONLY, 0o777)
         c = os.read(ldscript, 1)
         while c != "":
             if state == 0:

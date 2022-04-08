@@ -1,10 +1,11 @@
 import sys
 import types
 
+import rpython.compat as compat
 from rpython.flowspace.model import Constant
 from rpython.annotator import description, model as annmodel
 from rpython.rlib.objectmodel import UnboxedValue
-from rpython.tool.pairtype import pairtype, pair
+from rpython.tool.pairtype import pairmethod, pairtype, pair
 from rpython.tool.identity_dict import identity_dict
 from rpython.tool.flattenrec import FlattenRecursion
 from rpython.rtyper.extregistry import ExtRegistryEntry
@@ -20,7 +21,7 @@ from rpython.rtyper.llannotation import SomePtr
 from rpython.rtyper.lltypesystem import rstr
 from rpython.rtyper.rmodel import (
     Repr, getgcflavor, inputconst, warning, mangle)
-
+from rpython.compat import itervalues
 
 class FieldListAccessor(object):
 
@@ -28,12 +29,12 @@ class FieldListAccessor(object):
         assert type(fields) is dict
         self.TYPE = TYPE
         self.fields = fields
-        for x in fields.itervalues():
+        for x in itervalues(fields):
             assert isinstance(x, ImmutableRanking)
 
     def all_immutable_fields(self):
         result = set()
-        for key, value in self.fields.iteritems():
+        for key, value in self.fields.items():
             if value in (IR_IMMUTABLE, IR_IMMUTABLE_ARRAY):
                 result.add(key)
         return result
@@ -49,6 +50,8 @@ class ImmutableRanking(object):
 
     def __nonzero__(self):
         return self.is_immutable
+
+    __bool__ = __nonzero__
 
     def __repr__(self):
         return '<%s>' % self.name
@@ -222,7 +225,7 @@ class ClassRepr(Repr):
         return r_subclass.getruntime(self.lowleveltype)
 
     def convert_const(self, value):
-        if not isinstance(value, (type, types.ClassType)):
+        if not isinstance(value, (type, compat.ClassType)):
             raise TyperError("not a class: %r" % (value,))
         bk = self.rtyper.annotator.bookkeeper
         return self.convert_desc(bk.getdesc(value))
@@ -1036,7 +1039,8 @@ class InstanceRepr(Repr):
 
 
 class __extend__(pairtype(InstanceRepr, InstanceRepr)):
-    def convert_from_to((r_ins1, r_ins2), v, llops):
+    @pairmethod
+    def convert_from_to(r_ins1, r_ins2, v, llops):
         # which is a subclass of which?
         if r_ins1.classdef is None or r_ins2.classdef is None:
             basedef = None
@@ -1057,7 +1061,8 @@ class __extend__(pairtype(InstanceRepr, InstanceRepr)):
         else:
             return NotImplemented
 
-    def rtype_is_((r_ins1, r_ins2), hop):
+    @pairmethod
+    def rtype_is_(r_ins1, r_ins2, hop):
         if r_ins1.gcflavor != r_ins2.gcflavor:
             # obscure logic, the is can be true only if both are None
             v_ins1, v_ins2 = hop.inputargs(
@@ -1108,11 +1113,12 @@ def fishllattr(inst, name, default=_missing):
                              (lltype.typeOf(widest), name))
     return default
 
-def attr_reverse_size((_, T)):
+def attr_reverse_size(tup):
     # This is used to sort the instance or class attributes by decreasing
     # "likely size", as reported by rffi.sizeof(), to minimize padding
     # holes in C.  Fields should first be sorted by name, just to minimize
     # randomness, and then (stably) sorted by 'attr_reverse_size'.
+    _, T = tup
     if T is lltype.Void:
         return None
     from rpython.rtyper.lltypesystem.rffi import sizeof

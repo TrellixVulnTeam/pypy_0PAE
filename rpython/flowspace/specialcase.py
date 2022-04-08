@@ -52,7 +52,10 @@ def sc_getattr(ctx, w_obj, w_index, w_default=None):
 
 redirect_function(open,       'rpython.rlib.rfile.create_file')
 redirect_function(os.fdopen,  'rpython.rlib.rfile.create_fdopen_rfile')
-redirect_function(os.tmpfile, 'rpython.rlib.rfile.create_temp_rfile')
+try:
+    redirect_function(os.tmpfile, 'rpython.rlib.rfile.create_temp_rfile')
+except AttributeError:
+    pass
 
 # on top of PyPy only: 'os.remove != os.unlink'
 # (on CPython they are '==', but not identical either)
@@ -78,6 +81,24 @@ def rpython_print_item(s):
         buf.append(c)
     buf.append(' ')
 rpython_print_item._annenforceargs_ = (str,)
+
+def rpython_print_end(s):
+    buf = stdoutbuffer.linebuf
+    if not s:
+        return
+
+    if s[0] == '\n':
+        rpython_print_newline()
+    elif buf:
+        buf[-1] = s[0]
+    else:
+        buf.append(s[0])
+
+    for c in s[1:]:
+        if c == '\n':
+            rpython_print_newline()
+        else:
+            buf.append(c)
 
 def rpython_print_newline():
     buf = stdoutbuffer.linebuf

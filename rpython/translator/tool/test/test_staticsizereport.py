@@ -19,7 +19,7 @@ class TestStaticSizeReport(object):
         func = compile(f, [int])
         size, num = group_static_size(func.builder.db,
                                       func.builder.db.globalcontainers())
-        for key, value in num.iteritems():
+        for key, value in num.items():
             if "staticsizereport.A" in str(key) and "vtable" not in str(key):
                 assert value == 101
 
@@ -29,7 +29,7 @@ class TestStaticSizeReport(object):
         fixlist = [x for x in range(100)]
         dynlist = [x for x in range(100)]
         test_dict = dict(map(lambda x: (x, hex(x)), range(256, 4096)))
-        reverse_dict = dict(map(lambda (x,y): (y,x), test_dict.items()))
+        reverse_dict = dict(map(reversed, test_dict.items()))
         class wrap:
             pass
         for x in xrange(100):

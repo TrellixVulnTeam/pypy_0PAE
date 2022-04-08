@@ -1,8 +1,9 @@
+from __future__ import print_function
 import sys
 if len(sys.argv) >= 4 and sys.argv[1] == '--sub':
     sys.path[:] = eval(sys.argv[2])      # hacks for test_integration
     # XXX we don't invokve py.test machinery but try to make sure
-    # pypy support code sees the test options from the invoking 
+    # pypy support code sees the test options from the invoking
     # process
     import rpython.conftest
     class opt:
@@ -65,12 +66,12 @@ class _TestMemoryManager:
         memmgr.set_max_age(4, 1)
         tokens = [FakeLoopToken() for i in range(10)]
         for i in range(len(tokens)):
-            print 'record tokens[%d]' % i
+            print('record tokens[%d]' % i)
             memmgr.keep_loop_alive(tokens[i])
             memmgr.next_generation()
             for j in range(0, i, 2):
                 assert tokens[j] in memmgr.alive_loops
-                print 'also keep alive tokens[%d]' % j
+                print('also keep alive tokens[%d]' % j)
                 memmgr.keep_loop_alive(tokens[j])
         for i in range(len(tokens)):
             if i < 7 and (i%2) != 0:
@@ -200,7 +201,7 @@ class _TestIntegration(LLJitMixin):
             for i in range(10):
                 g(1)   # g(1) gets a loop with an entry bridge
                 g(2)   # and an exit bridge, stays alive
-                g(1)   
+                g(1)
                 g(3)
                 g(1)
                 g(4)   # g(2), g(3), g(4), g(5) are thrown away every iteration
@@ -273,12 +274,12 @@ if __name__ == '__main__':
         try:
             for name in dir(test):
                 if name.startswith('test_'):
-                    print
-                    print '-'*79
-                    print '----- Now running test', name, '-----'
-                    print
+                    print()
+                    print('-'*79)
+                    print('----- Now running test', name, '-----')
+                    print()
                     getattr(test, name)()
         finally:
             if hasattr(test, 'teardown_class'):
                 test.teardown_class()
-            
+

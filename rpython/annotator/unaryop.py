@@ -363,7 +363,7 @@ class __extend__(SomeList):
             self.listdef.agree(getbookkeeper(), s_iterable.listdef)
         else:
             s_iter = s_iterable.iter()
-            self.method_append(s_iter.next())
+            self.method_append(next(s_iter))
 
     def method_reverse(self):
         self.listdef.mutate()

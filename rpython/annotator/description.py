@@ -7,6 +7,7 @@ from rpython.annotator.argument import rawshape, ArgErr, simple_args
 from rpython.tool.sourcetools import valid_identifier
 from rpython.tool.pairtype import extendabletype
 from rpython.annotator.model import AnnotatorError, s_ImpossibleValue, unionof
+from rpython.compat import with_metaclass
 
 class CallFamily(object):
     """A family of Desc objects that could be called from common call sites.
@@ -128,9 +129,8 @@ class ClassAttrFamily(object):
         self.s_value = s_value
 
 # ____________________________________________________________
-
+@with_metaclass(extendabletype)
 class Desc(object):
-    __metaclass__ = extendabletype
 
     def __init__(self, bookkeeper, pyobj=None):
         self.bookkeeper = bookkeeper
@@ -387,7 +387,7 @@ class FunctionDesc(Desc):
                 s_sigs.append(s_sig)
 
             for row in table:
-                for graph in row.itervalues():
+                for graph in row.values():
                     enlist(graph)
 
             return s_sigs

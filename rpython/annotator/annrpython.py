@@ -4,6 +4,7 @@ import types
 from collections import defaultdict
 from contextlib import contextmanager
 
+import rpython.compat as compat
 from rpython.tool.ansi_print import AnsiLogger
 from rpython.tool.pairtype import pair
 from rpython.tool.error import (format_blocked_annotation_error,
@@ -577,7 +578,7 @@ class RPythonAnnotator(object):
 
 
     def follow_link(self, graph, link, constraints):
-        assert not (isinstance(link.exitcase, (types.ClassType, type)) and
+        assert not (isinstance(link.exitcase, (compat.ClassType, type)) and
                 issubclass(link.exitcase, BaseException))
 
         ignore_link = False
@@ -606,7 +607,7 @@ class RPythonAnnotator(object):
         v_last_exc_type = link.last_exception
         v_last_exc_value = link.last_exc_value
 
-        assert (isinstance(link.exitcase, (types.ClassType, type)) and
+        assert (isinstance(link.exitcase, (compat.ClassType, type)) and
                 issubclass(link.exitcase, BaseException))
 
         assert v_last_exc_type and v_last_exc_value

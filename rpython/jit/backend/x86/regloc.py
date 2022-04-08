@@ -112,7 +112,7 @@ class RawEspLoc(AssemblerLocation):
 
 class FrameLoc(RawEbpLoc):
     _immutable_ = True
-    
+
     def __init__(self, position, ebp_offset, type):
         # _getregkey() returns self.value; the value returned must not
         # conflict with RegLoc._getregkey().  It doesn't a bit by chance,
@@ -344,7 +344,7 @@ xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, xmm8, xmm9, xmm10, xmm11, xmm12,
 # we actually do:
 #     mov r11, 0xDEADBEEFDEADBEEF
 #     mov rax, [r11]
-# 
+#
 # NB: You can use the scratch register as a temporary register in
 # assembler.py, but care must be taken when doing so. A call to a method in
 # LocationCodeBuilder could clobber the scratch register when certain
@@ -478,13 +478,13 @@ class LocationCodeBuilder(object):
                                 invoke(self, possible_code1 + "m", val1, val2)
                                 return
                             if possible_code1 == 'm' and not fits32(val1[1]):
-                                val1 = self._fix_static_offset_64_m(val1)
+                                val1 = self._fix_static_offset_64_m(*val1)
                             if possible_code2 == 'm' and not fits32(val2[1]):
-                                val2 = self._fix_static_offset_64_m(val2)
+                                val2 = self._fix_static_offset_64_m(*val2)
                             if possible_code1 == 'a' and not fits32(val1[3]):
-                                val1 = self._fix_static_offset_64_a(val1)
+                                val1 = self._fix_static_offset_64_a(*val1)
                             if possible_code2 == 'a' and not fits32(val2[3]):
-                                val2 = self._fix_static_offset_64_a(val2)
+                                val2 = self._fix_static_offset_64_a(*val2)
                             invoke(self, possible_code1 + possible_code2, val1, val2)
                             return
             _missing_binary_insn(name, code1, code2)
@@ -511,9 +511,9 @@ class LocationCodeBuilder(object):
                         _rx86_getattr(self, name + "_m")(val)
                         return
                     if possible_code == 'm' and not fits32(val[1]):
-                        val = self._fix_static_offset_64_m(val)
+                        val = self._fix_static_offset_64_m(*val)
                     if possible_code == 'a' and not fits32(val[3]):
-                        val = self._fix_static_offset_64_a(val)
+                        val = self._fix_static_offset_64_a(*val)
                     methname = name + "_" + possible_code
                     _rx86_getattr(self, methname)(val)
 
@@ -567,7 +567,7 @@ class LocationCodeBuilder(object):
         self.MOV_ri(X86_64_SCRATCH_REG.value, addr)
         return (X86_64_SCRATCH_REG.value, 0)
 
-    def _fix_static_offset_64_m(self, (basereg, static_offset)):
+    def _fix_static_offset_64_m(self, basereg, static_offset):
         # For cases where an AddressLoc has the location_code 'm', but
         # where the static offset does not fit in 32-bits.  We have to fall
         # back to the X86_64_SCRATCH_REG.  Returns a new location encoded
@@ -577,8 +577,7 @@ class LocationCodeBuilder(object):
         self.LEA_ra(X86_64_SCRATCH_REG.value, (basereg, reg, 0, ofs))
         return (X86_64_SCRATCH_REG.value, 0)
 
-    def _fix_static_offset_64_a(self, (basereg, scalereg,
-                                       scale, static_offset)):
+    def _fix_static_offset_64_a(self, basereg, scalereg, scale, static_offset):
         # For cases where an AddressLoc has the location_code 'a', but
         # where the static offset does not fit in 32-bits.  We have to fall
         # back to the X86_64_SCRATCH_REG.  In one case it is even more
@@ -734,7 +733,7 @@ class LocationCodeBuilder(object):
     CVTPS2PD = _binaryop('CVTPS2PD')
     CVTPD2DQ = _binaryop('CVTPD2DQ')
     CVTDQ2PD = _binaryop('CVTDQ2PD')
-    
+
     SQRTSD = _binaryop('SQRTSD')
 
     ANDPD = _binaryop('ANDPD')

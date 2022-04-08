@@ -1,4 +1,6 @@
+from __future__ import print_function
 import py, random
+from rpython.compat import long
 from rpython.rtyper.lltypesystem.lltype import *
 from rpython.rtyper.lltypesystem import rffi
 from rpython.translator.c.test.test_genc import compile
@@ -472,7 +474,7 @@ class TestLowLevelType(object):
 
         fn = self.getcompiled(f, [int])
         res = fn(1)
-        print res
+        print(res)
         assert eval(res) == (
             # int
             -sys.maxint, undefined,               # add
@@ -509,7 +511,7 @@ class TestLowLevelType(object):
             )
 
         res = fn(5)
-        print res
+        print(res)
         assert eval(res) == (
             # int
             -sys.maxint+4, undefined,             # add
@@ -788,7 +790,7 @@ class TestLowLevelType(object):
         #
         glob_sizes = g()
         #
-        def check((ssize, msize, smsize, mssize)):
+        def check(ssize, msize, smsize, mssize):
             if is_arm:
                 # ARM has stronger rules about aligned memory access
                 # so according to the rules for round_up_for_allocation
@@ -801,8 +803,8 @@ class TestLowLevelType(object):
             assert mssize == msize
         #
         def f():
-            check(glob_sizes)
-            check(g())
+            check(*glob_sizes)
+            check(*g())
             return 42
         #
         fn = self.getcompiled(f, [])

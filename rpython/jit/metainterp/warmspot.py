@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys, py
 
 from rpython.tool.sourcetools import func_with_new_name
@@ -28,6 +29,7 @@ from rpython.jit.codewriter.effectinfo import EffectInfo
 from rpython.jit.metainterp.optimizeopt import ALL_OPTS_NAMES
 from rpython.rlib.entrypoint import all_jit_entrypoints,\
      annotated_jit_entrypoints
+from rpython.compat import execute
 
 
 # ____________________________________________________________
@@ -127,9 +129,9 @@ def jittify_and_run(interp, graph, args, repeat=1, graph_and_interp_only=False,
         warmrunnerdesc.metainterp_sd.jitlog.finish()
         warmrunnerdesc.metainterp_sd.profiler.finish()
         warmrunnerdesc.metainterp_sd.cpu.finish_once()
-    print '~~~ return value:', repr(res)
+    print('~~~ return value:', repr(res))
     while repeat > 1:
-        print '~' * 79
+        print('~' * 79)
         res1 = interp.eval_graph(graph, args)
         if isinstance(res, int):
             assert res1 == res
@@ -570,11 +572,11 @@ class WarmRunnerDesc(object):
                 raise     # go through
             except Exception as e:
                 if not we_are_translated():
-                    print "~~~ Crash in JIT!"
-                    print '~~~ %s: %s' % (e.__class__, e)
+                    print("~~~ Crash in JIT!")
+                    print('~~~ %s: %s' % (e.__class__, e))
                     if sys.stdout == sys.__stdout__:
                         import pdb; pdb.post_mortem(tb)
-                    raise e.__class__, e, tb
+                    raise
                 fatalerror('~~~ Crash in JIT! %s' % (e,))
         crash_in_jit._dont_inline_ = True
 
@@ -713,25 +715,25 @@ class WarmRunnerDesc(object):
                     d['type%d' % i] = spec
             convert = ";".join(arg_converters)
             if name == 'get_jitcell_at_key':
-                exec py.code.Source("""
+                execute(py.code.Source("""
                 def accessor(%s):
                     %s
                     return cast_instance_to_gcref(function(%s))
-                """ % (arg_spec, convert, arg_spec)).compile() in d
+                """ % (arg_spec, convert, arg_spec)).compile(), d)
                 FUNC = lltype.Ptr(lltype.FuncType(ARGS, llmemory.GCREF))
             elif name == "trace_next_iteration_hash":
-                exec py.code.Source("""
+                execute(py.code.Source("""
                 def accessor(arg0):
                     function(arg0)
-                """).compile() in d
+                """).compile(), d)
                 FUNC = lltype.Ptr(lltype.FuncType([lltype.Unsigned],
                                                   lltype.Void))
             else:
-                exec py.code.Source("""
+                execute(py.code.Source("""
                 def accessor(%s):
                     %s
                     function(%s)
-                """ % (arg_spec, convert, arg_spec)).compile() in d
+                """ % (arg_spec, convert, arg_spec)).compile(), d)
                 FUNC = lltype.Ptr(lltype.FuncType(ARGS, lltype.Void))
             func = d['accessor']
             ll_ptr = self.helper_func(FUNC, func)

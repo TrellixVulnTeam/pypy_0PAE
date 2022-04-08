@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import print_function
 import os, py
 if os.name != 'nt':
     py.test.skip('tests for win32 only')
@@ -41,7 +42,7 @@ if not os.path.exists(test1) or not os.path.exists(test0):
         return internal_sum(a, b);
     }
     '''))
-    eci = ExternalCompilationInfo(include_dirs=[cdir], 
+    eci = ExternalCompilationInfo(include_dirs=[cdir],
                         libraries=[loadtest_dir + '/loadtest0' + arch])
     lib_name = str(platform.compile([c_file], eci, test1[:-4],
                    standalone=False, ))
@@ -72,7 +73,7 @@ def test_terminate_process():
                          "time.sleep(10)",
                          ],
                         )
-    print proc.pid
+    print(proc.pid)
     handle = rwin32.OpenProcess(rwin32.PROCESS_ALL_ACCESS, False, proc.pid)
     assert rwin32.TerminateProcess(handle, signal.SIGTERM) == 1
     rwin32.CloseHandle(handle)
@@ -85,7 +86,7 @@ def test_wenviron():
     assert rwin32._wgetenv(name) == value
     env = dict(rwin32._wenviron_items())
     assert env[name] == value
-    for key, value in env.iteritems():
+    for key, value in env.items():
         assert type(key) is unicode
         assert type(value) is unicode
 

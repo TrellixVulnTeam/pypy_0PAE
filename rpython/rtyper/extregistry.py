@@ -1,7 +1,7 @@
+import collections
 import weakref
-import UserDict
+from rpython.compat import with_metaclass
 from rpython.tool.uid import Hashable
-
 
 class AutoRegisteringType(type):
 
@@ -30,8 +30,8 @@ class AutoRegisteringType(type):
         selfcls._register(EXT_REGISTRY_BY_TYPE, key)
 
 
+@with_metaclass(AutoRegisteringType)
 class ExtRegistryEntry(object):
-    __metaclass__ = AutoRegisteringType
 
     def __init__(self, type, instance=None):
         self.type = type
@@ -73,7 +73,7 @@ class ExtRegistryEntry(object):
 
 # ____________________________________________________________
 
-class FlexibleWeakDict(UserDict.DictMixin):
+class FlexibleWeakDict(collections.MutableMapping):
     """A WeakKeyDictionary that accepts more or less anything as keys:
     weakly referenceable objects or not, hashable objects or not.
     """
@@ -105,6 +105,12 @@ class FlexibleWeakDict(UserDict.DictMixin):
     def __delitem__(self, key):
         d, key = self.ref(key)
         del d[key]
+
+    def __iter__(self):
+        return iter(self.keys())
+
+    def __len__(self):
+        return len(self.keys())
 
     def keys(self):
         return (self._regdict.keys() +

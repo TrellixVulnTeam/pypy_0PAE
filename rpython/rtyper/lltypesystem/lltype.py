@@ -1,6 +1,7 @@
 import weakref
-from types import MethodType, NoneType
+from types import MethodType
 
+from rpython.compat import NoneType, long
 from rpython.annotator.bookkeeper import analyzer_for, immutablevalue
 from rpython.annotator.model import (
         AnnotatorError, SomeBool, SomeInteger, SomeObject)
@@ -90,8 +91,7 @@ def safe_equal(x, y, TLS=TLS):
 class frozendict(dict):
 
     def __hash__(self):
-        items = self.items()
-        items.sort()
+        items = sorted(self.items())
         return hash(tuple(items))
 
 
@@ -147,8 +147,7 @@ class LowLevelType(object):
             pass
         if hash_level >= 3:
             return 0
-        items = self.__dict__.items()
-        items.sort()
+        items = sorted(self.__dict__.items())
         TLS.nested_hash_level = hash_level + 1
         try:
             result = hash((self.__class__,) + tuple(items))
@@ -1215,6 +1214,8 @@ class _abstract_ptr(object):
         except DelayedPointer:
             return True    # assume it's not a delayed null
 
+    __bool__ = __nonzero__
+
     # _setobj, _getobj and _obj0 are really _internal_ implementations
     # details of _ptr, use _obj if necessary instead !
     def _setobj(self, pointing_to, solid=False):
@@ -1604,6 +1605,8 @@ class _interior_ptr(_abstract_ptr):
 
     def __nonzero__(self):
         raise RuntimeError("do not test an interior pointer for nullity")
+
+    __bool__ = __nonzero__
 
     def _get_obj(self):
         ob = self._parent
@@ -2506,5 +2509,3 @@ def dissect_ll_instance(v, t=None, memo=None):
         for item in v.items:
             for i in dissect_ll_instance(item, t.OF, memo):
                 yield i
-
-

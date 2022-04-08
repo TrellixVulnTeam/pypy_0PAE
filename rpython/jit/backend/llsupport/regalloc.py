@@ -4,6 +4,7 @@ from rpython.rlib.objectmodel import we_are_translated, specialize
 from rpython.jit.metainterp.resoperation import rop, AbstractValue
 from rpython.rtyper.lltypesystem import lltype
 from rpython.rtyper.lltypesystem.lloperation import llop
+from rpython.compat import iteritems
 
 try:
     from collections import OrderedDict
@@ -211,7 +212,7 @@ class FrameManager(object):
 
     def finish_binding(self):
         all = [0] * self.get_frame_depth()
-        for b, loc in self.bindings.iteritems():
+        for b, loc in iteritems(self.bindings):
             size = self.frame_size(b.type)
             pos = self.get_loc_index(loc)
             for i in range(pos, pos + size):
@@ -236,7 +237,7 @@ class FrameManager(object):
 
     def _check_invariants(self):
         all = [0] * self.get_frame_depth()
-        for b, loc in self.bindings.iteritems():
+        for b, loc in iteritems(self.bindings):
             size = self.frame_size(b)
             pos = self.get_loc_index(loc)
             for i in range(pos, pos + size):
@@ -1095,7 +1096,7 @@ def compute_vars_longevity(inputargs, operations):
                 if not isinstance(arg, Const):
                     assert arg in produced
             produced[op] = None
-    for lifetime in longevity.itervalues():
+    for lifetime in longevity.values():
         if lifetime.real_usages is not None:
             lifetime.real_usages.reverse()
         if not we_are_translated():

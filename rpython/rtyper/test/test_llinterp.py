@@ -1,4 +1,4 @@
-from __future__ import with_statement
+from __future__ import print_function, with_statement
 import py
 import sys
 from rpython.rtyper.lltypesystem.lltype import typeOf, Void, malloc, free
@@ -58,7 +58,7 @@ def clear_tcache():
 
 def get_interpreter(func, values, view='auto', viewbefore='auto', policy=None,
                     backendopt=False, config=None, **extraconfigopts):
-    extra_key = [(key, value) for key, value in extraconfigopts.iteritems()]
+    extra_key = [(key, value) for key, value in extraconfigopts.items()]
     extra_key.sort()
     extra_key = tuple(extra_key)
     key = ((func,) + tuple([typeOf(x) for x in values]) +
@@ -251,7 +251,7 @@ def test_list_reverse():
         return l
     res = interpret(f,[])
     assert len(res.ll_items()) == len([3,2,1])
-    print res
+    print(res)
     for i in range(3):
         assert res.ll_items()[i] == 3-i
 

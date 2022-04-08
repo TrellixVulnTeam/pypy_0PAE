@@ -13,6 +13,7 @@ from rpython.translator.tool.cbuild import ExternalCompilationInfo
 from rpython.rlib.objectmodel import we_are_translated, specialize
 from rpython.rlib.nonconst import NonConstant
 from rpython.rlib.rarithmetic import intmask
+from rpython.compat import xrange
 
 import sys
 import os

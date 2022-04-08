@@ -182,7 +182,7 @@ class AssemblerZARCH(BaseAssembler, OpAssembler,
         mc = InstrBuilder()
         old_mc = self.mc
         self.mc = mc
-        
+
         # save the information
         mc.store_link()
         mc.push_std_frame()
@@ -1118,7 +1118,7 @@ class AssemblerZARCH(BaseAssembler, OpAssembler,
         mc.store(RCS3, RCS1, 0) # std RCS3, [rootstacktop]
 
     def _call_footer_shadowstack(self, gcrootmap):
-        # r6 -> r15 can be used freely, they will be restored by 
+        # r6 -> r15 can be used freely, they will be restored by
         # _call_footer after this call
         RCS1 = r.r8
         RCS2 = r.r7
@@ -1183,9 +1183,9 @@ class AssemblerZARCH(BaseAssembler, OpAssembler,
                 addr = l.addr(base_ofs + v * WORD, r.SPP)
                 if diff > 0:
                     if store:
-                        mc.STMG(iv, includes[i+diff], addr) 
+                        mc.STMG(iv, includes[i+diff], addr)
                     else:
-                        mc.LMG(iv, includes[i+diff], addr) 
+                        mc.LMG(iv, includes[i+diff], addr)
                     i = j
                 else:
                     if store:
@@ -1204,9 +1204,9 @@ class AssemblerZARCH(BaseAssembler, OpAssembler,
         addr = l.addr(base_ofs + v * WORD, r.SPP)
         if diff > 0:
             if store:
-                mc.STMG(iv, includes[-1], addr) 
+                mc.STMG(iv, includes[-1], addr)
             else:
-                mc.LMG(iv, includes[-1], addr) 
+                mc.LMG(iv, includes[-1], addr)
         else:
             if store:
                 mc.STG(iv, addr)
@@ -1577,8 +1577,8 @@ class AssemblerZARCH(BaseAssembler, OpAssembler,
                     # the mapping might be wrong!
                     if bridge_accum_info.location is not guard_accum_info.location:
                         self.regalloc_mov(guard_accum_info.location, bridge_accum_info.location)
-                bridge_accum_info = bridge_accum_info.next()
-            guard_accum_info = guard_accum_info.next()
+                bridge_accum_info = next(bridge_accum_info)
+            guard_accum_info = next(guard_accum_info)
 
         # register mapping is most likely NOT valid, thus remap it
         src_locations1 = []

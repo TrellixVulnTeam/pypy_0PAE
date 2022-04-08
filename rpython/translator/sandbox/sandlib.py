@@ -4,6 +4,7 @@ was translated from RPython code with --sandbox.  This library is
 for the outer process, which can run CPython or PyPy.
 """
 
+from __future__ import print_function
 import sys, os, posixpath, errno, stat, time
 import subprocess
 from rpython.tool.killsubprocess import killsubprocess
@@ -77,7 +78,7 @@ EXCEPTION_TABLE = [
     (9, RuntimeError),
     ]
 
-def write_exception(g, exception, tb=None):
+def write_exception(g, exception):
     for i, excclass in EXCEPTION_TABLE:
         if isinstance(exception, excclass):
             write_message(g, i)
@@ -90,7 +91,7 @@ def write_exception(g, exception, tb=None):
             break
     else:
         # just re-raise the exception
-        raise exception.__class__, exception, tb
+        raise
 
 def shortrepr(x):
     r = repr(x)
@@ -229,7 +230,7 @@ class SandboxedProc(object):
             import select
             select.select([child_stdout], [], [])
             f = open('/proc/%d/seccomp' % self.popen.pid, 'w')
-            print >> f, 1
+            print(1, file=f)
             f.close()
         while True:
             try:
@@ -243,8 +244,7 @@ class SandboxedProc(object):
             try:
                 answer, resulttype = self.handle_message(fnname, *args)
             except Exception as e:
-                tb = sys.exc_info()[2]
-                write_exception(child_stdin, e, tb)
+                write_exception(child_stdin, e)
                 if self.log:
                     if str(e):
                         self.log.exception('%s: %s' % (e.__class__.__name__, e))
@@ -296,7 +296,10 @@ class SimpleIOSandboxedProc(SandboxedProc):
         """Send data to stdin. Read data from stdout and stderr,
         until end-of-file is reached. Wait for process to terminate.
         """
-        import cStringIO
+        try:
+            import cStringIO
+        except ImportError:
+            import io as cStringIO
         if input:
             if isinstance(input, str):
                 input = cStringIO.StringIO(input)
@@ -320,11 +323,11 @@ class SimpleIOSandboxedProc(SandboxedProc):
         returncode = self.handle_until_return()
         if returncode != 0:
             if os.name == 'posix' and returncode < 0:
-                print >> self._error, "[Subprocess killed by %s]" % (
-                    signal_name(-returncode),)
+                print("[Subprocess killed by %s]" % (
+                    signal_name(-returncode),), file=self._error)
             else:
-                print >> self._error, "[Subprocess exit code: %d]" % (
-                    returncode,)
+                print("[Subprocess exit code: %d]" % (
+                    returncode,), file=self._error)
         self._input = None
         self._output = None
         self._error = None
@@ -573,4 +576,3 @@ class VirtualizedSocketProc(VirtualizedSandboxedProc):
             return self.get_file(fd).send(data)
         return super(VirtualizedSocketProc, self).do_ll_os__ll_os_write(
             fd, data)
-

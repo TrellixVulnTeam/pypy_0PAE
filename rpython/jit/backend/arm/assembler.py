@@ -1,4 +1,4 @@
-from __future__ import with_statement
+from __future__ import print_function, with_statement
 
 import os
 
@@ -30,6 +30,7 @@ from rpython.rtyper.lltypesystem import lltype, rffi
 from rpython.jit.backend.arm import callbuilder
 from rpython.rtyper.lltypesystem.lloperation import llop
 from rpython.rlib.rjitlog import rjitlog as jl
+from rpython.compat import iteritems
 
 class AssemblerARM(ResOpAssembler):
 
@@ -980,7 +981,7 @@ class AssemblerARM(ResOpAssembler):
         self.datablockwrapper.done()      # finish using cpu.asmmemmgr
         self.datablockwrapper = None
         allblocks = self.get_asmmemmgr_blocks(looptoken)
-        size = self.mc.get_relative_pos() 
+        size = self.mc.get_relative_pos()
         res = self.mc.materialize(self.cpu, allblocks,
                                    self.cpu.gc_ll_descr.gcrootmap)
         #self.cpu.codemap.register_codemap(
@@ -1596,14 +1597,14 @@ def not_implemented(msg):
 
 
 def notimplemented_op(self, op, arglocs, regalloc, fcond):
-    print "[ARM/asm] %s not implemented" % op.getopname()
+    print("[ARM/asm] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 
 asm_operations = [notimplemented_op] * (rop._LAST + 1)
 asm_extra_operations = {}
 
-for name, value in ResOpAssembler.__dict__.iteritems():
+for name, value in iteritems(ResOpAssembler.__dict__):
     if name.startswith('emit_opx_'):
         opname = name[len('emit_opx_'):]
         num = getattr(EffectInfo, 'OS_' + opname.upper())

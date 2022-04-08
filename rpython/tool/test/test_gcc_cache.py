@@ -1,5 +1,9 @@
+from __future__ import print_function
 import sys
-import cStringIO
+try:
+    import cStringIO
+except ImportError:
+    import io as cStringIO
 import py
 from rpython.tool.udir import udir
 from rpython.translator.tool.cbuild import ExternalCompilationInfo
@@ -36,9 +40,9 @@ def test_gcc_exec():
     assert build_executable_cache([f], eci2) == "42\n"
     f.write("#error BOOM\n")
     err = py.test.raises(CompilationError, build_executable_cache, [f], eci2)
-    print '<<<'
-    print err
-    print '>>>'
+    print('<<<')
+    print(err)
+    print('>>>')
 
 def test_gcc_ask():
     f = localudir.join("y.c")

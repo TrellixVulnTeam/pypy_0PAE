@@ -1,4 +1,5 @@
 import py.test
+from rpython.compat import long
 from rpython.rtyper.test.tool import BaseRtypingTest
 from rpython.rtyper.annlowlevel import hlstr
 from rpython.tool.udir import udir
@@ -21,7 +22,7 @@ class TestPosix(BaseRtypingTest):
 
     def test_open(self):
         def f():
-            ff = posix.open(path, posix.O_RDONLY, 0777)
+            ff = posix.open(path, posix.O_RDONLY, 0o777)
             return ff
         func = self.interpret(f, [])
         assert is_valid_int(func)
@@ -30,7 +31,7 @@ class TestPosix(BaseRtypingTest):
         def fo(fi):
             g = posix.fstat(fi)
             return g
-        fi = os.open(path,os.O_RDONLY,0777)
+        fi = os.open(path,os.O_RDONLY, 0o777)
         func = self.interpret(fo,[fi])
         stat = os.fstat(fi)
         for i in range(len(stat)):
@@ -72,7 +73,7 @@ class TestPosix(BaseRtypingTest):
     def test_lseek(self):
         def f(fi, pos):
             posix.lseek(fi, pos, 0)
-        fi = os.open(path, os.O_RDONLY, 0777)
+        fi = os.open(path, os.O_RDONLY, 0o777)
         func = self.interpret(f, [fi, 5])
         res = os.read(fi, 2)
         assert res =='is'
@@ -80,7 +81,7 @@ class TestPosix(BaseRtypingTest):
     def test_isatty(self):
         def f(fi):
             posix.isatty(fi)
-        fi = os.open(path, os.O_RDONLY, 0777)
+        fi = os.open(path, os.O_RDONLY, 0o777)
         func = self.interpret(f, [fi])
         assert not func
         os.close(fi)
@@ -102,22 +103,22 @@ class TestPosix(BaseRtypingTest):
             else:
                 text = '333'
             return posix.write(fi,text)
-        fi = os.open(path,os.O_WRONLY,0777)
+        fi = os.open(path,os.O_WRONLY, 0o777)
         text = 'This is a test'
         func = self.interpret(f,[fi])
         os.close(fi)
-        fi = os.open(path,os.O_RDONLY,0777)
+        fi = os.open(path,os.O_RDONLY, 0o777)
         res = os.read(fi,20)
         assert res == text
 
     def test_read(self):
         def f(fi,len):
             return posix.read(fi,len)
-        fi = os.open(path,os.O_WRONLY,0777)
+        fi = os.open(path,os.O_WRONLY, 0o777)
         text = 'This is a test'
         os.write(fi,text)
         os.close(fi)
-        fi = os.open(path,os.O_RDONLY,0777)
+        fi = os.open(path,os.O_RDONLY, 0o777)
         res = self.interpret(f,[fi,20])
         assert self.ll_to_string(res) == text
 
@@ -140,7 +141,7 @@ class TestPosix(BaseRtypingTest):
     def test_close(self):
         def f(fi):
             return posix.close(fi)
-        fi = os.open(path,os.O_WRONLY,0777)
+        fi = os.open(path,os.O_WRONLY, 0o777)
         text = 'This is a test'
         os.write(fi,text)
         res = self.interpret(f,[fi])
@@ -150,7 +151,7 @@ class TestPosix(BaseRtypingTest):
     def test_ftruncate(self):
         def f(fi,len):
             os.ftruncate(fi,len)
-        fi = os.open(path,os.O_RDWR,0777)
+        fi = os.open(path,os.O_RDWR, 0o777)
         func = self.interpret(f,[fi,6])
         assert os.fstat(fi).st_size == 6
 

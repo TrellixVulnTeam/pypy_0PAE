@@ -1,5 +1,6 @@
 """Support for OS X."""
 
+from __future__ import print_function
 from rpython.translator.platform import posix
 import os
 
@@ -37,7 +38,7 @@ class Darwin(posix.BasePosix):
     def get_rpath_flags(self, rel_libdirs):
         # needed for cross compiling on ARM, needs fixing if relevant for darwin
         if len(rel_libdirs) > 0:
-            print 'in get_rpath_flags, rel_libdirs is not fixed up',rel_libdirs
+            print('in get_rpath_flags, rel_libdirs is not fixed up',rel_libdirs)
         return self.rpath_flags
 
     def _args_for_shared(self, args, **kwds):

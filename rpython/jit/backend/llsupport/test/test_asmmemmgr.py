@@ -1,3 +1,4 @@
+from __future__ import print_function
 import random, py
 from rpython.jit.backend.llsupport.asmmemmgr import AsmMemoryManager
 from rpython.jit.backend.llsupport.asmmemmgr import MachineDataBlockWrapper
@@ -117,7 +118,7 @@ class TestAsmMemoryManager:
 
     def test_random(self):
         seed = random.randrange(0, 10**5)
-        print "random seed:", seed
+        print("random seed:", seed)
         r = random.Random(seed)
         got = []
         real_use = 0
@@ -152,7 +153,7 @@ class TestAsmMemoryManager:
                 else:
                     new_total = self.asmmemmgr.total_memory_allocated
                     iterations_without_allocating_more = 0
-                    print real_use, new_total
+                    print(real_use, new_total)
                     # We seem to never see a printed value greater
                     # than 131072.  Be reasonable and allow up to 147456.
                     assert new_total <= 147456
@@ -238,7 +239,7 @@ def test_blockbuildermixin(translated=True):
     debug._log = debug.DebugLog()
     try:
         mc._dump(addr, 'test-logname-section')
-        log = list(debug._log) 
+        log = list(debug._log)
     finally:
         debug._log = None
     encoded = ''.join(writtencode).encode('hex').upper()
@@ -246,7 +247,7 @@ def test_blockbuildermixin(translated=True):
     assert log == [('test-logname-section',
                     [('debug_print', 'SYS_EXECUTABLE', '??'),
                      ('debug_print', 'CODE_DUMP', ataddr, '+0 ', encoded)])]
-    
+
     lltype.free(p, flavor='raw')
 
 def test_blockbuildermixin2():

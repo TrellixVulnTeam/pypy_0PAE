@@ -17,6 +17,7 @@ from rpython.rlib.signature import signature
 from rpython.tool.sourcetools import func_renamer
 from rpython.translator.platform import platform
 from rpython.translator.tool.cbuild import ExternalCompilationInfo
+from rpython.compat import xrange
 
 
 if _WIN32:
@@ -914,7 +915,7 @@ def execv(path, args):
 @replace_os_function('execve')
 def execve(path, args, env):
     envstrs = []
-    for item in env.iteritems():
+    for item in env.items():
         envstr = "%s=%s" % item
         envstrs.append(envstr)
 
@@ -939,7 +940,7 @@ def spawnv(mode, path, args):
 @replace_os_function('spawnve')
 def spawnve(mode, path, args, env):
     envstrs = []
-    for item in env.iteritems():
+    for item in env.items():
         envstrs.append("%s=%s" % item)
     rstring.check_str0(path)
     l_args = rffi.ll_liststr2charpp(args)
@@ -1216,7 +1217,7 @@ def chmod(path, mode):
         attr = win32traits.GetFileAttributes(path)
         if attr == win32traits.INVALID_FILE_ATTRIBUTES:
             raise rwin32.lastSavedWindowsError()
-        if mode & 0200: # _S_IWRITE
+        if mode & 0o200: # _S_IWRITE
             attr &= ~win32traits.FILE_ATTRIBUTE_READONLY
         else:
             attr |= win32traits.FILE_ATTRIBUTE_READONLY
@@ -1951,7 +1952,7 @@ if not _WIN32:
                     groups_p = lltype.nullptr(GID_GROUPS_T.TO)
                     groups_p = lltype.malloc(GID_GROUPS_T.TO, widen(ngroups_p[0]),
                                              flavor='raw')
-                     
+
                     n = handle_posix_error('getgrouplist', c_getgroupslist(user,
                                                      group, groups_p, ngroups_p))
             ngroups = widen(ngroups_p[0])
@@ -2145,7 +2146,7 @@ if not _WIN32:
         _compilation_info_ = ExternalCompilationInfo(
             includes=[ 'unistd.h', ],
         )
-    
+
     # Taken from posixmodule.c. Note the avaialbility is determined at
     # compile time by the host, but filled in by a runtime call to pathconf,
     # sysconf, or confstr.
@@ -2405,7 +2406,7 @@ if not _WIN32:
        setattr(ConfConfig, k, rffi_platform.DefinedConstantInteger(v))
     for k,v in sysconf_consts_defs.items():
        setattr(ConfConfig, k, rffi_platform.DefinedConstantInteger(v))
-            
+
     confConfig = rffi_platform.configure(ConfConfig)
     pathconf_names = {}
     confstr_names = {}
@@ -2531,7 +2532,7 @@ if HAVE_FEXECVE:
 
     def fexecve(fd, args, env):
         envstrs = []
-        for item in env.iteritems():
+        for item in env.items():
             envstr = "%s=%s" % item
             envstrs.append(envstr)
 

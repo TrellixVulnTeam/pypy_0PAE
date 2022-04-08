@@ -1,5 +1,6 @@
 """Support for Windows."""
 
+from __future__ import print_function
 import py, os, sys, re, shutil
 
 from rpython.translator.platform import CompilationError
@@ -479,13 +480,13 @@ class MsvcPlatform(Platform):
         if manifest and not shared:
             linkflags.append('/MANIFESTINPUT:pypy.manifest')
         m.rule('$(TARGET)', ['$(OBJECTS)'] + extra_deps,
-                [ '$(CC_LINK) $(LDFLAGS) $(LDFLAGSEXTRA)' + 
-                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' + 
+                [ '$(CC_LINK) $(LDFLAGS) $(LDFLAGSEXTRA)' +
+                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' +
                   linkobjs,
                 ])
         m.rule('debugmode_$(TARGET)', ['$(OBJECTS)'] + extra_deps,
-                [ '$(CC_LINK) /DEBUG $(LDFLAGS) $(LDFLAGSEXTRA)' + 
-                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' + 
+                [ '$(CC_LINK) /DEBUG $(LDFLAGS) $(LDFLAGSEXTRA)' +
+                  ' $(LINKFILES) /out:$@ $(LIBDIRS) $(LIBS) ' +
                   linkobjs,
                 ])
 
@@ -576,11 +577,11 @@ class WinDefinition(posix.Definition):
         def write_list(prefix, lst):
             lst = lst or ['']
             for i, fn in enumerate(lst):
-                print >> f, prefix, fn,
+                print(prefix, fn, end=' ', file=f)
                 if i < len(lst)-1:
-                    print >> f, '\\'
+                    print('\\', file=f)
                 else:
-                    print >> f
+                    print(file=f)
                 prefix = ' ' * len(prefix)
         name, value = self.name, self.value
         if isinstance(value, str):

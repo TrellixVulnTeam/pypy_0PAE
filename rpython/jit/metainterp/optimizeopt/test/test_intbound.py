@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rpython.jit.metainterp.optimizeopt.intutils import IntBound, IntUpperBound, \
      IntLowerBound, IntUnbounded, ConstIntBound, next_pow2_m1
 
@@ -99,7 +100,7 @@ def test_known():
                     border.append(n)
                 else:
                     inside.append(n)
-                    
+
         for n in nbr:
             c = const(n)
             if n in inside:
@@ -123,7 +124,7 @@ def test_known():
                     assert b.known_lt(c)
 
 
-def test_make():                            
+def test_make():
     for _, _, b1 in some_bounds():
         for _, _, b2 in some_bounds():
             lt = IntUnbounded()
@@ -162,7 +163,7 @@ def test_make():
                 assert not le.known_gt(c)
                 assert not le.known_ge(c)
 
-                
+
             ge = IntUnbounded()
             ge.make_ge(b1)
             ge.make_ge(b2)
@@ -191,7 +192,7 @@ def test_make():
                     assert not gl.known_le(c)
                     assert not gl.known_lt(c)
 
-def test_intersect():                            
+def test_intersect():
     for _, _, b1 in some_bounds():
         for _, _, b2 in some_bounds():
             b = copy(b1)
@@ -201,7 +202,7 @@ def test_intersect():
                     assert b.contains(n)
                 else:
                     assert not b.contains(n)
-                    
+
 def test_add():
     for _, _, b1 in some_bounds():
         for n1 in nbr:
@@ -209,7 +210,7 @@ def test_add():
             for n2 in nbr:
                 c1 = const(n2)
                 c2 = const(n2 + n1)
-                
+
                 if b1.known_le(c1):
                     assert b2.known_le(c2)
                 else:
@@ -404,8 +405,8 @@ def test_make_random(t1, t2):
 def test_add_bound_random(t1, t2):
     b1, n1 = t1
     b2, n2 = t2
-    print b1, n1
-    print b2, n2
+    print(b1, n1)
+    print(b2, n2)
     b3 = b1.add_bound(b2)
     try:
         r = ovfcheck(n1 + n2)
@@ -418,8 +419,8 @@ def test_add_bound_random(t1, t2):
 def test_sub_bound_random(t1, t2):
     b1, n1 = t1
     b2, n2 = t2
-    print b1, n1
-    print b2, n2
+    print(b1, n1)
+    print(b2, n2)
     b3 = b1.sub_bound(b2)
     try:
         r = ovfcheck(n1 - n2)

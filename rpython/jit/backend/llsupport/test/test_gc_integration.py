@@ -2,6 +2,7 @@
 """ Tests for register allocation for common constructs
 """
 
+from __future__ import print_function
 import py
 import re, sys, struct
 from rpython.jit.metainterp.history import TargetToken, BasicFinalDescr,\
@@ -685,8 +686,8 @@ class TestGcShadowstackDirect(BaseTestRegalloc):
                 new_frame.jf_frame[item] = rffi.cast(lltype.Signed, s)
             assert cpu.gc_ll_descr.gcrootmap.curtop() == rffi.cast(lltype.Signed, frame)
             cpu.gc_ll_descr.gcrootmap.settop(rffi.cast(lltype.Signed, new_frame))
-            print '"Collecting" moved the frame from %d to %d' % (
-                i, cpu.gc_ll_descr.gcrootmap.curtop())
+            print('"Collecting" moved the frame from %d to %d' % (
+                i, cpu.gc_ll_descr.gcrootmap.curtop()))
             frames.append(new_frame)
 
         def check2(i):

@@ -1,4 +1,4 @@
-from __future__ import with_statement
+from __future__ import print_function, with_statement
 
 import math
 import sys, os
@@ -145,7 +145,7 @@ class TestTypedTestCase(object):
     def test_memoryerror(self):
         def g(i):
             return [0] * i
-        
+
         def f(i):
             try:
                 lst = g(i)
@@ -656,7 +656,7 @@ class TestTypedTestCase(object):
             #       before the fix which was that iterkeys_with_hash()
             #       didn't do the initial rehashing on its own
             for key, h in objectmodel.iterkeys_with_hash(prebuilt_d):
-                print key, h
+                print(key, h)
                 assert h == compute_hash(key)
             return 42
 
@@ -759,7 +759,7 @@ class TestTypedTestCase(object):
                 return f(n)
             except StackOverflow:
                 return -42
-        
+
         def f(n):
             if n == 0:
                 return 1

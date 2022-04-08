@@ -7,11 +7,11 @@ def setup_module(mod):
     mod.tmpdir = py.test.ensuretemp(mod.__name__)
     mod.lines = lines = map(hex,map(hash, map(str, range(100))))
     # some extra handcrafted tests
-    lines.extend([ 'AAA', 'AAAA', 'AAAB', 'AAB', 'AABB' ]) 
+    lines.extend([ 'AAA', 'AAAA', 'AAAB', 'AAB', 'AABB' ])
     out = mod.tmpdir.join('btree.py')
     o = out.open('w')
     mod.trie = triegenerator.build_compression_tree(
-        o, dict(map(lambda (x,y):(y,x), enumerate(lines))))
+        o, dict(map(reversed, enumerate(lines))))
     o.close()
     mod.bt = out.pyimport()
 

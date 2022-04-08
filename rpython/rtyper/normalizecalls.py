@@ -1,3 +1,5 @@
+from __future__ import print_function
+from rpython.compat import cmp, ordering_from_cmp
 from rpython.annotator import model as annmodel, description
 from rpython.flowspace.argument import Signature
 from rpython.flowspace.model import (Variable, Constant, Block, Link,
@@ -7,6 +9,7 @@ from rpython.rtyper.error import TyperError
 from rpython.rtyper.rmodel import getgcflavor
 from rpython.tool.sourcetools import valid_identifier
 from rpython.annotator.classdesc import ClassDesc
+from rpython.compat import iterkeys, itervalues
 
 
 def normalize_call_familes(annotator):
@@ -62,7 +65,7 @@ def raise_call_table_too_complex_error(callfamily, annotator):
                 pass # XXX better message in this case
             callers = []
             msg.append("the callers of these functions are:")
-            for tag, (caller, callee) in annotator.translator.callgraph.iteritems():
+            for tag, (caller, callee) in annotator.translator.callgraph.items():
                 if callee not in problematic_function_graphs:
                     continue
                 if str(caller) in callers:
@@ -158,8 +161,8 @@ def normalize_calltable_row_annotation(annotator, graphs):
     for graph in graphs:
         graph_bindings[graph] = [annotator.binding(v)
                                  for v in graph.getargs()]
-    iterbindings = graph_bindings.itervalues()
-    nbargs = len(iterbindings.next())
+    iterbindings = itervalues(graph_bindings)
+    nbargs = len(next(iterbindings))
     for binding in iterbindings:
         assert len(binding) == nbargs
 
@@ -214,7 +217,7 @@ def merge_classpbc_getattr_into_classdef(annotator):
             descs = access_set.descs
             if len(descs) <= 1:
                 continue
-            if not isinstance(descs.iterkeys().next(), ClassDesc):
+            if not isinstance(next(iterkeys(descs)), ClassDesc):
                 continue
             classdefs = [desc.getuniqueclassdef() for desc in descs]
             commonbase = classdefs[0]
@@ -297,6 +300,7 @@ def create_instantiate_function(annotator, classdef):
 class TooLateForNewSubclass(Exception):
     pass
 
+@ordering_from_cmp
 class TotalOrderSymbolic(ComputedIntSymbolic):
 
     def __init__(self, orderwitness, peers):
@@ -359,14 +363,14 @@ class TotalOrderSymbolic(ComputedIntSymbolic):
                 mapping[classdef._unique_cdef_id] = classdef
         for peer in self.peers:
             if peer is self:
-                print '==>',
+                print('==>', end=' ')
             else:
-                print '   ',
-            print 'value %4s --' % (peer.value,), peer.orderwitness,
+                print('   ', end=' ')
+            print('value %4s --' % (peer.value,), peer.orderwitness, end=' ')
             if peer.orderwitness[-1] in mapping:
-                print mapping[peer.orderwitness[-1]]
+                print(mapping[peer.orderwitness[-1]])
             else:
-                print
+                print()
 
 def assign_inheritance_ids(annotator):
     # we sort the classes by lexicographic order of reversed(mro),

@@ -1,5 +1,6 @@
 import math
 import sys
+from rpython.compat import long
 from rpython.translator.translator import TranslationContext
 from rpython.rtyper.test import snippet
 from rpython.rtyper.test.tool import BaseRtypingTest

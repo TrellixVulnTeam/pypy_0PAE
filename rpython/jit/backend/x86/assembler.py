@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 
 from rpython.jit.backend.llsupport import jitframe, rewrite
@@ -40,6 +41,7 @@ from rpython.jit.codewriter.effectinfo import EffectInfo
 from rpython.jit.codewriter import longlong
 from rpython.rlib.rarithmetic import intmask, r_uint
 from rpython.rlib.objectmodel import compute_unique_id
+from rpython.compat import iteritems
 
 
 class Assembler386(BaseAssembler, VectorAssemblerMixin):
@@ -741,8 +743,8 @@ class Assembler386(BaseAssembler, VectorAssemblerMixin):
                     # the mapping might be wrong!
                     if bridge_accum_info.location is not guard_accum_info.location:
                         self.mov(guard_accum_info.location, bridge_accum_info.location)
-                bridge_accum_info = bridge_accum_info.next()
-            guard_accum_info = guard_accum_info.next()
+                bridge_accum_info = next(bridge_accum_info)
+            guard_accum_info = next(guard_accum_info)
 
         # register mapping is most likely NOT valid, thus remap it
         src_locations1 = []
@@ -1160,7 +1162,7 @@ class Assembler386(BaseAssembler, VectorAssemblerMixin):
         if not self.verbose:
             return
         pos = self.mc.get_relative_pos()
-        print >> sys.stderr, ' 0x%x  %s' % (pos, text)
+        print(' 0x%x  %s' % (pos, text), file=sys.stderr)
 
     # ------------------------------------------------------------
 
@@ -2723,8 +2725,8 @@ genop_tlref_list = {}
 genop_guard_list = [Assembler386.not_implemented_op_guard] * rop._LAST
 
 import itertools
-iterate = itertools.chain(Assembler386.__dict__.iteritems(),
-                          VectorAssemblerMixin.__dict__.iteritems())
+iterate = itertools.chain(iteritems(Assembler386.__dict__),
+                          iteritems(VectorAssemblerMixin.__dict__))
 for name, value in iterate:
     if name.startswith('genop_discard_'):
         opname = name[len('genop_discard_'):]

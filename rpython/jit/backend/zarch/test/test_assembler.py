@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import struct
 import math
@@ -157,7 +158,7 @@ class TestRunningAssembler(object):
         print(f64)
         print(s64)
         for i,c in enumerate(f64):
-            print('index: %d is set? %s' % (i,c))
+            print(('index: %d is set? %s' % (i,c)))
 
         assert f64[1] == '1' # The z/Architecture architectural mode is installed.
         assert f64[2] == '1' # The z/Architecture architectural mode is active.
@@ -403,7 +404,7 @@ class TestRunningAssembler(object):
     def test_stmg(self):
         self.mc.LGR(r.r2, r.r15)
         self.a.jmpto(r.r14)
-        print hex(run_asm(self.a))
+        print(hex(run_asm(self.a)))
 
     def test_recursion(self):
         with ActivationRecordCtx(self):
@@ -522,7 +523,7 @@ class TestRunningAssembler(object):
                     pool.addr(mem)
                 self.mc.LEY(r.f1, loc.addr(0, r.r13))
                 ## cast short to long!
-                self.mc.LDEBR(r.f0, r.f1) 
+                self.mc.LDEBR(r.f0, r.f1)
                 self.mc.LG(r.r11, loc.addr(4, r.r13))
                 self.mc.STD(r.f0, loc.addr(0, r.r11))
             run_asm(self.a)
@@ -536,7 +537,7 @@ class TestRunningAssembler(object):
                     pool.addr(mem)
                 self.mc.LG(r.r12, loc.addr(0, r.r13))
                 # cast int to float!
-                self.mc.CDGBR(r.f0, r.r12) 
+                self.mc.CDGBR(r.f0, r.r12)
                 self.mc.LG(r.r11, loc.addr(8, r.r13))
                 self.mc.STD(r.f0, loc.addr(0, r.r11))
             run_asm(self.a)
@@ -568,7 +569,7 @@ class TestRunningAssembler(object):
         def STG(reg, addr):
             stored.append((reg,))
         def LMG(start, end, addr):
-            loaded.append((start, end)) 
+            loaded.append((start, end))
         def LG(reg, addr):
             loaded.append((reg,))
         self.mc.STMG = STMG

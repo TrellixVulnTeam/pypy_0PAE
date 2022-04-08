@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py, random, sys
 from rpython.rtyper.lltypesystem import lltype, llmemory, rffi, rstr
 from rpython.rtyper.lltypesystem.lloperation import LL_OPERATIONS
@@ -165,16 +166,16 @@ def write_revdb_def_file(db, target_path):
     ## print >> f, "#define RDB_VERSION  0x%x" % random.randrange(0, sys.maxint)
     ## print >> f
     for i, fn in enumerate(funcnames):
-        print >> f, '#define RPY_CALLBACKLOC_%s %d' % (fn, i)
-    print >> f
-    print >> f, '#define RPY_CALLBACKLOCS \\'
+        print('#define RPY_CALLBACKLOC_%s %d' % (fn, i), file=f)
+    print(file=f)
+    print('#define RPY_CALLBACKLOCS \\', file=f)
     funcnames = funcnames or ['NULL']
     for i, fn in enumerate(funcnames):
         if i == len(funcnames) - 1:
             tail = ''
         else:
             tail = ', \\'
-        print >> f, '\t(void *)%s%s' % (fn, tail)
+        print('\t(void *)%s%s' % (fn, tail), file=f)
     ## print >> f
 
     ## def _base(name):

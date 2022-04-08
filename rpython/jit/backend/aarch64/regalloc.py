@@ -1,4 +1,5 @@
 
+from __future__ import print_function
 from rpython.jit.backend.aarch64 import registers as r
 from rpython.jit.backend.aarch64 import locations
 from rpython.jit.backend.arm import conditions as c
@@ -20,6 +21,7 @@ from rpython.jit.backend.llsupport.gcmap import allocate_gcmap
 from rpython.jit.backend.llsupport.descr import CallDescr
 from rpython.jit.codewriter.effectinfo import EffectInfo
 from rpython.jit.codewriter import longlong
+from rpython.compat import iteritems
 
 from rpython.rlib.rarithmetic import r_uint
 
@@ -1090,7 +1092,7 @@ class Regalloc(BaseRegalloc):
         frame_depth = self.fm.get_frame_depth()
         gcmap = allocate_gcmap(self.assembler,
                         frame_depth, JITFRAME_FIXED_SIZE)
-        for box, loc in self.rm.reg_bindings.iteritems():
+        for box, loc in iteritems(self.rm.reg_bindings):
             if loc in forbidden_regs:
                 continue
             if box.type == REF and self.rm.is_still_alive(box):
@@ -1098,7 +1100,7 @@ class Regalloc(BaseRegalloc):
                 assert loc.is_core_reg()
                 val = self.cpu.all_reg_indexes[loc.value]
                 gcmap[val // WORD // 8] |= r_uint(1) << (val % (WORD * 8))
-        for box, loc in self.fm.bindings.iteritems():
+        for box, loc in iteritems(self.fm.bindings):
             if box.type == REF and self.rm.is_still_alive(box):
                 assert loc.is_stack()
                 val = loc.position + JITFRAME_FIXED_SIZE
@@ -1110,16 +1112,16 @@ class Regalloc(BaseRegalloc):
 
 
 def notimplemented(self, op):
-    print "[ARM64/regalloc] %s not implemented" % op.getopname()
+    print("[ARM64/regalloc] %s not implemented" % op.getopname())
     raise NotImplementedError(op)
 
 def notimplemented_guard_op(self, op, prevop):
-    print "[ARM64/regalloc] %s not implemented" % op.getopname()
-    raise NotImplementedError(op)    
+    print("[ARM64/regalloc] %s not implemented" % op.getopname())
+    raise NotImplementedError(op)
 
 def notimplemented_comp_op(self, op, res_in_cc):
-    print "[ARM64/regalloc] %s not implemented" % op.getopname()
-    raise NotImplementedError(op)    
+    print("[ARM64/regalloc] %s not implemented" % op.getopname())
+    raise NotImplementedError(op)
 
 operations = [notimplemented] * (rop._LAST + 1)
 guard_operations = [notimplemented_guard_op] * (rop._LAST + 1)
@@ -1142,4 +1144,4 @@ for key, value in rop.__dict__.items():
     if hasattr(Regalloc, methname):
         func = getattr(Regalloc, methname).im_func
         comp_operations[value] = func
-    
+

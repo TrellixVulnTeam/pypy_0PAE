@@ -1,10 +1,12 @@
 import sys, random
+from rpython.compat import cmp, ordering_from_cmp
 from rpython.rlib import debug
 from rpython.rlib.rsre.rsre_core import _adjust, match_context, search_context
 from rpython.rlib.rsre.rsre_core import MODE_FULL
 from rpython.rlib.rsre.rsre_core import StrMatchContext, EndOfString
 
 
+@ordering_from_cmp
 class Position(object):
     def __init__(self, p):
         assert isinstance(p, int)

@@ -27,7 +27,7 @@ class Logger(object):
         ops = []
         i = trace.get_iter()
         while not i.done():
-            ops.append(i.next())
+            ops.append(next(i))
         return i.inputargs, ops
 
     def log_loop(self, inputargs, operations, number=0, type=None,

@@ -46,3 +46,4 @@ ignore =
 
 exclude =
     __pycache__  # There's no value in checking cache directories
+    rlib/unicodedata/unicodedb_*.py

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import sys
 import weakref
@@ -259,20 +260,20 @@ for mark, in marks:
 if __name__ == "__main__":
     print("# generated constants from rpython/rlib/jitlog.py")
     print('import struct')
-    print('MARK_JITLOG_START = struct.pack("b", %s)' % hex(0x10))
+    print(('MARK_JITLOG_START = struct.pack("b", %s)' % hex(0x10)))
     for mark, in marks:
         nmr = globals()['MARK_' + mark]
         h = hex(ord(nmr))
-        print '%s = struct.pack("b", %s)' % ('MARK_' + mark, h)
-    print 'MARK_JITLOG_END = struct.pack("b", %s)' % hex(start)
+        print('%s = struct.pack("b", %s)' % ('MARK_' + mark, h))
+    print('MARK_JITLOG_END = struct.pack("b", %s)' % hex(start))
     for key,value in locals().items():
         if key.startswith("MP_"):
-            print '%s = (%s,"%s")' % (key, hex(value[0]), value[1])
-    print 'SEM_TYPE_NAMES = {'
+            print('%s = (%s,"%s")' % (key, hex(value[0]), value[1]))
+    print('SEM_TYPE_NAMES = {')
     for key,value in locals().items():
         if key.startswith("MP_") and value[0] != 0:
-            print '    %s: "%s",' % (hex(value[0]), key[3:].lower())
-    print '}'
+            print('    %s: "%s",' % (hex(value[0]), key[3:].lower()))
+    print('}')
 
 MP_STR = (0x0, "s")
 MP_INT = (0x0, "i")
@@ -465,7 +466,7 @@ class LogTrace(BaseLogTrace):
         ops = []
         i = trace.get_iter()
         while not i.done():
-            ops.append(i.next())
+            ops.append(next(i))
         self.write(i.inputargs, ops)
 
     def write(self, args, ops, ops_offset={}):

@@ -11,9 +11,10 @@ Traceback (most recent call last):
   File \"field.py\", line 25, in encode
     raise ValueError(\"field '%s' can't accept value %s\"
 ValueError: field 'test' can't accept value 65536
->>> 
+>>>
 
 """
+from rpython.compat import long
 
 
 class Field(object):
@@ -43,9 +44,9 @@ class Field(object):
         value &= self.mask
         value = long(value)
         value <<= (32 - self.right - 1)
-        if value & 0x80000000L:
+        if value & 0x80000000:
             # yuck:
-            return ~int((~value)&0xFFFFFFFFL)
+            return ~int((~value)&0xFFFFFFFF)
         else:
             return int(value)
     def decode(self, inst):

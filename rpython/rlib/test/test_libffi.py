@@ -1,3 +1,4 @@
+from __future__ import print_function
 import gc
 import os
 import py
@@ -240,7 +241,7 @@ class TestLibffiCall(BaseFfiTest):
             #del cls.dll
 
     def get_libfoo(self):
-        return self.dll    
+        return self.dll
 
     def call(self, funcspec, args, RESULT, is_struct=False, jitif=[]):
         """
@@ -618,7 +619,7 @@ class TestLibffiCall(BaseFfiTest):
             f_by_name = libfoo.getpointer('AAA_first_ordinal_function' ,[],
                                           types.sint)
             f_by_ordinal = libfoo.getpointer_by_ordinal(1 ,[], types.sint)
-            print dir(f_by_name)
+            print(dir(f_by_name))
             assert f_by_name.funcsym == f_by_ordinal.funcsym
             chain = ArgChain()
             assert 42 == f_by_ordinal.call(chain, rffi.INT, is_struct=False)
@@ -642,10 +643,10 @@ class TestLibffiCall(BaseFfiTest):
                 f_name = 'BBB_second_ordinal_function'
             f_by_name = dll.getpointer(f_name, [], types.sint)
             f_by_ordinal = dll.getpointer_by_ordinal(2 ,[], types.sint)
-            print dir(f_by_name)
+            print(dir(f_by_name))
             assert f_by_name.funcsym == f_by_ordinal.funcsym
             chain = ArgChain()
             assert 24 == f_by_ordinal.call(chain, rffi.INT, is_struct=False)
 
 
-        
+

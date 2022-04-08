@@ -1,6 +1,7 @@
-from __future__ import division
+from __future__ import division, print_function
 import cPickle as pickle
 
+from rpython.compat import cmp, ordering_from_cmp
 from rpython.tool.ansicolor import red, yellow, green
 from rpython.rtyper.lltypesystem.lltype import typeOf, _ptr, Ptr, ContainerType
 from rpython.rtyper.lltypesystem.lltype import GcOpaqueType
@@ -10,6 +11,7 @@ from rpython.memory.lltypelayout import convert_offset_to_int
 class Info:
     pass
 
+@ordering_from_cmp
 class ModuleReport:
     def __init__(self, modulename, totalsize, typereports):
         self.modulename = modulename
@@ -22,6 +24,7 @@ class ModuleReport:
     def __cmp__(self, other):
         return cmp((self.totalsize, self.modulename), (other.totalsize, other.modulename))
 
+@ordering_from_cmp
 class TypeReport:
     def __init__(self, typename, size, numobjects):
         self.typename = typename
@@ -76,7 +79,7 @@ def guess_size_obj(obj):
             try:
                 length = len(ptr)
             except TypeError:
-                print "couldn't find size of", ptr
+                print("couldn't find size of", ptr)
                 return 0
     else:
         length = None
@@ -123,7 +126,7 @@ def make_report_static_size(database, nodes, grouper, recursive=None):
 
     nodes = sorted(nodes, key=nodekey)
     totalsize, numobjects = group_static_size(database, nodes, grouper, recursive)
-    l = [(size, key) for key, size in totalsize.iteritems()]
+    l = [(size, key) for key, size in totalsize.items()]
     l.sort()
     l.reverse()
     sizesum = 0
@@ -184,7 +187,7 @@ def aggregate_values_by_module_and_type(database, count_modules_separately=False
         reachables.update(seen)
         reports.append(ModuleReport(modulename, size, typereports))
 
-    
+
     allnodes = set([node for node in database.globalcontainers() if node.nodekind != "func"])
     unreachables = allnodes-reachables
     if count_modules_separately:
@@ -246,18 +249,18 @@ def print_report(filename,
         size = format_size(report.totalsize, human_readable)
         globalsize += report.totalsize
         if summary:
-            print "%d\t%s" % (size, report.modulename)
+            print("%d\t%s" % (size, report.modulename))
         else:
-            print '%s: %s' % (red(report.modulename), yellow(size))
-            print green(format_line('Typename', 'Size', 'Num'))
+            print('%s: %s' % (red(report.modulename), yellow(size)))
+            print(green(format_line('Typename', 'Size', 'Num')))
             for typereport in report.typereports:
-                print format_typereport(typereport, human_readable)
-            print
-    print
-    print 'Total size:', format_size(globalsize, human_readable)
+                print(format_typereport(typereport, human_readable))
+            print()
+    print()
+    print('Total size:', format_size(globalsize, human_readable))
 
     if show_unknown_graphs:
-        print
-        print green('Unknown graphs:')
+        print()
+        print(green('Unknown graphs:'))
         for graphname in info.unknown_graphs:
-            print graphname
+            print(graphname)

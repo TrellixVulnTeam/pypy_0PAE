@@ -1,14 +1,14 @@
 import os
 
 def main(iterations=1):
-    dest = os.open('/dev/null', os.O_RDWR, 0777)
+    dest = os.open('/dev/null', os.O_RDWR, 0o777)
     payload = 'x' * 1024
 
     for x in xrange(1024 * 1024 * iterations):
         os.write(dest, payload)
 
     os.close(dest)
-    
+
 def entry_point(argv):
     if len(argv) > 1:
         n = int(argv[1])

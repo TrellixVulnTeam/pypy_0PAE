@@ -116,8 +116,7 @@ class FmtDesc(object):
         return True
 
 def table2desclist(table):
-    items = table.items()
-    items.sort()
+    items = sorted(table.items())
     lst = [FmtDesc(key, attrs) for key, attrs in items]
     return unrolling_iterable(lst)
 

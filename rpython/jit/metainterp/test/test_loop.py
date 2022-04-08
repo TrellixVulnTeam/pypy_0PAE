@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.rlib.jit import JitDriver, hint, set_param, dont_look_inside,\
      elidable
@@ -357,7 +358,7 @@ class LoopTest(object):
 
         expected = f(12)
         res = self.meta_interp(f, [12])
-        print res
+        print(res)
         assert res == expected
 
     def test_nested_loops_discovered_by_bridge(self):
@@ -1145,7 +1146,7 @@ class LoopTest(object):
                     v = reverse(W_Cons(pc + 1, W_Cons(pc + 2, W_Cons(pc + 3, W_Cons(pc + 4, W_Nil())))))
                     pc = pc + 1
                 repetitions += 1
-        
+
         self.meta_interp(entry_point, [])
 
 

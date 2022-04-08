@@ -851,7 +851,7 @@ class FuncNode(FuncNodeBase):
             if line.endswith(':'):
                 if line.startswith('err'):
                     try:
-                        nextline = bodyiter.next()
+                        nextline = next(bodyiter)
                     except StopIteration:
                         nextline = ''
                     # merge this 'err:' label with the following line

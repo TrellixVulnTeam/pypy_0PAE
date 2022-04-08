@@ -19,8 +19,9 @@ from rpython.rtyper.lltypesystem.lltype import (
     Array, Signed, cast_pointer, getfunctionptr, cast_ptr_to_int)
 from rpython.rtyper.rmodel import (Repr, inputconst, CanBeNull, mangle,
     warning, impossible_repr)
-from rpython.tool.pairtype import pair, pairtype
+from rpython.tool.pairtype import pair, pairmethod, pairtype
 from rpython.translator.unsimplify import varoftype
+from rpython.compat import itervalues
 
 
 def small_cand(rtyper, s_pbc):
@@ -203,7 +204,7 @@ class FunctionReprBase(Repr):
         descs = list(s_pbc.descriptions)
         shape, index = self.callfamily.find_row(bk, descs, args, hop.spaceop)
         row_of_graphs = self.callfamily.calltables[shape][index]
-        anygraph = row_of_graphs.itervalues().next()  # pick any witness
+        anygraph = next(itervalues(row_of_graphs))  # pick any witness
         vfn = hop.inputarg(self, arg=0)
         vlist = [self.convert_to_concrete_llfn(vfn, shape, index,
                                                hop.llops)]
@@ -371,19 +372,23 @@ class FunctionRepr(FunctionReprBase):
 
 
 class __extend__(pairtype(FunctionRepr, FunctionRepr)):
-    def convert_from_to((r_fpbc1, r_fpbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_fpbc1, r_fpbc2, v, llops):
         return v
 
 class __extend__(pairtype(FunctionRepr, FunctionsPBCRepr)):
-    def convert_from_to((r_fpbc1, r_fpbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_fpbc1, r_fpbc2, v, llops):
         return inputconst(r_fpbc2, r_fpbc1.s_pbc.const)
 
 class __extend__(pairtype(FunctionsPBCRepr, FunctionRepr)):
-    def convert_from_to((r_fpbc1, r_fpbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_fpbc1, r_fpbc2, v, llops):
         return inputconst(Void, None)
 
 class __extend__(pairtype(FunctionsPBCRepr, FunctionsPBCRepr)):
-    def convert_from_to((r_fpbc1, r_fpbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_fpbc1, r_fpbc2, v, llops):
         # this check makes sense because both source and dest repr are FunctionsPBCRepr
         if r_fpbc1.lowleveltype == r_fpbc2.lowleveltype:
             return v
@@ -484,7 +489,7 @@ class SmallFunctionSetPBCRepr(FunctionReprBase):
         descs = list(s_pbc.descriptions)
         shape, index = self.callfamily.find_row(bk, descs, args, hop.spaceop)
         row_of_graphs = self.callfamily.calltables[shape][index]
-        anygraph = row_of_graphs.itervalues().next()  # pick any witness
+        anygraph = next(itervalues(row_of_graphs))  # pick any witness
         vlist = [hop.inputarg(self, arg=0)]
         vlist += callparse.callparse(self.rtyper, anygraph, hop)
         rresult = callparse.getrresult(self.rtyper, anygraph)
@@ -505,11 +510,13 @@ class SmallFunctionSetPBCRepr(FunctionReprBase):
 
 
 class __extend__(pairtype(SmallFunctionSetPBCRepr, FunctionRepr)):
-    def convert_from_to((r_set, r_ptr), v, llops):
+    @pairmethod
+    def convert_from_to(r_set, r_ptr, v, llops):
         return inputconst(Void, None)
 
 class __extend__(pairtype(SmallFunctionSetPBCRepr, FunctionsPBCRepr)):
-    def convert_from_to((r_set, r_ptr), v, llops):
+    @pairmethod
+    def convert_from_to(r_set, r_ptr, v, llops):
         assert v.concretetype is Char
         v_int = llops.genop('cast_char_to_int', [v], resulttype=Signed)
         return llops.genop('getarrayitem', [r_set.c_pointer_table, v_int],
@@ -536,17 +543,20 @@ def compression_function(r_set):
 
 
 class __extend__(pairtype(FunctionRepr, SmallFunctionSetPBCRepr)):
-    def convert_from_to((r_ptr, r_set), v, llops):
+    @pairmethod
+    def convert_from_to(r_ptr, r_set, v, llops):
         desc, = r_ptr.s_pbc.descriptions
         return inputconst(Char, r_set.convert_desc(desc))
 
 class __extend__(pairtype(FunctionsPBCRepr, SmallFunctionSetPBCRepr)):
-    def convert_from_to((r_ptr, r_set), v, llops):
+    @pairmethod
+    def convert_from_to(r_ptr, r_set, v, llops):
         ll_compress = compression_function(r_set)
         return llops.gendirectcall(ll_compress, v)
 
 class __extend__(pairtype(FunctionReprBase, FunctionReprBase)):
-    def rtype_is_((robj1, robj2), hop):
+    @pairmethod
+    def rtype_is_(robj1, robj2, hop):
         if hop.s_result.is_constant():
             return inputconst(Bool, hop.s_result.const)
         s_pbc = annmodel.unionof(robj1.s_pbc, robj2.s_pbc)
@@ -585,7 +595,8 @@ def conversion_table(r_from, r_to):
 
 
 class __extend__(pairtype(SmallFunctionSetPBCRepr, SmallFunctionSetPBCRepr)):
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         c_table = conversion_table(r_from, r_to)
         if c_table:
             assert v.concretetype is Char
@@ -706,7 +717,8 @@ class __extend__(pairtype(MultipleUnrelatedFrozenPBCRepr,
                           SingleFrozenPBCRepr),
                  pairtype(SingleFrozenPBCRepr,
                           MultipleUnrelatedFrozenPBCRepr)):
-    def rtype_is_((robj1, robj2), hop):
+    @pairmethod
+    def rtype_is_(robj1, robj2, hop):
         if isinstance(robj1, MultipleUnrelatedFrozenPBCRepr):
             r = robj1
         else:
@@ -791,17 +803,20 @@ class MultipleFrozenPBCRepr(MultipleFrozenPBCReprBase):
 
 class __extend__(pairtype(MultipleFrozenPBCRepr,
                           MultipleUnrelatedFrozenPBCRepr)):
-    def convert_from_to((robj1, robj2), v, llops):
+    @pairmethod
+    def convert_from_to(robj1, robj2, v, llops):
         return llops.genop('cast_ptr_to_adr', [v], resulttype=llmemory.Address)
 
 class __extend__(pairtype(MultipleFrozenPBCRepr, MultipleFrozenPBCRepr)):
-    def convert_from_to((r_pbc1, r_pbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_pbc1, r_pbc2, v, llops):
         if r_pbc1.access_set == r_pbc2.access_set:
             return v
         return NotImplemented
 
 class __extend__(pairtype(SingleFrozenPBCRepr, MultipleFrozenPBCRepr)):
-    def convert_from_to((r_pbc1, r_pbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_pbc1, r_pbc2, v, llops):
         frozendesc1 = r_pbc1.frozendesc
         access = frozendesc1.queryattrfamily()
         if access is r_pbc2.access_set:
@@ -812,11 +827,13 @@ class __extend__(pairtype(SingleFrozenPBCRepr, MultipleFrozenPBCRepr)):
 
 class __extend__(pairtype(MultipleFrozenPBCReprBase,
                           SingleFrozenPBCRepr)):
-    def convert_from_to((r_pbc1, r_pbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_pbc1, r_pbc2, v, llops):
         return inputconst(Void, r_pbc2.frozendesc)
 
 class __extend__(pairtype(FunctionRepr, MultipleFrozenPBCRepr)):
-    def convert_from_to((r_fn1, r_frozen2), v, llops):
+    @pairmethod
+    def convert_from_to(r_fn1, r_frozen2, v, llops):
         if r_fn1.s_pbc.is_constant():
             value = r_frozen2.convert_const(r_fn1.s_pbc.const)
             lltype = r_frozen2.lowleveltype
@@ -824,7 +841,8 @@ class __extend__(pairtype(FunctionRepr, MultipleFrozenPBCRepr)):
         return NotImplemented
 
 class __extend__(pairtype(MultipleFrozenPBCRepr, FunctionRepr)):
-    def convert_from_to((r_frozen1, r_fn2), v, llops):
+    @pairmethod
+    def convert_from_to(r_frozen1, r_fn2, v, llops):
         if r_fn2.lowleveltype is Void:
             value = r_fn2.s_pbc.const
             return Constant(value, Void)
@@ -902,7 +920,8 @@ class MethodOfFrozenPBCRepr(Repr):
 
 class __extend__(pairtype(MethodOfFrozenPBCRepr, MethodOfFrozenPBCRepr)):
 
-    def convert_from_to((r_from, r_to), v, llops):
+    @pairmethod
+    def convert_from_to(r_from, r_to, v, llops):
         return pair(r_from.r_im_self, r_to.r_im_self).convert_from_to(v, llops)
 
 # ____________________________________________________________
@@ -1087,7 +1106,8 @@ def ll_cls_hash(cls):
     return cast_ptr_to_int(cls)
 
 class __extend__(pairtype(ClassesPBCRepr, rclass.ClassRepr)):
-    def convert_from_to((r_clspbc, r_cls), v, llops):
+    @pairmethod
+    def convert_from_to(r_clspbc, r_cls, v, llops):
         # turn a PBC of classes to a standard pointer-to-vtable class repr
         if r_clspbc.lowleveltype == r_cls.lowleveltype:
             return v
@@ -1097,7 +1117,8 @@ class __extend__(pairtype(ClassesPBCRepr, rclass.ClassRepr)):
         return r_cls.fromclasstype(v, llops)
 
 class __extend__(pairtype(ClassesPBCRepr, ClassesPBCRepr)):
-    def convert_from_to((r_clspbc1, r_clspbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_clspbc1, r_clspbc2, v, llops):
         # this check makes sense because both source and dest repr are ClassesPBCRepr
         if r_clspbc1.lowleveltype == r_clspbc2.lowleveltype:
             return v
@@ -1208,7 +1229,8 @@ class MethodsPBCRepr(Repr):
         return hop2.dispatch()
 
 class __extend__(pairtype(MethodsPBCRepr, MethodsPBCRepr)):
-    def convert_from_to((r_mpbc1, r_mpbc2), v, llops):
+    @pairmethod
+    def convert_from_to(r_mpbc1, r_mpbc2, v, llops):
         if r_mpbc1.lowleveltype == r_mpbc2.lowleveltype:
             return v
         return NotImplemented

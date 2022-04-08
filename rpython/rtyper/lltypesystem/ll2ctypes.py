@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 
 try:
@@ -15,6 +16,7 @@ else:
     load_library_kwargs = {}
 
 import os, platform as host_platform
+from rpython.compat import reraise
 from rpython.rtyper.lltypesystem import lltype, llmemory
 from rpython.rtyper.extfunc import ExtRegistryEntry
 from rpython.rlib.objectmodel import Symbolic, ComputedIntSymbolic
@@ -568,7 +570,7 @@ class _parentable_mixin(object):
                             "double conversion from lltype to ctypes?")
         # XXX don't store here immortal structures
         if DEBUG_ALLOCATED:
-            print >> sys.stderr, "LL2CTYPES:", hex(addr)
+            print("LL2CTYPES:", hex(addr), file=sys.stderr)
         ALLOCATED[addr] = self
 
     def _addressof_storage(self):
@@ -582,7 +584,7 @@ class _parentable_mixin(object):
         # allow the ctypes object to go away now
         addr = ctypes.cast(self._storage, ctypes.c_void_p).value
         if DEBUG_ALLOCATED:
-            print >> sys.stderr, "LL2C FREE:", hex(addr)
+            print("LL2C FREE:", hex(addr), file=sys.stderr)
         try:
             del ALLOCATED[addr]
         except KeyError:
@@ -675,7 +677,7 @@ class _fixedsizedarray_mixin(_parentable_mixin):
 
     def getitem(self, index, uninitialized_ok=False):
         if hasattr(self, '_items'):
-            obj = lltype._fixedsizearray.getitem.im_func(self, 
+            obj = lltype._fixedsizearray.getitem.im_func(self,
                                      index, uninitialized_ok=uninitialized_ok)
             return obj
         else:
@@ -831,8 +833,7 @@ def lltype2ctypes(llobj, normalize=True):
                 # XXX a temporary workaround for comparison of lltype.FuncType
                 key = llobj._obj.__dict__.copy()
                 key['_TYPE'] = repr(key['_TYPE'])
-                items = key.items()
-                items.sort()
+                items = sorted(key.items())
                 key = tuple(items)
                 if key in _all_callbacks:
                     return _all_callbacks[key]
@@ -1361,7 +1362,7 @@ def get_ctypes_trampoline(FUNCTYPE, cfunc):
             # e.g. test_llhelper_error_value)
             evalue._ll2ctypes_c_result = cres
             _callback_exc_info = None
-            raise etype, evalue, etb
+            reraise(etype, evalue, etb)
         return ctypes2lltype(RESULT, cres)
     return invoke_via_ctypes
 

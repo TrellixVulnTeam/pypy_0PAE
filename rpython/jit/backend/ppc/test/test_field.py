@@ -1,3 +1,4 @@
+from rpython.compat import long
 from rpython.jit.backend.ppc.field import Field
 from py.test import raises
 
@@ -61,4 +62,3 @@ class TestFields(object):
             assert field.decode(field.encode(32767)) == 32767
             raises(ValueError, field.encode, 32768)
             raises(ValueError, field.encode, -32769)
-

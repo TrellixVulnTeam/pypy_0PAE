@@ -294,7 +294,7 @@ class VectorAssembler(object):
             self._accum_reduce(op, scalar_arg, vector_loc, scalar_loc)
             if orig_scalar_loc is not scalar_loc:
                 self.regalloc_mov(scalar_loc, orig_scalar_loc)
-            accum_info = accum_info.next()
+            accum_info = next(accum_info)
 
     def _accum_reduce(self, op, arg, accumloc, targetloc):
         # Currently the accumulator can ONLY be the biggest

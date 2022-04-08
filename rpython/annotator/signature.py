@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import types
+import rpython.compat as compat
 from rpython.annotator.model import (
     SomeBool, SomeInteger, SomeString, SomeFloat, SomeList, SomeDict, s_None,
     SomeObject, SomeInstance, SomeTuple, unionof, SomeUnicodeString, SomeType,
@@ -68,7 +69,7 @@ def _compute_annotation(t, bookkeeper=None):
         return SomeDict(
                 DictDef(bookkeeper,
                         annotation(t.keys()[0]), annotation(t.values()[0])))
-    elif type(t) is types.NoneType:
+    elif type(t) is compat.NoneType:
         return s_None
     elif extregistry.is_registered(t):
         entry = extregistry.lookup(t)
@@ -82,7 +83,7 @@ def annotationoftype(t, bookkeeper=False):
 
     """The most precise SomeValue instance that contains all
     objects of type t."""
-    assert isinstance(t, (type, types.ClassType))
+    assert isinstance(t, (type, compat.ClassType))
     if t is bool:
         return SomeBool()
     elif t is int:
@@ -93,7 +94,7 @@ def annotationoftype(t, bookkeeper=False):
         return SomeString()
     elif t is unicode:
         return SomeUnicodeString()
-    elif t is types.NoneType:
+    elif t is compat.NoneType:
         return s_None
     elif bookkeeper and extregistry.is_registered_type(t):
         return (extregistry.lookup_type(t)

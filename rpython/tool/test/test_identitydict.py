@@ -1,4 +1,5 @@
 import py
+from rpython.compat import long
 from rpython.tool.identity_dict import identity_dict, IdentityDictPurePython
 
 class TestIdentityDictNative:

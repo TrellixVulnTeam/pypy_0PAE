@@ -1,6 +1,7 @@
 """
 Processor auto-detection
 """
+from __future__ import print_function
 import sys, os
 from rpython.rtyper.tool.rffi_platform import getdefined
 from rpython.translator.platform import is_host_build
@@ -31,7 +32,7 @@ def detect_model_from_c_compiler():
         MODEL_PPC_64: ['__powerpc64__'],
         MODEL_S390_64:['__s390x__'],
     }
-    for k, v in mapping.iteritems():
+    for k, v in mapping.items():
         for macro in v:
             if not getdefined(macro, ''):
                 continue
@@ -159,6 +160,6 @@ if __name__ == '__main__':
         name = 'auto'
         x = autodetect()
     x = (x, getcpuclassname(name), getcpufeatures(name))
-    print 'autodetect:     ', x[0]
-    print 'getcpuclassname:', x[1]
-    print 'getcpufeatures: ', x[2]
+    print('autodetect:     ', x[0])
+    print('getcpuclassname:', x[1])
+    print('getcpufeatures: ', x[2])

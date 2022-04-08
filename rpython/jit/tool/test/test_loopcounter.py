@@ -1,4 +1,7 @@
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError
+    from io import StringIO
 from rpython.jit.tool.loopcounter import count_loops_and_bridges
 
 def test_loopcounter():

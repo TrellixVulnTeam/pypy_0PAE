@@ -11,6 +11,7 @@ import math
 import inspect
 from collections import OrderedDict
 
+from rpython.compat import iteritems, itervalues, ordering_from_cmp
 from rpython.tool.sourcetools import rpython_wrapper, func_with_new_name
 from rpython.rtyper.extregistry import ExtRegistryEntry
 from rpython.flowspace.specialcase import register_flow_sc
@@ -149,7 +150,7 @@ def enforceargs(*types_, **kwds):
             if isinstance(arg, list):
                 return [get_type_descr_of_argument(arg[0])]
             elif isinstance(arg, dict):
-                key, value = next(arg.iteritems())
+                key, value = next(iteritems(arg))
                 return {get_type_descr_of_argument(key): get_type_descr_of_argument(value)}
             else:
                 return type(arg)
@@ -245,6 +246,7 @@ def llhelper_error_value(error_value):
 
 # ____________________________________________________________
 
+@ordering_from_cmp
 class Symbolic(object):
 
     def annotation(self):
@@ -265,6 +267,8 @@ class Symbolic(object):
 
     def __nonzero__(self):
         raise TypeError("Symbolics are not comparable! %r" % (self,))
+
+    __bool__ = __nonzero__
 
 class ComputedIntSymbolic(Symbolic):
 
@@ -882,7 +886,7 @@ class r_dict(object):
     iterkeys = __iter__
 
     def itervalues(self):
-        return self._dict.itervalues()
+        return itervalues(self._dict)
 
     def iteritems(self):
         for dk, value in self._dict.items():
@@ -960,7 +964,7 @@ def iterkeys_with_hash(d):
     return d.iterkeys_with_hash()
 
 def _iteritems_with_hash_untranslated(d):
-    for k, v in d.iteritems():
+    for k, v in d.items():
         yield (k, v, _expected_hash(d, k))
 
 @specialize.call_location()

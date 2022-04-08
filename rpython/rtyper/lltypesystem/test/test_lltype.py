@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 import sys
 from rpython.rtyper.lltypesystem.lltype import *
@@ -19,7 +20,7 @@ def test_basics():
     assert S0.a == Signed
     assert S0.b == Signed
     s0 = malloc(S0)
-    print s0
+    print(s0)
     assert typeOf(s0) == Ptr(S0)
     py.test.raises(UninitializedMemoryAccess, "s0.a")
     s0.a = 1
@@ -30,10 +31,10 @@ def test_basics():
     # simple array
     Ar = GcArray(('v', Signed))
     x = malloc(Ar,0)
-    print x
+    print(x)
     assert len(x) == 0
     x = malloc(Ar,3)
-    print x
+    print(x)
     assert typeOf(x) == Ptr(Ar)
     assert isweak(x[0], Ar.OF)
     x[0].v = 1
@@ -837,7 +838,7 @@ class TestTrackAllocation:
         assert 'malloc(' in lines[-1] and 'flavor="raw")' in lines[-1]
 
         # The traceback should not be too long
-        print traceback
+        print(traceback)
 
         free(buf, flavor="raw")
 

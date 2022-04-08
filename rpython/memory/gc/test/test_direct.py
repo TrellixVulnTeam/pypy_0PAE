@@ -6,6 +6,7 @@ see as the list of roots (stack and prebuilt objects).
 
 # XXX VERY INCOMPLETE, low coverage
 
+from __future__ import print_function
 import py
 from rpython.rtyper.lltypesystem import lltype, llmemory
 from rpython.memory.gctypelayout import TypeLayoutBuilder, FIN_HANDLER_ARRAY
@@ -124,7 +125,7 @@ class BaseDirectGCTest(object):
 
 
 class DirectGCTest(BaseDirectGCTest):
-    
+
     def test_simple(self):
         p = self.malloc(S)
         p.x = 5
@@ -224,8 +225,8 @@ class DirectGCTest(BaseDirectGCTest):
             a = self.malloc(VAR, i)
             assert 'DEAD' not in repr(a)
             self.stackroots.append(a)
-            print 'ADDED TO STACKROOTS:', llmemory.cast_adr_to_int(
-                llmemory.cast_ptr_to_adr(a))
+            print('ADDED TO STACKROOTS:', llmemory.cast_adr_to_int(
+                llmemory.cast_ptr_to_adr(a)))
             assert 'DEAD' not in repr(self.stackroots)
             for j in range(5):
                 assert 'DEAD' not in repr(self.stackroots)
@@ -309,7 +310,7 @@ class DirectGCTest(BaseDirectGCTest):
         self.gc.collect()
         p = self.malloc(S)
         hash = self.gc.identityhash(p)
-        print hash
+        print(hash)
         assert is_valid_int(hash)
         assert hash == self.gc.identityhash(p)
         self.stackroots.append(p)
@@ -322,7 +323,7 @@ class DirectGCTest(BaseDirectGCTest):
         self.stackroots.append(p)
         self.gc.collect()
         hash = self.gc.identityhash(self.stackroots[-1])
-        print hash
+        print(hash)
         assert is_valid_int(hash)
         for i in range(6):
             self.gc.collect()
@@ -334,7 +335,7 @@ class DirectGCTest(BaseDirectGCTest):
         for i in range(6):
             self.gc.collect()
         hash = self.gc.identityhash(self.stackroots[-1])
-        print hash
+        print(hash)
         assert is_valid_int(hash)
         for i in range(2):
             self.gc.collect()
@@ -342,7 +343,7 @@ class DirectGCTest(BaseDirectGCTest):
         self.stackroots.pop()
         # (4) p is a prebuilt object
         hash = self.gc.identityhash(p_const)
-        print hash
+        print(hash)
         assert is_valid_int(hash)
         assert hash == self.gc.identityhash(p_const)
         # (5) p is actually moving (for the markcompact gc only?)
@@ -513,7 +514,7 @@ class TestMiniMarkGCSimple(DirectGCTest):
         for arraylength in (range(4, 17)
                             + [69]      # 3 bytes
                             + [300]):   # 10 bytes
-            print 'array length:', arraylength
+            print('array length:', arraylength)
             nums = {}
             a = self.malloc(VAR, arraylength)
             self.stackroots.append(a)
@@ -706,7 +707,7 @@ class TestIncrementalMiniMarkGCFull(DirectGCTest):
         #ensure all the ptr fields are zeroed
         assert p.prev == lltype.nullptr(S)
         assert p.next == lltype.nullptr(S)
-    
+
     def test_malloc_varsize_no_cleanup(self):
         x = lltype.Signed
         VAR1 = lltype.GcArray(x)

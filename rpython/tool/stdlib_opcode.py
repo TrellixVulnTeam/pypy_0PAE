@@ -1,3 +1,6 @@
+from rpython.compat import cmp, ordering_from_cmp
+
+@ordering_from_cmp
 class _BaseOpcodeDesc(object):
     def __init__(self, bytecode_spec, name, index, methodname):
         self.bytecode_spec = bytecode_spec
@@ -25,7 +28,7 @@ class _BaseOpcodeDesc(object):
 
     def __str__(self):
         return "<OpcodeDesc code=%d name=%s at %x>" % (self.index, self.name, id(self))
-    
+
     __repr__ = __str__
 
 class _baseopcodedesc:
@@ -42,7 +45,7 @@ class BytecodeSpec(object):
             HAVE_ARGUMENT = HAVE_ARGUMENT
         class opcodedesc(_baseopcodedesc):
             """A namespace mapping OPCODE_NAME to OpcodeDescs."""
-        
+
         self.name = name
         self.OpcodeDesc = OpcodeDesc
         self.opcodedesc = opcodedesc
@@ -59,12 +62,11 @@ class BytecodeSpec(object):
             setattr(self.opcodedesc, methodname, desc)
             self.opdescmap[index] = desc
         # fill the ordered opdesc list
-        self.ordered_opdescs = lst = self.opdescmap.values() 
-        lst.sort()
-    
+        self.ordered_opdescs = sorted(self.opdescmap.values())
+
     def to_globals(self, globals_dict):
         """NOT_RPYTHON. Add individual opcodes to the module constants."""
-        for name, value in self.opmap.iteritems():
+        for name, value in self.opmap.items():
             # Rename 'STORE_SLICE+0' opcodes
             if name.endswith('+0'):
                 name = name[:-2]
@@ -75,7 +77,7 @@ class BytecodeSpec(object):
 
     def __str__(self):
         return "<%s bytecode>" % (self.name,)
-    
+
     __repr__ = __str__
 
 from opcode import opmap, HAVE_ARGUMENT

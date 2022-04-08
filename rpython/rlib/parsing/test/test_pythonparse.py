@@ -47,7 +47,7 @@ test: NUMBER;
     t = parse("((a, b, c),b,c,d=2,**kwargs)").visit(ToAST())[0]
     t = parse("((a, b, c),b,c,(c, d)=4,*args, **args)").visit(ToAST())[0]
     t = parse("(self, a, b, args)").visit(ToAST())[0]
-    
+
 def test_parse_funcdef():
     regexs, rules, ToAST = parse_ebnf("""
 IGNORE: " ";
@@ -86,7 +86,11 @@ class TestParser(object):
 
     def tokenize(self, source):
         # use tokenize module but rewrite tokens slightly
-        import tokenize, cStringIO
+        import tokenize
+        try:
+            import cStringIO
+        except ImportError:
+            import io as cStringIO
         pos = 0
         readline = cStringIO.StringIO(source).readline
         for token in tokenize.generate_tokens(readline):
@@ -165,13 +169,13 @@ def f(x):
 print >> f, a, b, c,
 print >> f, a, b
 print >> f
-print 
+print
 print 1
 print 1, 2
-print 1, 2,  
+print 1, 2,
 """)
         t = self.ToAST.transform(t)
- 
+
     def test_assignment(self):
         t = self.parse("""
 a = 1
@@ -251,4 +255,3 @@ a = 1 - 2 - 3
         s = py.path.local(__file__).dirpath().dirpath().join("parsing.py").read()
         t = self.parse(s)
         t = self.ToAST.transform(t)
-

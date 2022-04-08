@@ -3,6 +3,7 @@
 Tests for the rzlib module.
 """
 
+from __future__ import print_function
 import py, sys
 from rpython.rlib import rzlib
 from rpython.rlib.rarithmetic import r_uint
@@ -90,7 +91,7 @@ def test_deflate_set_dictionary():
     rzlib.deflateSetDictionary(stream, zdict)
     bytes = rzlib.compress(stream, text, rzlib.Z_FINISH)
     rzlib.deflateEnd(stream)
-    
+
     stream2 = rzlib.inflateInit()
 
     from rpython.rtyper.lltypesystem import lltype, rffi, rstr
@@ -118,7 +119,7 @@ def test_deflate_set_dictionary():
 
 def test_compression():
     """
-    Once we have got a deflate stream, rzlib.compress() 
+    Once we have got a deflate stream, rzlib.compress()
     should allow us to compress bytes.
     """
     stream = rzlib.deflateInit()
@@ -134,7 +135,7 @@ def test_compression_lots_of_data():
     """
     expanded = repr(range(20000))
     compressed = zlib.compress(expanded)
-    print len(expanded), '=>', len(compressed)
+    print(len(expanded), '=>', len(compressed))
     stream = rzlib.deflateInit()
     bytes = rzlib.compress(stream, expanded, rzlib.Z_FINISH)
     rzlib.deflateEnd(stream)
@@ -171,7 +172,7 @@ def test_decompression_lots_of_data():
     """
     expanded = repr(range(20000))
     compressed = zlib.compress(expanded)
-    print len(compressed), '=>', len(expanded)
+    print(len(compressed), '=>', len(expanded))
     stream = rzlib.inflateInit()
     bytes, finished, unused = rzlib.decompress(stream, compressed,
                                                rzlib.Z_FINISH)
@@ -188,7 +189,7 @@ def test_decompression_truncated_input():
     """
     expanded = repr(range(20000))
     compressed = zlib.compress(expanded)
-    print len(compressed), '=>', len(expanded)
+    print(len(compressed), '=>', len(expanded))
     stream = rzlib.inflateInit()
     data, finished1, unused1 = rzlib.decompress(stream, compressed[:1000])
     assert expanded.startswith(data)
@@ -404,7 +405,7 @@ def test_translate_and_large_input():
         # don't run this"?
 
     for a in test_list:
-        print 'Testing compression of "s" * %d' % a
+        print('Testing compression of "s" * %d' % a)
         z = zlib.compressobj()
         count = a
         pieces = []
@@ -419,7 +420,7 @@ def test_translate_and_large_input():
         expected = zlib.compress(expected)
         assert fc(a, 1) == expected
 
-        print 'Testing adler32 and crc32 of "s" * %d' % a
+        print('Testing adler32 and crc32 of "s" * %d' % a)
         def compute(function, start):
             count = a
             while count > 0:

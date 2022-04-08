@@ -12,7 +12,7 @@ class TestRecursive(JitAarch64Mixin, RecursiveTests):
         assert len(codemaps) == 3
         # we want to create a map of differences, so unpacking the tracebacks
         # byte by byte
-        codemaps.sort(lambda a, b: cmp(a[1], b[1]))
+        codemaps.sort(key=lambda a: a[1])
         # biggest is the big loop, smallest is the bridge
         def get_ranges(c):
             ranges = []

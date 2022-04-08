@@ -1,3 +1,4 @@
+from __future__ import print_function
 import py
 from rpython.translator.translator import TranslationContext, graphof
 from rpython.translator.backendopt.all import backend_optimizations
@@ -171,7 +172,7 @@ def test_get_graph():
     for block in graph.iterblocks():
         for op in block.operations:
             if op.opname == "direct_call":
-                print op
+                print(op)
                 graph = get_graph(op.args[0], t)
                 assert graph is not None
     # an external function in RPython turns currently into
@@ -184,7 +185,7 @@ def test_get_graph():
         for block in graph.iterblocks():
             for op in block.operations:
                 if op.opname == "direct_call":
-                    print op
+                    print(op)
                     subgraph = get_graph(op.args[0], t)
                     if subgraph is None:
                         # ignore 'get_errno' and 'set_errno', and
@@ -443,7 +444,7 @@ class TestLLSpecializeListComprehension:
         # for now, this is not optimized as a list comp
         def main(n, m):
             d = {n: m, m: n}
-            lst = [i*17 for i in d.iterkeys()]
+            lst = [i*17 for i in d.keys()]
             return len(lst) + lst[0] + lst[-1]
         interp, graph = self.specialize(main, [int, int])
         res = interp.eval_graph(graph, [8, 5])

@@ -1,4 +1,5 @@
 import random, sys
+from rpython.compat import long
 from rpython.flowspace.operation import op
 from rpython.rlib import debug
 from rpython.rlib.rarithmetic import is_valid_int

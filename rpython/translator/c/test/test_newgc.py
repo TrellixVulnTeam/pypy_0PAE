@@ -1,3 +1,4 @@
+from __future__ import print_function
 import gc
 import inspect
 import os
@@ -37,9 +38,9 @@ class UsingFrameworkTest(object):
             try:
                 res = f(arg0, arg1)
             except MemoryError:
-                print "MEMORY-ERROR"
+                print("MEMORY-ERROR")
             else:
-                print res
+                print(res)
             return 0
 
         t = Translation(main, gc=cls.gcpolicy,
@@ -121,7 +122,7 @@ class UsingFrameworkTest(object):
     def run(self, name, *args, **kwds):
         if not args:
             args = (-1, )
-        print 'Running %r)' % name
+        print('Running %r)' % name)
         res = self.c_allfuncs(name, *args, **kwds)
         num = self.name_to_func[name]
         if self.funcsstr[num]:
@@ -699,11 +700,11 @@ class UsingFrameworkTest(object):
     def define_open_read_write_seek_close(cls):
         filename = cls.filename
         def does_stuff():
-            fd = os.open(filename, os.O_WRONLY | os.O_CREAT, 0777)
+            fd = os.open(filename, os.O_WRONLY | os.O_CREAT, 0o777)
             count = os.write(fd, "hello world\n")
             assert count == len("hello world\n")
             os.close(fd)
-            fd = os.open(filename, os.O_RDONLY, 0777)
+            fd = os.open(filename, os.O_RDONLY, 0o777)
             result = os.lseek(fd, 1, 0)
             assert result == 1
             data = os.read(fd, 500)
@@ -1163,8 +1164,8 @@ class UsingFrameworkTest(object):
             a = lltype.malloc(A, 1000)
             s2 = lltype.malloc(S)
             #
-            fd1 = os.open(filename1, os.O_WRONLY | os.O_CREAT, 0666)
-            fd2 = os.open(filename2, os.O_WRONLY | os.O_CREAT, 0666)
+            fd1 = os.open(filename1, os.O_WRONLY | os.O_CREAT, 0o666)
+            fd2 = os.open(filename2, os.O_WRONLY | os.O_CREAT, 0o666)
             # try to ensure we get twice the exact same output below
             gc.collect(); gc.collect(); gc.collect()
             rgc.dump_rpy_heap(fd1)
@@ -1211,7 +1212,7 @@ class UsingFrameworkTest(object):
             #
             p = rgc.get_typeids_z()
             s = ''.join([p[i] for i in range(len(p))])
-            fd = os.open(filename, open_flags, 0666)
+            fd = os.open(filename, open_flags, 0o666)
             os.write(fd, s)
             os.close(fd)
             #
@@ -1307,7 +1308,7 @@ class UsingFrameworkTest(object):
     def test_long_chain_of_instances(self):
         res = self.run("long_chain_of_instances")
         assert res == 1500
-        
+
 
 class TestSemiSpaceGC(UsingFrameworkTest, snippet.SemiSpaceGCTestDefines):
     gcpolicy = "semispace"
@@ -1475,7 +1476,7 @@ class TestSemiSpaceGC(UsingFrameworkTest, snippet.SemiSpaceGCTestDefines):
 
     def define_nursery_hash_base(cls):
         from rpython.rlib.debug import debug_print
-        
+
         class A:
             pass
         def fn():
@@ -1664,7 +1665,7 @@ class TestMiniMarkGC(TestSemiSpaceGC):
         #
         for i in range(10):
             gcmax = random.randrange(50000, 100000)
-            print gcmax
+            print(gcmax)
             res = self.run("limited_memory", -1, runner=myrunner)
             assert res == 42
 
@@ -1769,14 +1770,14 @@ class TestIncrementalMiniMarkGC(TestMiniMarkGC):
             assert popen.wait() in (-6, 134)     # aborted
             # note: it seems that on some systems we get 134 and on
             # others we get -6.  Bash is supposed to translate the
-            # SIGABRT (signal 6) from the subprocess into the exit 
+            # SIGABRT (signal 6) from the subprocess into the exit
             # code 128+6, but I guess it may not always do so.
             assert 'out of memory:' in child_stderr
             return '42'
         #
         for i in range(10):
             ulimitv = random.randrange(50000, 100000)
-            print ulimitv
+            print(ulimitv)
             res = self.run("limited_memory_linux", -1, runner=myrunner)
             assert res == 42
 
@@ -1874,11 +1875,11 @@ class TestIncrementalMiniMarkGC(TestMiniMarkGC):
                 if rgc.is_done(val):
                     break
                 if n == 100:
-                    print 'Endless loop!'
+                    print('Endless loop!')
                     assert False, 'this looks like an endless loop'
-                
+
             if n < 4: # we expect at least 4 steps
-                print 'Too few steps! n =', n
+                print('Too few steps! n =', n)
                 assert False
 
             # check that the state transitions are reasonable
